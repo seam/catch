@@ -1,0 +1,6 @@
+dependencies {
+  compile project(':api'),
+          "joda-time:joda-time:${library_versions.jodaTime}"
+  
+  testRuntime "org.glassfish.web:el-impl:${library_versions.el}"
+}

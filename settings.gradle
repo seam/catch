@@ -1,0 +1,4 @@
+include 'api'
+include 'impl'
+
+rootProject.name = 'seam-execption-handling'
