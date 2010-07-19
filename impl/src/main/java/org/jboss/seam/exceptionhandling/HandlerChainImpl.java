@@ -27,25 +27,22 @@ package org.jboss.seam.exceptionhandling;
  * Provides a package private method to check if the chain
  * needs to end.
  */
-public class HandlerChainImpl implements HandlerChain
-{
-   private boolean chainEnd;
+public class HandlerChainImpl implements HandlerChain {
+    private boolean chainEnd;
 
-   /**
-    * End execution of the chain.
-    * Calling this method will immediately stop executing the handler chain, leaving any
-    * handlers left in the chain as uncalled.
-    */
-   public void end()
-   {
-      this.chainEnd = false;
-   }
+    /**
+     * End execution of the chain.
+     * Calling this method will immediately stop executing the handler chain, leaving any
+     * handlers left in the chain as uncalled.
+     */
+    public void end() {
+        this.chainEnd = true;
+    }
 
-   /**
-    * @return flag indicating if the chain should continue execution
-    */
-   boolean isChainEnd()
-   {
-      return this.chainEnd;
-   }
+    /**
+     * @return flag indicating if the chain should continue execution
+     */
+    boolean isChainEnd() {
+        return this.chainEnd;
+    }
 }
