@@ -1,4 +1,5 @@
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 library_versions = [junit: '4.8.1', cdi: '1.0-SP1', shrinkWrap: '1.0.0-alpha-2', 
                     arquillian: '1.0.0.Alpha2', weld: '1.0.1-SP1', slf4j: '1.5.8',
@@ -13,6 +14,7 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'maven'
   apply plugin: 'idea'
+  apply plugin: 'eclipse'
 
   repositories {
     mavenRepo(urls: 'https://repository.jboss.org/nexus/content/groups/public/')
