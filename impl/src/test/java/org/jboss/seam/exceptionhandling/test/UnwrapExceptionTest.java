@@ -56,7 +56,7 @@ public class UnwrapExceptionTest extends BaseExceptionHandlerTest {
     }
 
     @Test
-    public void assertInnerExceptionHandledFirst() {
+    public void assertInnerExceptionHandledOnlyCalled() {
         Exception e = new UnsupportedOperationException("test", new NullPointerException("test"));
 
         this.nullPointerExceptionHandler.shouldCallEnd(true);
