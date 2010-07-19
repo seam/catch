@@ -1,15 +1,18 @@
+apply plugin: 'idea'
+
 library_versions = [junit: '4.8.1', cdi: '1.0-SP1', shrinkWrap: '1.0.0-alpha-2', 
                     arquillian: '1.0.0.Alpha2', weld: '1.0.1-SP1', slf4j: '1.5.8',
                     jodaTime: '1.6', el: '2.1.2-b04']
 
 
-allprojects {
+subprojects {
   group = 'org.jboss.seam.exception-handling'
   version = '1.0.0-SNAPSHOT' 
   archivesBaseName = 'seam-exception-handling'
 
   apply plugin: 'java'
   apply plugin: 'maven'
+  apply plugin: 'idea'
 
   repositories {
     mavenRepo(urls: 'https://repository.jboss.org/nexus/content/groups/public/')
