@@ -20,10 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exceptionhandling.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.exceptionhandling.ExceptionEvent;
+import org.jboss.seam.exceptionhandling.ExceptionHandlerExecutor;
+import org.jboss.seam.exceptionhandling.StateImpl;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -33,39 +36,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.io.IOException;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class MultipleHandlerTest extends BaseExceptionHandlerTest
+public class UnsupportedOperationExceptionHandlerTest extends BaseExceptionHandlerTest
 {
    @Inject
-   private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
-
-   @Inject
-   private ExceptionExceptionHandler exceptionExceptionHandler;
-
-   @Inject
-   private NullPointerExceptionHandler nullPointerExceptionHandler;
+   private UnsupportedOperationExceptionHandler handler;
 
    @Deployment
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
-            ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
+         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test
-   public void testAllValidHandlersCalled()
+   public void testHandlerIsCalled() throws IOException
    {
+      this.handler.shouldCallEnd(true); // Set so I can reuse this handler in different tests
       ExceptionEvent event = new ExceptionEvent(new UnsupportedOperationException(), new StateImpl(this.beanManager));
       this.beanManager.fireEvent(event);
 
-      assertTrue(this.unsupportedOperationExceptionHandler.isHandleCalled());
-      assertTrue(this.exceptionExceptionHandler.isHandleCalled());
-      assertFalse(this.nullPointerExceptionHandler.isHandleCalled());
+      assertTrue(this.handler.isHandleCalled());
+      assertTrue(event.isExceptionHandled());
    }
 }

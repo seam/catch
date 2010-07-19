@@ -20,21 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exceptionhandling.test;
 
 import javax.enterprise.context.RequestScoped;
 
-@RequestScoped
-public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<UnsupportedOperationException, State>
-{
+import org.jboss.seam.exceptionhandling.ExceptionHandler;
+import org.jboss.seam.exceptionhandling.HandlerChain;
+import org.jboss.seam.exceptionhandling.State;
 
+@RequestScoped
+public class NullPointerExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<NullPointerException, State>
+{
    /**
     * @return the numeric priority of this handler in relationship to
     *         other handlers, 1 being top priority
     */
    public int getPriority()
    {
-      return 1;  //To change body of implemented methods use File | Settings | File Templates.
+      return 0;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    /**
@@ -44,7 +47,7 @@ public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler i
     * @param state container for any useful application state
     * @param e     uncaught exception
     */
-   public void handle(HandlerChain chain, State state, UnsupportedOperationException e)
+   public void handle( HandlerChain chain, State state, NullPointerException e)
    {
       super.baseHandle(chain, state, e);
    }

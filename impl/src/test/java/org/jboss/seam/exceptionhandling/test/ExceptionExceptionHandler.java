@@ -20,29 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exceptionhandling.test;
 
-import org.joda.time.DateTime;
+import javax.enterprise.context.RequestScoped;
 
-public class BaseExceptionHandler
+import org.jboss.seam.exceptionhandling.ExceptionHandler;
+import org.jboss.seam.exceptionhandling.HandlerChain;
+import org.jboss.seam.exceptionhandling.State;
+
+@RequestScoped
+public class ExceptionExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<Exception, State>
 {
-   protected boolean handleCalled;
-   protected boolean callEnd;
-   protected DateTime timeCalled;
-
-   public boolean isHandleCalled()
+   /**
+    * @return the numeric priority of this handler in relationship to
+    *         other handlers, 1 being top priority
+    */
+   public int getPriority()
    {
-      return this.handleCalled;
-   }
-
-   public void shouldCallEnd(boolean callEnd)
-   {
-      this.callEnd = callEnd;
-   }
-
-   public DateTime getTimeCalled()
-   {
-      return this.timeCalled;
+      return 0;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    /**
@@ -52,14 +47,8 @@ public class BaseExceptionHandler
     * @param state container for any useful application state
     * @param e     uncaught exception
     */
-   public void baseHandle(HandlerChain chain, State state, Throwable e)
+   public void handle( HandlerChain chain, State state, Exception e)
    {
-      this.timeCalled = new DateTime();
-      this.handleCalled = true;
-
-      if (this.callEnd)
-      {
-         chain.end();
-      }
+      super.baseHandle(chain, state, e);
    }
 }

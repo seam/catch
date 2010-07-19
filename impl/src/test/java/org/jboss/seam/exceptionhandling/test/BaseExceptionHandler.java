@@ -20,20 +20,31 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exceptionhandling.test;
 
-import javax.enterprise.context.RequestScoped;
+import org.jboss.seam.exceptionhandling.HandlerChain;
+import org.jboss.seam.exceptionhandling.State;
+import org.joda.time.DateTime;
 
-@RequestScoped
-public class NullPointerExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<NullPointerException, State>
+public class BaseExceptionHandler
 {
-   /**
-    * @return the numeric priority of this handler in relationship to
-    *         other handlers, 1 being top priority
-    */
-   public int getPriority()
+   protected boolean handleCalled;
+   protected boolean callEnd;
+   protected DateTime timeCalled;
+
+   public boolean isHandleCalled()
    {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+      return this.handleCalled;
+   }
+
+   public void shouldCallEnd(boolean callEnd)
+   {
+      this.callEnd = callEnd;
+   }
+
+   public DateTime getTimeCalled()
+   {
+      return this.timeCalled;
    }
 
    /**
@@ -43,8 +54,14 @@ public class NullPointerExceptionHandler extends BaseExceptionHandler implements
     * @param state container for any useful application state
     * @param e     uncaught exception
     */
-   public void handle(HandlerChain chain, State state, NullPointerException e)
+   public void baseHandle( HandlerChain chain, State state, Throwable e)
    {
-      super.baseHandle(chain, state, e);
+      this.timeCalled = new DateTime();
+      this.handleCalled = true;
+
+      if (this.callEnd)
+      {
+         chain.end();
+      }
    }
 }

@@ -20,8 +20,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exceptionhandling.test;
 
+import org.jboss.seam.exceptionhandling.ExceptionHandler;
+import org.jboss.seam.exceptionhandling.ExceptionHandlerComparator;
+import org.jboss.seam.exceptionhandling.State;
 import org.junit.Test;
 
 import java.util.Arrays;

@@ -20,31 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exceptionhandling.test;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 
-@RequestScoped
-public class ExceptionExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<Exception, State>
+public abstract class BaseExceptionHandlerTest
 {
-   /**
-    * @return the numeric priority of this handler in relationship to
-    *         other handlers, 1 being top priority
-    */
-   public int getPriority()
-   {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void handle(HandlerChain chain, State state, Exception e)
-   {
-      super.baseHandle(chain, state, e);
-   }
+   @Inject
+   protected BeanManager beanManager;
 }
