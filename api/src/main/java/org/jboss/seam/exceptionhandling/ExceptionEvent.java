@@ -47,7 +47,8 @@ public class ExceptionEvent
    }
 
    /**
-    * @return State instance related to the environment. This will often need to be cast to the correct sub class.
+    * @return State instance related to the environment. This will often need to
+    *         be cast to the correct sub class.
     */
    public State getState()
    {
@@ -63,7 +64,9 @@ public class ExceptionEvent
    }
 
    /**
-    * This should be set if the exception has been handled in an event observer or handler.
+    * This should be set if the exception has been handled in an event observer
+    * or handler.
+    *
     * @param exceptionHandled new value
     */
    public void setExceptionHandled(boolean exceptionHandled)

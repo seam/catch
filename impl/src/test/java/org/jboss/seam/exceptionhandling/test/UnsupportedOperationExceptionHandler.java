@@ -22,19 +22,19 @@
 
 package org.jboss.seam.exceptionhandling.test;
 
-import javax.enterprise.context.RequestScoped;
-
 import org.jboss.seam.exceptionhandling.ExceptionHandler;
 import org.jboss.seam.exceptionhandling.HandlerChain;
 import org.jboss.seam.exceptionhandling.State;
+
+import javax.enterprise.context.RequestScoped;
 
 @RequestScoped
 public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<UnsupportedOperationException, State>
 {
 
    /**
-    * @return the numeric priority of this handler in relationship to
-    *         other handlers, 1 being top priority
+    * @return the numeric priority of this handler in relationship to other
+    *         handlers, 1 being top priority
     */
    public int getPriority()
    {
@@ -48,7 +48,7 @@ public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler i
     * @param state container for any useful application state
     * @param e     uncaught exception
     */
-   public void handle( HandlerChain chain, State state, UnsupportedOperationException e)
+   public void handle(HandlerChain chain, State state, UnsupportedOperationException e)
    {
       super.baseHandle(chain, state, e);
    }

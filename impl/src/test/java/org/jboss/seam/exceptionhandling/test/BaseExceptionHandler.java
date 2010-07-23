@@ -54,7 +54,7 @@ public class BaseExceptionHandler
     * @param state container for any useful application state
     * @param e     uncaught exception
     */
-   public void baseHandle( HandlerChain chain, State state, Throwable e)
+   public void baseHandle(HandlerChain chain, State state, Throwable e)
    {
       this.timeCalled = new DateTime();
       this.handleCalled = true;

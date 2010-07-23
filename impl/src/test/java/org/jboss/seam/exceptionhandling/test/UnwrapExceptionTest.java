@@ -40,32 +40,35 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class UnwrapExceptionTest extends BaseExceptionHandlerTest {
-    @Inject
-    private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
+public class UnwrapExceptionTest extends BaseExceptionHandlerTest
+{
+   @Inject
+   private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
 
-    @Inject
-    private NullPointerExceptionHandler nullPointerExceptionHandler;
+   @Inject
+   private NullPointerExceptionHandler nullPointerExceptionHandler;
 
-    @Deployment
-    public static Archive<?> createTestArchive() {
-        return ShrinkWrap.create("test.jar", JavaArchive.class)
-                .addClasses(UnsupportedOperationExceptionHandler.class,
-                        ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
-                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-    }
+   @Deployment
+   public static Archive<?> createTestArchive()
+   {
+      return ShrinkWrap.create("test.jar", JavaArchive.class)
+            .addClasses(UnsupportedOperationExceptionHandler.class,
+                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+   }
 
-    @Test
-    public void assertInnerExceptionHandledOnlyCalled() {
-        Exception e = new UnsupportedOperationException("test", new NullPointerException("test"));
+   @Test
+   public void assertInnerExceptionHandledOnlyCalled()
+   {
+      Exception e = new UnsupportedOperationException("test", new NullPointerException("test"));
 
-        this.nullPointerExceptionHandler.shouldCallEnd(true);
+      this.nullPointerExceptionHandler.shouldCallEnd(true);
 
-        ExceptionEvent event = new ExceptionEvent(e, new StateImpl(this.beanManager));
-        this.beanManager.fireEvent(event);
+      ExceptionEvent event = new ExceptionEvent(e, new StateImpl(this.beanManager));
+      this.beanManager.fireEvent(event);
 
-        assertTrue(this.nullPointerExceptionHandler.isHandleCalled());
-        assertFalse(this.unsupportedOperationExceptionHandler.isHandleCalled());
+      assertTrue(this.nullPointerExceptionHandler.isHandleCalled());
+      assertFalse(this.unsupportedOperationExceptionHandler.isHandleCalled());
 
-    }
+   }
 }

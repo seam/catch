@@ -56,9 +56,9 @@ public class MultipleHandlerTest extends BaseExceptionHandlerTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
-            ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
-         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
+                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test

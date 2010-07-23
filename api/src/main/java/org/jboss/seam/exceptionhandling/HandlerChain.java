@@ -22,15 +22,15 @@
 package org.jboss.seam.exceptionhandling;
 
 /**
- * Provides the developer methods to affect the traversal of the
- * chain of {@link ExceptionHandler} instances.
+ * Provides the developer methods to affect the traversal of the chain of {@link
+ * ExceptionHandler} instances.
  */
 public interface HandlerChain
 {
    /**
-    * End execution of the chain.
-    * Calling this method will immediately stop executing the handler chain, leaving any
-    * handlers left in the chain as uncalled.
+    * End execution of the chain. Calling this method will immediately stop
+    * executing the handler chain, leaving any handlers left in the chain as
+    * uncalled.
     */
    void end();
 }

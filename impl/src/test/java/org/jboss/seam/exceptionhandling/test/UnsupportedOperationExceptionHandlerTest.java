@@ -50,8 +50,8 @@ public class UnsupportedOperationExceptionHandlerTest extends BaseExceptionHandl
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
-         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test
