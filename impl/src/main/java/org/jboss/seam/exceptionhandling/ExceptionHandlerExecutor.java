@@ -31,15 +31,13 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Finds and invokes all {@link ExceptionHandler} instants for a particular
- * exception and {@link State}. <p> If any handlers are found and invoked the
- * the {@link ExceptionEvent#setExceptionHandled(boolean)} is set to true. </p>
+ * Finds and invokes all {@link ExceptionHandler} instants for a particular exception and {@link State}. <p> If any handlers are
+ * found and invoked the the {@link ExceptionEvent#setExceptionHandled(boolean)} is set to true. </p>
  */
 public class ExceptionHandlerExecutor
 {
    /**
-    * Observes the event, finds the correct exception handler(s) and invokes
-    * them.
+    * Observes the event, finds the correct exception handler(s) and invokes them.
     *
     * @param event Event Payload
     */

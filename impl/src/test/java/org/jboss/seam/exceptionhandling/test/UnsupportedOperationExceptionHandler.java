@@ -33,8 +33,7 @@ public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler i
 {
 
    /**
-    * @return the numeric priority of this handler in relationship to other
-    *         handlers, 1 being top priority
+    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
     */
    public int getPriority()
    {

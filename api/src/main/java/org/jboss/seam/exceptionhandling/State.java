@@ -24,14 +24,12 @@ package org.jboss.seam.exceptionhandling;
 import javax.enterprise.inject.spi.BeanManager;
 
 /**
- * The State object is meant to provide any state that may be helpful for the
- * developer in determining what to do with a particular exception handling. It
- * may include and application state, active processes, or other convenience
- * methods for the {@link ExceptionHandler} developer.
+ * The State object is meant to provide any state that may be helpful for the developer in determining what to do with a particular
+ * exception handling. It may include and application state, active processes, or other convenience methods for the {@link
+ * ExceptionHandler} developer.
  * <p/>
- * For example, a servlet state may include methods to retrieve the
- * HttpServletRequest, HttpServletResponse and possibly a navigation convenience
- * method.
+ * For example, a servlet state may include methods to retrieve the HttpServletRequest, HttpServletResponse and possibly a
+ * navigation convenience method.
  */
 public interface State
 {

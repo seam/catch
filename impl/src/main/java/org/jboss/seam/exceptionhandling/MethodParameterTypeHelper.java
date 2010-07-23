@@ -29,8 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Helper to encapsulate reflection code for finding parameter types on the
- * handler method.
+ * Helper to encapsulate reflection code for finding parameter types on the handler method.
  */
 final public class MethodParameterTypeHelper
 {
@@ -70,8 +69,7 @@ final public class MethodParameterTypeHelper
    }
 
    /**
-    * @return Unmodifiable collection of exception types found in the handle
-    *         method(s).
+    * @return Unmodifiable collection of exception types found in the handle method(s).
     */
    public Collection<Class> getExceptionTypes()
    {
@@ -79,8 +77,7 @@ final public class MethodParameterTypeHelper
    }
 
    /**
-    * @return Unmodifiable collection of exception types found in the handle
-    *         method(s).
+    * @return Unmodifiable collection of exception types found in the handle method(s).
     */
    public Collection<Class> getStateTypes()
    {

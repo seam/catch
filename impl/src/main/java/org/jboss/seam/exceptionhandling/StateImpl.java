@@ -29,7 +29,7 @@ import javax.enterprise.inject.spi.BeanManager;
  */
 public class StateImpl implements State
 {
-   private BeanManager beanManager;
+   private final BeanManager beanManager;
 
    /**
     * Constructor

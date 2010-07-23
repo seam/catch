@@ -32,8 +32,7 @@ import javax.enterprise.context.RequestScoped;
 public class NullPointerExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<NullPointerException, State>
 {
    /**
-    * @return the numeric priority of this handler in relationship to other
-    *         handlers, 1 being top priority
+    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
     */
    public int getPriority()
    {

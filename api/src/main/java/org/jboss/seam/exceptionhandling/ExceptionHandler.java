@@ -22,14 +22,13 @@
 package org.jboss.seam.exceptionhandling;
 
 /**
- * Registers an exception handler for a specific exception and state, this is
- * the main entry point for using Seam's exception handling infrastructure.
+ * Registers an exception handler for a specific exception and state, this is the main entry point for using Seam's exception
+ * handling infrastructure.
  */
 public interface ExceptionHandler<E extends Throwable, S extends State>
 {
    /**
-    * @return the numeric priority of this handler in relationship to other
-    *         handlers, 1 being top priority
+    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
     */
    int getPriority();
 
