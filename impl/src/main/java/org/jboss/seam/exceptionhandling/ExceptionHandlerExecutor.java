@@ -55,7 +55,7 @@ public class ExceptionHandlerExecutor
       final BeanManager beanManager = state.getBeanManager();
 
       Throwable exception = event.getException();
-      MethodParameterTypeHelper methodParameterTypeHelper;
+      MethodParameterTypeHelper handlerMethodParameters;
 
       do
       {
@@ -71,10 +71,10 @@ public class ExceptionHandlerExecutor
          unwrapped = unwrappedExceptions.pop();
          for (ExceptionHandler handler : this.allHandlers)
          {
-            methodParameterTypeHelper = new MethodParameterTypeHelper(handler);
+            handlerMethodParameters = new MethodParameterTypeHelper(handler);
 
-            if (methodParameterTypeHelper.containsExceptionTypeOrSuperType(unwrapped.getClass())
-                  && methodParameterTypeHelper.containsStateTypeOrSuperType(state.getClass()))
+            if (handlerMethodParameters.containsExceptionTypeOrSuperType(unwrapped.getClass())
+                  && handlerMethodParameters.containsStateTypeOrSuperType(state.getClass()))
             {
                handler.handle(chain, state, unwrapped);
                event.setExceptionHandled(true);
