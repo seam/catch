@@ -23,8 +23,10 @@ package org.jboss.seam.exceptionhandling;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +38,9 @@ import java.util.Stack;
  */
 public class ExceptionHandlerExecutor
 {
+   @Inject
+   private List<ExceptionHandler> allHandlers;
+
    /**
     * Observes the event, finds the correct exception handler(s) and invokes them.
     *
@@ -48,12 +53,9 @@ public class ExceptionHandlerExecutor
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
       final State state = event.getState();
       final BeanManager beanManager = state.getBeanManager();
-      final List<ExceptionHandler> allHandlers = this.getContextualExceptionHandlerInstances(beanManager);
 
       Throwable exception = event.getException();
       MethodParameterTypeHelper methodParameterTypeHelper;
-
-      Collections.sort(allHandlers, new ExceptionHandlerComparator());
 
       do
       {
@@ -67,7 +69,7 @@ public class ExceptionHandlerExecutor
       while (!unwrappedExceptions.isEmpty() && !((HandlerChainImpl) chain).isChainEnd())
       {
          unwrapped = unwrappedExceptions.pop();
-         for (ExceptionHandler handler : allHandlers)
+         for (ExceptionHandler handler : this.allHandlers)
          {
             methodParameterTypeHelper = new MethodParameterTypeHelper(handler);
 
@@ -87,13 +89,16 @@ public class ExceptionHandlerExecutor
    }
 
    /**
+    * Finds all instances of {@link org.jboss.seam.exceptionhandling.ExceptionHandler} and creates contextual instances for use.
+    * <p/>
     * Method taken from Seam faces BeanManagerUtils.
     *
     * @param manager BeanManager instance
     * @return List of instantiated  found by the bean manager
     */
    @SuppressWarnings("unchecked")
-   private List<ExceptionHandler> getContextualExceptionHandlerInstances(BeanManager manager)
+   @Produces
+   public List<ExceptionHandler> getContextualExceptionHandlerInstances(BeanManager manager)
    {
       List<ExceptionHandler> result = new ArrayList<ExceptionHandler>();
       for (Bean<?> bean : manager.getBeans(ExceptionHandler.class))
@@ -105,6 +110,9 @@ public class ExceptionHandlerExecutor
             result.add((ExceptionHandler) manager.getReference(bean, ExceptionHandler.class, context));
          }
       }
+
+      Collections.sort(result, new ExceptionHandlerComparator());
+
       return result;
    }
 }
