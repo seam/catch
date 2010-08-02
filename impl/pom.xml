@@ -56,6 +56,13 @@
         <artifactId>weld-core</artifactId>
         <scope>test</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.glassfish.web</groupId>
+        <artifactId>el-impl</artifactId>
+        <scope>test</scope>
+      </dependency>
+
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
