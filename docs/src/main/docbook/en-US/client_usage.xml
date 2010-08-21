@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="exception.handling.client_usage">
+	<title>Usage</title>
+	<para>
+      An end user of the Seam Exception Handling Framework is typically only concerned with the ExceptionHandler class.
+      Though, in creating their handlers they may make use of an implementation of State, and will also want to use the
+      HandlerChain to end execution of the chain.  For further information, please check the API docs.
+	</para>
+
+	<section id="exception.handling.client_usage.exception_handler">
+		<title>ExceptionHandler</title>
+		
+		<para>
+		</para>
+		
+		<section id="exception.handling.client_usage.adding_handlers">
+			<title>Adding Handlers</title>
+			<para>
+			</para>
+		</section> 
+
+		<section id="exception.handling.client_usage.ordering_handlers">
+			<title>Ordering of Handlers</title>
+			<para>
+			</para>
+		</section> 
+		
+	</section>
+
+	<section id="exception.handling.client_usage.state">
+		<title>State</title>
+		
+		<para>
+		</para>
+
+   </section>
+
+	<section id="exception.handling.client_usage.handler_chain">
+		<title>Handler Chain</title>
+		
+		<para>
+		</para>
+
+   </section>
+<!--
+vim:et:ts=3:sw=3:tw=120
+-->    
+</chapter>

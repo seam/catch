@@ -4,13 +4,12 @@
    <title>Seam Exception Handling Introduction</title>
   
    <para>
-      Lead in...
+      The Seam Exception Handling module creates a simple, yet robust base for other modules and users
+      to create a custom and complete exception handling process. Exception handling is done using
+      CDI events, keeping exception handling noninvasive and also helping the program or module to stay 
+      minimally coupled to the exception handling framework.
    </para>
   
-   <section>
-      <title>Getting Started</title>
-      <para>Explain</para>
-   </section>
 <!--
 vim:et:ts=3:sw=3:tw=120
 -->    
