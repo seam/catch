@@ -1,25 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="">
-	<title></title>
-	<para>
-	</para>
+<chapter id="exception.handling.framwork_integration">
+	<title>Framework Integration</title>
 
-	<section id="">
-		<title></title>
+	<para>
+      Integration of Seam Exception Handling into other frameworks consists of two main areas:
+   </para>
+
+   <itemizedlist>
+      <listitem>creating and firing an <literal>ExceptionEvent</literal></listitem>
+      <listitem>extending and implementing a <literal>State</literal></listitem>
+   </itemizedlist>
+
+	<section id="exception.handling.framwork_integration.exceptionevent">
+		<title>Creating and Firing an ExceptionEvent</title>
 		
 		<para>
+         An <literal>ExceptionEvent</literal> is constructed by passing a <literal>Throwable</literal> and a
+         <literal>State</literal> implementation.  Firing that event is done via CDI events, please consult the CDI API
+         or specification for more information.
 		</para>
-		
-		<section id="">
-			<title></title>
-			<para>
-			</para>
-		</section>
-		
-		
+
+      <para>
+         To ease the burden of the application developers, it is suggested that the following two approaches be taken
+         for allowing creation of <literal>ExceptionEvent</literal> objects
+      </para>
+
+      <itemizedlist>
+         <listitem>
+            tie into the exception handling mechanism of the underlying framework
+         </listitem>
+         <listitem>
+            create a shortcut means of creating and firing events that takes a <literal>Throwable</literal>
+         </listitem>
+      </itemizedlist>
+
+      <para>
+         By tying into the underlying framework's exception handling, any uncaught exception should be routed through
+         the Seam Exception Handling system and allow user created handlers to be invoked.  This is the typical way of
+         using the Seam Exception Handling framework.  This also should follow best practices for the specific framework
+         and allow more fine fleshed out <literal>State</literal> implementations to be passed to the handlers.
+      </para>
+
+      <para>
+         A shortcut method of creating and firing the <literal>ExceptionEvent</literal> could be used in catch blocks,
+         but possibly would not allow as fleshed out of a <literal>State</literal> object.
+      </para>
 	</section>
+
+   <section id="exception.handling.framwork_integration.state">
+      <title>Extending State</title>
+
+      <para>
+         The basic <literal>State</literal> interface is very generic and only contains a
+         <literal>BeanManager</literal>. A new interface extending the basic one should be created for the framework.
+         This new interface should contain additional state or framework objects that the application developers could
+         use to determine handling of a specific exception, display messages to the users, and / or perform other
+         framework specific actions such as navigation, graceful termination, etc.
+      </para>
+   </section>
 <!--
 vim:et:ts=3:sw=3:tw=120
 -->    

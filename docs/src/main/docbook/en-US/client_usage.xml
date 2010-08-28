@@ -13,18 +13,56 @@
 		<title>ExceptionHandler</title>
 		
 		<para>
-		</para>
-		
+         ExceptionHandler instances should generally be created to handle a single type of exception, of course more
+         general kinds of handlers could be written to support logging, handling of a whole hierarchy of exceptions,
+         etc. The ExceptionHandler interface is generized to aid with this concern:
+      </para>
+
+      <programlisting><![CDATA[public interface ExceptionHandler<E extends Throwable, S extends State>
+{
+   int getPriority();
+
+   void handle(HandlerChain chain, S state, E e);
+}]]>
+      </programlisting>
+
+      <para>
+         <literal>E</literal> defines the exception type this handler will process in the handle method. <literal>S</literal> is for the type of state
+         object (more below) the handler expects. For example a handler could work slightly differently for the same
+         exception based on the environment. If a <literal>OptimisticLockException</literal> is raised a message to the user may be
+         desired, but building that message would be environment specific, is it a Swing dialog, a <literal>FacesMessage</literal>, a
+         <literal>SOAPFault</literal>?  The State object can help to be an identifier of the type of environment in which the handler is meant to be
+         run.
+      </para>
+
+      <para>
+         All of the logic of an ExceptionHandler is contained within the handle method. This is the method the framework
+         invokes for each exception that is raised that matches the Exception type and State types (or subclasses
+         thereof).
+      </para> 
+         
 		<section id="exception.handling.client_usage.adding_handlers">
 			<title>Adding Handlers</title>
 			<para>
+            Adding a handler to the framework is as easy as creating the class and implementing the interface. Nothing
+            special is needed, the framework will pick up the handler at the start of the application.
 			</para>
 		</section> 
 
 		<section id="exception.handling.client_usage.ordering_handlers">
 			<title>Ordering of Handlers</title>
 			<para>
+            The <literal>getPriority</literal> method of a handler helps determine the order of the handler within the chain of handlers.
+            The lower the number, the closer to the top of the chain a handler is placed.  If two handlers are found
+            that have the same priority the hierarchy of the two exception types is taken into consideration.  If one
+            exception is a super type of the other, the more specific handler is added before the other in the chain. 
 			</para>
+
+         <para>
+            If the XML Configuration module is used, explicit ordering can be created by configuring the the
+            'allHandlers' list of the ExceptionHandlerExecutor class.  Please see the XML Configuration module
+            documentation for more information about configuring classes.
+         </para>
 		</section> 
 		
 	</section>
@@ -33,6 +71,11 @@
 		<title>State</title>
 		
 		<para>
+         The <literal>State</literal> object holds information that the exception handler may need or desire to make decisions for handling
+         the exception.  The basic State implemenation will allow the handler to retrieve the BeanManager.  Other
+         examples would be in a JSF application the State implementation could extend the basic implemenation to contain the <literal>Application</literal>,
+         <literal>NavigationHandler</literal>, <literal>ExceptionQueuedEventContext</literal>, etc.  Each implementation would be different and environment
+         specific.
 		</para>
 
    </section>
@@ -41,6 +84,9 @@
 		<title>Handler Chain</title>
 		
 		<para>
+         The HandlerChain only has one method: <literal>end</literal>.  This method is used to halt execution of the handler chain at the
+         end of this exception handler.  If end is not called the handler chain will continue to be traversed and
+         appropriate handlers invoked until end is called in a handler or the end of the chain is reached.
 		</para>
 
    </section>

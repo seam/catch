@@ -9,7 +9,7 @@
    <xi:include href="introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
    <xi:include href="installation.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
    <xi:include href="client_usage.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
-   <!--<xi:include href="integration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  -->
+   <xi:include href="integration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
    <!--
    <xi:include href="another_chapter.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
    -->
