@@ -85,8 +85,8 @@
    </build>
 
    <scm>
-     <connection>scm:git:git://github.com/LightGuard/seam-exception-handling.git</connection>
-     <url>http://github.com/LightGuard/seam-exception-handling/tree/master</url>
+     <connection>scm:git:git://github.com/seam/catch.git</connection>
+     <url>http://github.com/seam/catch</url>
    </scm>
 
 </project>

@@ -73,9 +73,9 @@
 
    <!--
    <scm>
-      <connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/mail/trunk/docs</connection>
-      <developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/mail/trunk/docs</developerConnection>
-      <url>http://fisheye.jboss.org/browse/seam/modules/mail/docs</url>
+      <connection>scm:git:git://github.com/seam/mail.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
+      <url>http://github.com/seam/mail</url>
    </scm>
    -->
 </project>
