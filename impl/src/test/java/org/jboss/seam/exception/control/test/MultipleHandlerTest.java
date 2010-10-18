@@ -20,13 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling.test;
+package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exceptionhandling.ExceptionEvent;
-import org.jboss.seam.exceptionhandling.ExceptionHandlerExecutor;
-import org.jboss.seam.exceptionhandling.StateImpl;
+import org.jboss.seam.exception.control.impl.ExceptionHandlerExecutor;
+import org.jboss.seam.exception.control.impl.StateImpl;
+import org.jboss.seam.exception.control.ExceptionEvent;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;

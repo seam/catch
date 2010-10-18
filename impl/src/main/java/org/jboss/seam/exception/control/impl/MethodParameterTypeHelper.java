@@ -20,7 +20,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exception.control.impl;
+
+import org.jboss.seam.exception.control.ExceptionHandler;
+import org.jboss.seam.exception.control.State;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

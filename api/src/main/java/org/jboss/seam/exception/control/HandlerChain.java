@@ -19,35 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.jboss.seam.exception.control;
 
-package org.jboss.seam.exceptionhandling.test;
-
-import org.jboss.seam.exceptionhandling.ExceptionHandler;
-import org.jboss.seam.exceptionhandling.HandlerChain;
-import org.jboss.seam.exceptionhandling.State;
-
-import javax.enterprise.context.RequestScoped;
-
-@RequestScoped
-public class ExceptionExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<Exception, State>
+/**
+ * Provides the developer methods to affect the traversal of the chain of {@link org.jboss.seam.exception.control.ExceptionHandler} instances.
+ */
+public interface HandlerChain
 {
    /**
-    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
+    * End execution of the chain. Calling this method will immediately stop executing the handler chain, leaving any handlers left
+    * in the chain as uncalled.
     */
-   public int getPriority()
-   {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void handle(HandlerChain chain, State state, Exception e)
-   {
-      super.baseHandle(chain, state, e);
-   }
+   void end();
 }

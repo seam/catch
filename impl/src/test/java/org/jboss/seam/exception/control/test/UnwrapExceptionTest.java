@@ -19,14 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.jboss.seam.exceptionhandling.test;
+package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exceptionhandling.ExceptionEvent;
-import org.jboss.seam.exceptionhandling.ExceptionHandlerExecutor;
-import org.jboss.seam.exceptionhandling.StateImpl;
+import org.jboss.seam.exception.control.ExceptionEvent;
+import org.jboss.seam.exception.control.impl.ExceptionHandlerExecutor;
+import org.jboss.seam.exception.control.impl.StateImpl;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -36,32 +35,40 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class UnsupportedOperationExceptionHandlerTest extends BaseExceptionHandlerTest
+public class UnwrapExceptionTest extends BaseExceptionHandlerTest
 {
    @Inject
-   private UnsupportedOperationExceptionHandler handler;
+   private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
+
+   @Inject
+   private NullPointerExceptionHandler nullPointerExceptionHandler;
 
    @Deployment
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
+            .addClasses(UnsupportedOperationExceptionHandler.class,
+                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
             .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test
-   public void testHandlerIsCalled() throws IOException
+   public void assertInnerExceptionHandledOnlyCalled()
    {
-      this.handler.shouldCallEnd(true); // Set so I can reuse this handler in different tests
-      ExceptionEvent event = new ExceptionEvent(new UnsupportedOperationException(), new StateImpl(this.beanManager));
+      Exception e = new UnsupportedOperationException("test", new NullPointerException("test"));
+
+      this.nullPointerExceptionHandler.shouldCallEnd(true);
+
+      ExceptionEvent event = new ExceptionEvent(e, new StateImpl(this.beanManager));
       this.beanManager.fireEvent(event);
 
-      assertTrue(this.handler.isHandleCalled());
-      assertTrue(event.isExceptionHandled());
+      assertTrue(this.nullPointerExceptionHandler.isHandleCalled());
+      assertFalse(this.unsupportedOperationExceptionHandler.isHandleCalled());
+
    }
 }

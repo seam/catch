@@ -19,16 +19,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exceptionhandling;
 
 /**
- * Provides the developer methods to affect the traversal of the chain of {@link ExceptionHandler} instances.
+ * An extensible exception handling handling framework.
  */
-public interface HandlerChain
-{
-   /**
-    * End execution of the chain. Calling this method will immediately stop executing the handler chain, leaving any handlers left
-    * in the chain as uncalled.
-    */
-   void end();
-}
+package org.jboss.seam.exceptionhandling;

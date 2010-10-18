@@ -20,48 +20,34 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling.test;
+package org.jboss.seam.exception.control.impl;
 
-import org.jboss.seam.exceptionhandling.HandlerChain;
-import org.jboss.seam.exceptionhandling.State;
-import org.joda.time.DateTime;
+import org.jboss.seam.exception.control.State;
 
-public class BaseExceptionHandler
+import javax.enterprise.inject.spi.BeanManager;
+
+/**
+ * Basic {@link org.jboss.seam.exception.control.State} implementation.
+ */
+public class StateImpl implements State
 {
-   protected boolean handleCalled;
-   protected boolean callEnd;
-   protected DateTime timeCalled;
+   private final BeanManager beanManager;
 
-   public boolean isHandleCalled()
+   /**
+    * Constructor
+    *
+    * @param beanManager instance of {@link BeanManager}.
+    */
+   public StateImpl(BeanManager beanManager)
    {
-      return this.handleCalled;
-   }
-
-   public void shouldCallEnd(boolean callEnd)
-   {
-      this.callEnd = callEnd;
-   }
-
-   public DateTime getTimeCalled()
-   {
-      return this.timeCalled;
+      this.beanManager = beanManager;
    }
 
    /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
+    * @return current BeanManager.
     */
-   public void baseHandle(HandlerChain chain, State state, Throwable e)
+   public BeanManager getBeanManager()
    {
-      this.timeCalled = new DateTime();
-      this.handleCalled = true;
-
-      if (this.callEnd)
-      {
-         chain.end();
-      }
+      return this.beanManager;
    }
 }

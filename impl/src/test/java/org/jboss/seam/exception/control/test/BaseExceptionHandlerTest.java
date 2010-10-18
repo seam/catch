@@ -20,7 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-/**
- * An extensible exception handling handling framework. 
- */
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exception.control.test;
+
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+
+public abstract class BaseExceptionHandlerTest
+{
+   @Inject
+   protected BeanManager beanManager;
+}

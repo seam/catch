@@ -19,18 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exceptionhandling;
 
-/**
- * Registers an exception handler for a specific exception and state, this is the main entry point for using Seam's exception
- * handling infrastructure.
- */
-public interface ExceptionHandler<E extends Throwable, S extends State>
+package org.jboss.seam.exception.control.test;
+
+import org.jboss.seam.exception.control.ExceptionHandler;
+import org.jboss.seam.exception.control.HandlerChain;
+import org.jboss.seam.exception.control.State;
+
+import javax.enterprise.context.RequestScoped;
+
+@RequestScoped
+public class NullPointerExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<NullPointerException, State>
 {
    /**
     * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
     */
-   int getPriority();
+   public int getPriority()
+   {
+      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+   }
 
    /**
     * Method called to execute logic for an uncaught exception.
@@ -39,5 +46,8 @@ public interface ExceptionHandler<E extends Throwable, S extends State>
     * @param state container for any useful application state
     * @param e     uncaught exception
     */
-   void handle(HandlerChain chain, S state, E e);
+   public void handle(HandlerChain chain, State state, NullPointerException e)
+   {
+      super.baseHandle(chain, state, e);
+   }
 }

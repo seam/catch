@@ -1,43 +1,43 @@
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
-library_versions = [junit: '4.8.1', cdi: '1.0-SP1', shrinkWrap: '1.0.0-alpha-2', 
-                    arquillian: '1.0.0.Alpha2', weld: '1.0.1-SP1', slf4j: '1.5.8',
-                    jodaTime: '1.6', el: '2.1.2-b04']
+library_versions = [junit: '4.8.1', cdi: '1.0-SP1', shrinkWrap: '1.0.0-alpha-2',
+   arquillian: '1.0.0.Alpha2', weld: '1.0.1-SP1', slf4j: '1.5.8',
+   jodaTime: '1.6', el: '2.1.2-b04']
 
 
 subprojects {
-  group = 'org.jboss.seam.exception-handling'
-  version = '1.0.0-SNAPSHOT' 
-  archivesBaseName = 'seam-exception-handling'
+   group = 'org.jboss.seam.catch'
+   version = '1.0.0-SNAPSHOT'
+   archivesBaseName = 'seam-catch'
 
-  apply plugin: 'java'
-  apply plugin: 'maven'
-  apply plugin: 'idea'
-  apply plugin: 'eclipse'
+   apply plugin: 'java'
+   apply plugin: 'maven'
+   apply plugin: 'idea'
+   apply plugin: 'eclipse'
 
-  repositories {
-    mavenRepo(urls: 'https://repository.jboss.org/nexus/content/groups/public/')
-  }
+   repositories {
+      mavenRepo(urls: 'https://repository.jboss.org/nexus/content/groups/public/')
+   }
 
-  dependencies {
-    compile "javax.enterprise:cdi-api:${library_versions.cdi}"
+   dependencies {
+      compile "javax.enterprise:cdi-api:${library_versions.cdi}"
 
-    runtime "org.jboss.weld:weld-core:${library_versions.weld}"
+      runtime "org.jboss.weld:weld-core:${library_versions.weld}"
 
-    testCompile "junit:junit:${library_versions.junit}",
-                "org.jboss.shrinkwrap:shrinkwrap-api:${library_versions.shrinkWrap}",
-                "org.jboss.arquillian:arquillian-junit:${library_versions.arquillian}",
-                "org.jboss.arquillian:arquillian-api:${library_versions.arquillian}"
-                
-    testRuntime "org.slf4j:slf4j-simple:${library_versions.slf4j}",
-                "org.jboss.arquillian.container:arquillian-weld-embedded:${library_versions.arquillian}"
+      testCompile "junit:junit:${library_versions.junit}",
+                  "org.jboss.shrinkwrap:shrinkwrap-api:${library_versions.shrinkWrap}",
+                  "org.jboss.arquillian:arquillian-junit:${library_versions.arquillian}",
+                  "org.jboss.arquillian:arquillian-api:${library_versions.arquillian}"
 
-  }
+      testRuntime "org.slf4j:slf4j-simple:${library_versions.slf4j}",
+                  "org.jboss.arquillian.container:arquillian-weld-embedded:${library_versions.arquillian}"
+
+   }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = gradle.gradleVersion
-    jarPath = 'wrapper-libs'
+   gradleVersion = gradle.gradleVersion
+   jarPath = 'wrapper-libs'
 }
 

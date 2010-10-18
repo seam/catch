@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="exception.handling.installation">
    <title>Installation</title>
    <para>
       The Seam Exception Handling API is the only compile time dependency a project needs, and an implementation must
       also be included, either explicitly or via some other module depending on it (and exposing their own specialized
-      extension) is all that is needed during runtime.  If you are using 
-      <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool, you can add the following dependency to 
+      extension) is all that is needed during runtime. If you are using
+      <ulink url="http://maven.apache.org/">Maven</ulink>
+      as your build tool, you can add the following dependency to
       your pom.xml file:
    </para>
    <programlisting role="XML"><![CDATA[
       <dependency>
-         <groupId>org.jboss.seam.exception-handling</groupId>
-         <artifactId>seam-exception-handling-api</artifactId>
-         <version>${seam-exception-handling-version}</version>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-api</artifactId>
+         <version>${seam-catch-version}</version>
          <scope>compile</scope>
       </dependency>
 
       <dependency>
-         <groupId>org.jboss.seam.exception-handling</groupId>
-         <artifactId>seam-exception-handling-impl</artifactId>
-         <version>${seam-exception-handling-version}</version>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-impl</artifactId>
+         <version>${seam-catch-version}</version>
          <scope>runtime</scope>
       </dependency>]]>
-   </programlisting>	
+   </programlisting>
    <note>
       <para>
-         The runtime dependency is only needed if another Seam 3 module being used doesn't already use it.  Typically
+         The runtime dependency is only needed if another Seam 3 module being used doesn't already use it. Typically
          this will only be for Java SE development.
       </para>
    </note>
    <tip>
       <para>
-         Replace ${seam-exception-handling-version} with the most recent or appropriate version of Seam Exception
+         Replace ${seam-catch-version} with the most recent or appropriate version of Seam Exception
          Handling.
-      </para>			
+      </para>
    </tip>
    <!--
    vim:et:ts=3:sw=3:tw=120
-   -->    
+   -->
 </chapter>

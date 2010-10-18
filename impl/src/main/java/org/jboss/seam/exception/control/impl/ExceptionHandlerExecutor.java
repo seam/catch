@@ -19,7 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exception.control.impl;
+
+import org.jboss.seam.exception.control.ExceptionEvent;
+import org.jboss.seam.exception.control.ExceptionHandler;
+import org.jboss.seam.exception.control.HandlerChain;
+import org.jboss.seam.exception.control.State;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
@@ -33,8 +38,8 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Finds and invokes all {@link ExceptionHandler} instants for a particular exception and {@link State}. <p> If any handlers are
- * found and invoked the the {@link ExceptionEvent#setExceptionHandled(boolean)} is set to true. </p>
+ * Finds and invokes all {@link org.jboss.seam.exception.control.ExceptionHandler} instants for a particular exception and {@link org.jboss.seam.exception.control.State}. <p> If any handlers are
+ * found and invoked the the {@link org.jboss.seam.exception.control.ExceptionEvent#setExceptionHandled(boolean)} is set to true. </p>
  */
 public class ExceptionHandlerExecutor
 {
@@ -46,7 +51,7 @@ public class ExceptionHandlerExecutor
     *
     * @param event Event Payload
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops"})
    public void executeHandlers(@Observes ExceptionEvent event)
    {
       final HandlerChain chain = new HandlerChainImpl();
@@ -57,8 +62,10 @@ public class ExceptionHandlerExecutor
       Throwable exception = event.getException();
       MethodParameterTypeHelper handlerMethodParameters;
 
+      //noinspection NestedAssignment
       do
       {
+         //noinspection ThrowableResultOfMethodCallIgnored
          unwrappedExceptions.push(exception);
       }
       while ((exception = exception.getCause()) != null);
@@ -89,7 +96,7 @@ public class ExceptionHandlerExecutor
    }
 
    /**
-    * Finds all instances of {@link org.jboss.seam.exceptionhandling.ExceptionHandler} and creates contextual instances for use.
+    * Finds all instances of {@link org.jboss.seam.exception.control.ExceptionHandler} and creates contextual instances for use.
     * <p/>
     * Method taken from Seam faces BeanManagerUtils.
     *

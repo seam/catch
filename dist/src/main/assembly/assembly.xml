@@ -6,7 +6,7 @@
    <formats>
       <format>zip</format>
    </formats>
-   
+
    <baseDirectory>${project.build.finalName}-${project.version}</baseDirectory>
 
    <!-- Add distribution files -->
@@ -26,7 +26,7 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.exception-handling:seam-exception-handling</include>
+            <include>org.jboss.seam.catch:seam-catch</include>
          </includes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
@@ -36,7 +36,7 @@
          <useProjectArtifact>false</useProjectArtifact>
          <useTransitiveDependencies>true</useTransitiveDependencies>
          <excludes>
-            <exclude>org.jboss.seam.exception-handling:*</exclude>
+            <exclude>org.jboss.seam.catch:*</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
@@ -57,7 +57,7 @@
          <unpack>true</unpack>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.exception-handling:seam-exception-handling-reference-guide</include>
+            <include>org.jboss.seam.catch:seam-catch-reference-guide</include>
          </includes>
          <unpackOptions>
             <excludes>
