@@ -20,34 +20,31 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling.test;
+package org.jboss.seam.exception.control.impl;
 
-import org.jboss.seam.exceptionhandling.ExceptionHandler;
-import org.jboss.seam.exceptionhandling.HandlerChain;
-import org.jboss.seam.exceptionhandling.State;
+import org.jboss.seam.exception.control.HandlerChain;
 
-import javax.enterprise.context.RequestScoped;
-
-@RequestScoped
-public class NullPointerExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<NullPointerException, State>
+/**
+ * Implementation of the {@link org.jboss.seam.exception.control.HandlerChain} interface. Provides a package private method to check if the chain needs to end.
+ */
+public class HandlerChainImpl implements HandlerChain
 {
+   private boolean chainEnd;
+
    /**
-    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
+    * End execution of the chain. Calling this method will immediately stop executing the handler chain, leaving any handlers left
+    * in the chain as uncalled.
     */
-   public int getPriority()
+   public void end()
    {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+      this.chainEnd = true;
    }
 
    /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
+    * @return flag indicating if the chain should continue execution
     */
-   public void handle(HandlerChain chain, State state, NullPointerException e)
+   boolean isChainEnd()
    {
-      super.baseHandle(chain, state, e);
+      return this.chainEnd;
    }
 }

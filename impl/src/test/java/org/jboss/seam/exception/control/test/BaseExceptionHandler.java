@@ -20,55 +20,48 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exception.control.test;
 
-/**
- * Payload for an exception to be handled.
- */
-public class ExceptionEvent
+import org.jboss.seam.exception.control.HandlerChain;
+import org.jboss.seam.exception.control.State;
+import org.joda.time.DateTime;
+
+public class BaseExceptionHandler
 {
-   private final State state;
-   private final Throwable exception;
-   private boolean exceptionHandled;
+   protected boolean handleCalled;
+   protected boolean callEnd;
+   protected DateTime timeCalled;
 
-   public ExceptionEvent(Throwable exception, State state)
+   public boolean isHandleCalled()
    {
-      this.exception = exception;
-      this.state = state;
-      this.exceptionHandled = false;
+      return this.handleCalled;
+   }
+
+   public void shouldCallEnd(boolean callEnd)
+   {
+      this.callEnd = callEnd;
+   }
+
+   public DateTime getTimeCalled()
+   {
+      return this.timeCalled;
    }
 
    /**
-    * @return the exception to be handled.
-    */
-   public Throwable getException()
-   {
-      return exception;
-   }
-
-   /**
-    * @return State instance related to the environment. This will often need to be cast to the correct sub class.
-    */
-   public State getState()
-   {
-      return state;
-   }
-
-   /**
-    * @return flag indicating the exception has been handled.
-    */
-   public boolean isExceptionHandled()
-   {
-      return exceptionHandled;
-   }
-
-   /**
-    * This should be set if the exception has been handled in an event observer or handler.
+    * Method called to execute logic for an uncaught exception.
     *
-    * @param exceptionHandled new value
+    * @param chain Chain object used to continue handling chain
+    * @param state container for any useful application state
+    * @param e     uncaught exception
     */
-   public void setExceptionHandled(boolean exceptionHandled)
+   public void baseHandle(HandlerChain chain, State state, Throwable e)
    {
-      this.exceptionHandled = exceptionHandled;
+      this.timeCalled = new DateTime();
+      this.handleCalled = true;
+
+      if (this.callEnd)
+      {
+         chain.end();
+      }
    }
 }

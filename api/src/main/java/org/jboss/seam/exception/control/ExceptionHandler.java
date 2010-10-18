@@ -19,22 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exceptionhandling;
-
-import javax.enterprise.inject.spi.BeanManager;
+package org.jboss.seam.exception.control;
 
 /**
- * The State object is meant to provide any state that may be helpful for the developer in determining what to do with a particular
- * exception handling. It may include and application state, active processes, or other convenience methods for the {@link
- * ExceptionHandler} developer.
- * <p/>
- * For example, a servlet state may include methods to retrieve the HttpServletRequest, HttpServletResponse and possibly a
- * navigation convenience method.
+ * Registers an exception handler for a specific exception and state, this is the main entry point for using Seam's exception
+ * handling infrastructure.
  */
-public interface State
+public interface ExceptionHandler<E extends Throwable, S extends State>
 {
    /**
-    * @return current BeanManager.
+    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
     */
-   public BeanManager getBeanManager();
+   int getPriority();
+
+   /**
+    * Method called to execute logic for an uncaught exception.
+    *
+    * @param chain Chain object used to continue handling chain
+    * @param state container for any useful application state
+    * @param e     uncaught exception
+    */
+   void handle(HandlerChain chain, S state, E e);
 }

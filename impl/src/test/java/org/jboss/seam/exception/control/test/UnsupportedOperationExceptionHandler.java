@@ -20,29 +20,35 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exception.control.test;
 
-/**
- * Implementation of the {@link HandlerChain} interface. Provides a package private method to check if the chain needs to end.
- */
-public class HandlerChainImpl implements HandlerChain
+import org.jboss.seam.exception.control.ExceptionHandler;
+import org.jboss.seam.exception.control.HandlerChain;
+import org.jboss.seam.exception.control.State;
+
+import javax.enterprise.context.RequestScoped;
+
+@RequestScoped
+public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<UnsupportedOperationException, State>
 {
-   private boolean chainEnd;
 
    /**
-    * End execution of the chain. Calling this method will immediately stop executing the handler chain, leaving any handlers left
-    * in the chain as uncalled.
+    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
     */
-   public void end()
+   public int getPriority()
    {
-      this.chainEnd = true;
+      return 1;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    /**
-    * @return flag indicating if the chain should continue execution
+    * Method called to execute logic for an uncaught exception.
+    *
+    * @param chain Chain object used to continue handling chain
+    * @param state container for any useful application state
+    * @param e     uncaught exception
     */
-   boolean isChainEnd()
+   public void handle(HandlerChain chain, State state, UnsupportedOperationException e)
    {
-      return this.chainEnd;
+      super.baseHandle(chain, state, e);
    }
 }
