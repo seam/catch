@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
@@ -9,17 +9,17 @@
       <version>3</version>
    </parent>
 
-   <groupId>org.jboss.seam.exception-handling</groupId>
-   <artifactId>seam-exception-handling-parent</artifactId>
+   <groupId>org.jboss.seam.catch</groupId>
+   <artifactId>seam-catch-parent</artifactId>
    <packaging>pom</packaging>
    <version>3.0.0-SNAPSHOT</version>
-   <name>Seam Exception Handling Parent</name>
+   <name>Seam Catch Parent</name>
 
    <properties>
       <seam.version>3.0.0.b01</seam.version>
       <joda-time.version>1.6</joda-time.version>
    </properties>
-   
+
    <prerequisites>
       <maven>3.0</maven>
    </prerequisites>
@@ -49,13 +49,13 @@
 
    <!-- Dependencies common to the api and implementation(s) -->
    <dependencies>
-     <dependency>
-       <groupId>javax.enterprise</groupId>
-       <artifactId>cdi-api</artifactId>
-       <scope>compile</scope>
-     </dependency>
+      <dependency>
+         <groupId>javax.enterprise</groupId>
+         <artifactId>cdi-api</artifactId>
+         <scope>compile</scope>
+      </dependency>
    </dependencies>
-   
+
    <profiles>
       <profile>
          <id>distribution</id>
@@ -73,8 +73,8 @@
    </profiles>
 
    <scm>
-     <connection>scm:git:git://github.com/seam/catch.git</connection>
-     <url>http://github.com/seam/catch</url>
+      <connection>scm:git:git://github.com/seam/catch.git</connection>
+      <url>http://github.com/seam/catch</url>
    </scm>
 
 </project>
