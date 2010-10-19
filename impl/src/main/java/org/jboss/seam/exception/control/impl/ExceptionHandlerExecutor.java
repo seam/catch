@@ -51,7 +51,7 @@ public class ExceptionHandlerExecutor
     *
     * @param event Event Payload
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops"})
    public void executeHandlers(@Observes ExceptionEvent event)
    {
       final HandlerChain chain = new HandlerChainImpl();
@@ -62,8 +62,10 @@ public class ExceptionHandlerExecutor
       Throwable exception = event.getException();
       MethodParameterTypeHelper handlerMethodParameters;
 
+      //noinspection NestedAssignment
       do
       {
+         //noinspection ThrowableResultOfMethodCallIgnored
          unwrappedExceptions.push(exception);
       }
       while ((exception = exception.getCause()) != null);
