@@ -67,7 +67,7 @@
          <modules>
             <module>dist</module>
             <module>docs</module>
-            <module>examples</module>
+            <!--<module>examples</module>-->
          </modules>
       </profile>
    </profiles>
