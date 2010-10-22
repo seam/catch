@@ -13,7 +13,7 @@
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-impl</artifactId>
    <packaging>jar</packaging>
-   <name>Seam Exception Handling Module Implementation</name>
+   <name>Seam Catch Module Implementation</name>
 
    <dependencies>
       <dependency>
