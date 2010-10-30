@@ -24,9 +24,9 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.impl.ExceptionHandlerExecutor;
-import org.jboss.seam.exception.control.impl.StateImpl;
 import org.jboss.seam.exception.control.ExceptionEvent;
+import org.jboss.seam.exception.control.ExceptionHandlerExecutor;
+import org.jboss.seam.exception.control.StateImpl;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -56,9 +56,9 @@ public class MultipleHandlerTest extends BaseExceptionHandlerTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
-                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
+                     ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
+         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test

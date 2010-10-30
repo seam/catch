@@ -23,8 +23,8 @@
 package org.jboss.seam.exception.control.test;
 
 import org.jboss.seam.exception.control.ExceptionHandler;
+import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.State;
-import org.jboss.seam.exception.control.impl.ExceptionHandlerComparator;
 import org.junit.Test;
 
 import java.util.Arrays;

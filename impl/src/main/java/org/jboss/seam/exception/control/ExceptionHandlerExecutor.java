@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exception.control.impl;
+package org.jboss.seam.exception.control;
 
 import org.jboss.seam.exception.control.ExceptionEvent;
 import org.jboss.seam.exception.control.ExceptionHandler;
