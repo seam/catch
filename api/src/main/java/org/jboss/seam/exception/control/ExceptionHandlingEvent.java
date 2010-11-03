@@ -25,50 +25,64 @@ package org.jboss.seam.exception.control;
 /**
  * Payload for an exception to be handled.
  */
-public class ExceptionEvent
+public class ExceptionHandlingEvent<T extends Throwable>
 {
-   private final State state;
-   private final Throwable exception;
-   private boolean exceptionHandled;
-
-   public ExceptionEvent(Throwable exception, State state)
+   protected enum ExceptionHandlingFlow
    {
-      this.exception = exception;
-      this.state = state;
-      this.exceptionHandled = false;
+      HANDLED,
+      PROCEED,
+      PROCEED_TO_CAUSE,
+      ABORT
    }
 
-   /**
-    * @return the exception to be handled.
-    */
-   public Throwable getException()
+   private StackInfo stackInfo;
+   private T exception;
+   boolean mute;
+   private ExceptionHandlingFlow flow;
+
+   public ExceptionHandlingEvent(StackInfo stackInfo)
    {
-      return exception;
+      this.exception = (T) stackInfo.getCurrentCause();
+      this.stackInfo = stackInfo;
    }
 
-   /**
-    * @return State instance related to the environment. This will often need to be cast to the correct sub class.
-    */
-   public State getState()
+   public T getException()
    {
-      return state;
+      return this.exception;
    }
 
-   /**
-    * @return flag indicating the exception has been handled.
-    */
-   public boolean isExceptionHandled()
+   public void handled()
    {
-      return exceptionHandled;
+      this.flow = ExceptionHandlingFlow.HANDLED;
    }
 
-   /**
-    * This should be set if the exception has been handled in an event observer or handler.
-    *
-    * @param exceptionHandled new value
-    */
-   public void setExceptionHandled(boolean exceptionHandled)
+   public void proceed()
    {
-      this.exceptionHandled = exceptionHandled;
+      this.flow = ExceptionHandlingFlow.PROCEED;
+   }
+
+   public void proceedToCause()
+   {
+      this.flow = ExceptionHandlingFlow.PROCEED_TO_CAUSE;
+   }
+
+   public void mute()
+   {
+      this.mute = true;
+   }
+
+   protected boolean isMute()
+   {
+      return this.mute;
+   }
+
+   protected StackInfo getStackInfo()
+   {
+      return this.stackInfo;
+   }
+
+   protected ExceptionHandlingFlow getFlow()
+   {
+      return this.flow;
    }
 }

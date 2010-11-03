@@ -21,11 +21,6 @@
  */
 package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.ExceptionEvent;
-import org.jboss.seam.exception.control.ExceptionHandler;
-import org.jboss.seam.exception.control.HandlerChain;
-import org.jboss.seam.exception.control.State;
-
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
@@ -39,7 +34,7 @@ import java.util.Stack;
 
 /**
  * Finds and invokes all {@link org.jboss.seam.exception.control.ExceptionHandler} instants for a particular exception and {@link org.jboss.seam.exception.control.State}. <p> If any handlers are
- * found and invoked the the {@link org.jboss.seam.exception.control.ExceptionEvent#setExceptionHandled(boolean)} is set to true. </p>
+ * found and invoked the the {@link ExceptionHandlingEvent#setExceptionHandled(boolean)} is set to true. </p>
  */
 public class ExceptionHandlerExecutor
 {
@@ -52,7 +47,7 @@ public class ExceptionHandlerExecutor
     * @param event Event Payload
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops"})
-   public void executeHandlers(@Observes ExceptionEvent event)
+   public void executeHandlers(@Observes ExceptionHandlingEvent event)
    {
       final HandlerChain chain = new HandlerChainImpl();
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
@@ -81,7 +76,7 @@ public class ExceptionHandlerExecutor
             handlerMethodParameters = new MethodParameterTypeHelper(handler);
 
             if (handlerMethodParameters.containsExceptionTypeOrSuperType(unwrapped.getClass())
-                  && handlerMethodParameters.containsStateTypeOrSuperType(state.getClass()))
+                && handlerMethodParameters.containsStateTypeOrSuperType(state.getClass()))
             {
                handler.handle(chain, state, unwrapped);
                event.setExceptionHandled(true);
@@ -101,6 +96,7 @@ public class ExceptionHandlerExecutor
     * Method taken from Seam faces BeanManagerUtils.
     *
     * @param manager BeanManager instance
+    *
     * @return List of instantiated  found by the bean manager
     */
    @SuppressWarnings("unchecked")
@@ -110,7 +106,8 @@ public class ExceptionHandlerExecutor
       List<ExceptionHandler> result = new ArrayList<ExceptionHandler>();
       for (Bean<?> bean : manager.getBeans(ExceptionHandler.class))
       {
-         CreationalContext<ExceptionHandler> context = (CreationalContext<ExceptionHandler>) manager.createCreationalContext(
+         CreationalContext<ExceptionHandler> context =
+            (CreationalContext<ExceptionHandler>) manager.createCreationalContext(
                bean);
          if (context != null)
          {

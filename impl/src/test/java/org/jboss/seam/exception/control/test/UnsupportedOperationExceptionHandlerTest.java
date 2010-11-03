@@ -24,8 +24,8 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionEvent;
 import org.jboss.seam.exception.control.ExceptionHandlerExecutor;
+import org.jboss.seam.exception.control.ExceptionHandlingEvent;
 import org.jboss.seam.exception.control.StateImpl;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -50,15 +50,16 @@ public class UnsupportedOperationExceptionHandlerTest extends BaseExceptionHandl
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
+         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test
    public void testHandlerIsCalled() throws IOException
    {
       this.handler.shouldCallEnd(true); // Set so I can reuse this handler in different tests
-      ExceptionEvent event = new ExceptionEvent(new UnsupportedOperationException(), new StateImpl(this.beanManager));
+      ExceptionHandlingEvent event = new ExceptionHandlingEvent(new UnsupportedOperationException(), new StateImpl(
+         this.beanManager));
       this.beanManager.fireEvent(event);
 
       assertTrue(this.handler.isHandleCalled());

@@ -23,8 +23,8 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionEvent;
 import org.jboss.seam.exception.control.ExceptionHandlerExecutor;
+import org.jboss.seam.exception.control.ExceptionHandlingEvent;
 import org.jboss.seam.exception.control.StateImpl;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -52,9 +52,9 @@ public class UnwrapExceptionTest extends BaseExceptionHandlerTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class,
-                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+         .addClasses(UnsupportedOperationExceptionHandler.class,
+                     ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
+         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Test
@@ -64,7 +64,7 @@ public class UnwrapExceptionTest extends BaseExceptionHandlerTest
 
       this.nullPointerExceptionHandler.shouldCallEnd(true);
 
-      ExceptionEvent event = new ExceptionEvent(e, new StateImpl(this.beanManager));
+      ExceptionHandlingEvent event = new ExceptionHandlingEvent(e, new StateImpl(this.beanManager));
       this.beanManager.fireEvent(event);
 
       assertTrue(this.nullPointerExceptionHandler.isHandleCalled());
