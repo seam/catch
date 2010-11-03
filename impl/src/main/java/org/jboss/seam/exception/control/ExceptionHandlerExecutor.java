@@ -21,102 +21,61 @@
  */
 package org.jboss.seam.exception.control;
 
-import javax.enterprise.context.spi.CreationalContext;
+import org.jboss.seam.exception.control.extension.CatchExtension;
+
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
 /**
- * Finds and invokes all {@link org.jboss.seam.exception.control.ExceptionHandler} instants for a particular exception and {@link org.jboss.seam.exception.control.State}. <p> If any handlers are
- * found and invoked the the {@link ExceptionHandlingEvent#setExceptionHandled(boolean)} is set to true. </p>
  */
 public class ExceptionHandlerExecutor
 {
    @Inject
-   private List<ExceptionHandler> allHandlers;
+   private CatchExtension extension;
 
    /**
     * Observes the event, finds the correct exception handler(s) and invokes them.
-    *
-    * @param event Event Payload
     */
-   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops"})
-   public void executeHandlers(@Observes ExceptionHandlingEvent event)
+   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
+   public void executeHandlers(@Observes Throwable eventException)
    {
-      final HandlerChain chain = new HandlerChainImpl();
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
-      final State state = event.getState();
-      final BeanManager beanManager = state.getBeanManager();
 
-      Throwable exception = event.getException();
+      Throwable exception = eventException;
       MethodParameterTypeHelper handlerMethodParameters;
 
-      //noinspection NestedAssignment
       do
       {
-         //noinspection ThrowableResultOfMethodCallIgnored
          unwrappedExceptions.push(exception);
       }
       while ((exception = exception.getCause()) != null);
 
       // Finding the correct exception handlers using reflection based on the method
       // to determine if it's the correct
-      Throwable unwrapped;
-      while (!unwrappedExceptions.isEmpty() && !((HandlerChainImpl) chain).isChainEnd())
+      int indexOfException = 0;
+      while (indexOfException < unwrappedExceptions.size())
       {
-         unwrapped = unwrappedExceptions.pop();
-         for (ExceptionHandler handler : this.allHandlers)
+         ExceptionHandlingEvent ehe = new ExceptionHandlingEvent(new StackInfo(unwrappedExceptions, indexOfException));
+
+         List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(this.extension.getHandlers()
+            .get(unwrappedExceptions.get(indexOfException)));
+
+         // TODO: Sort handlerMethods
+
+         for (AnnotatedMethod handler : handlerMethods)
          {
-            handlerMethodParameters = new MethodParameterTypeHelper(handler);
+            // TODO: Get bean from AnnotatedMethod, create bean, call method
 
-            if (handlerMethodParameters.containsExceptionTypeOrSuperType(unwrapped.getClass())
-                && handlerMethodParameters.containsStateTypeOrSuperType(state.getClass()))
-            {
-               handler.handle(chain, state, unwrapped);
-               event.setExceptionHandled(true);
-
-               if (((HandlerChainImpl) chain).isChainEnd())
-               {
-                  break;
-               }
-            }
+            // TODO: Make sure things like mute are handled
          }
+
+         // TODO rollbacks, throws, etc
+
+         indexOfException++;
       }
-   }
-
-   /**
-    * Finds all instances of {@link org.jboss.seam.exception.control.ExceptionHandler} and creates contextual instances for use.
-    * <p/>
-    * Method taken from Seam faces BeanManagerUtils.
-    *
-    * @param manager BeanManager instance
-    *
-    * @return List of instantiated  found by the bean manager
-    */
-   @SuppressWarnings("unchecked")
-   @Produces
-   public List<ExceptionHandler> getContextualExceptionHandlerInstances(BeanManager manager)
-   {
-      List<ExceptionHandler> result = new ArrayList<ExceptionHandler>();
-      for (Bean<?> bean : manager.getBeans(ExceptionHandler.class))
-      {
-         CreationalContext<ExceptionHandler> context =
-            (CreationalContext<ExceptionHandler>) manager.createCreationalContext(
-               bean);
-         if (context != null)
-         {
-            result.add((ExceptionHandler) manager.getReference(bean, ExceptionHandler.class, context));
-         }
-      }
-
-      Collections.sort(result, new ExceptionHandlerComparator());
-
-      return result;
    }
 }
