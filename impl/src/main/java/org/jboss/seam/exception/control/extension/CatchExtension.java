@@ -22,65 +22,81 @@
 
 package org.jboss.seam.exception.control.extension;
 
+import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.qualifier.HandlesExceptions;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessManagedBean;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+@SuppressWarnings({"unchecked"})
 public class CatchExtension implements Extension
 {
-   private Map<Class<?>, Collection<AnnotatedMethod>> handlers;
+   private final Map<? super Type, Collection<AnnotatedMethod>> allHandlers;
 
    public CatchExtension()
    {
-      this.handlers = new HashMap<Class<?>, Collection<AnnotatedMethod>>();
+      this.allHandlers = new HashMap<Type, Collection<AnnotatedMethod>>();
    }
 
-   public void findHandlers(@Observes ProcessManagedBean pmb)
+   public void findHandlers(@Observes final ProcessManagedBean pmb, final BeanManager bm)
    {
-      AnnotatedType type = pmb.getAnnotatedBeanClass();
+      final AnnotatedType type = pmb.getAnnotatedBeanClass();
+
       if (type.isAnnotationPresent(HandlesExceptions.class))
       {
-         HandlesExceptions declaration = type.getAnnotation(HandlesExceptions.class);
-         Class<? extends Throwable>[] handlesTypes = declaration.value();
-         Set<AnnotatedMethod> methods = type.getMethods();
-         Iterator<AnnotatedMethod> itr = methods.iterator();
+         final Set<AnnotatedMethod> methods = type.getMethods();
 
-         while (itr.hasNext())
+         for (AnnotatedMethod method : methods)
          {
-            AnnotatedMethod m = itr.next();
-            if (!m.isAnnotationPresent(Handles.class))
+            if (((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
             {
-               itr.remove();
-            }
-         }
+               final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
+               final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
 
-         for (Class<? extends Throwable> c : handlesTypes)
-         {
-            if (this.handlers.containsKey(c))
-            {
-               this.handlers.get(c).addAll(methods);
-            }
-            else
-            {
-               this.handlers.put(c, methods);
+               if (this.allHandlers.containsKey(exceptionType))
+               {
+                  this.allHandlers.get(exceptionType).add(method);
+               }
+               else
+               {
+                  this.allHandlers.put(exceptionType, new HashSet<AnnotatedMethod>(Arrays.asList(method)));
+               }
             }
          }
       }
    }
 
-   public Map<Class<?>, Collection<AnnotatedMethod>> getHandlers()
+   public Collection<AnnotatedMethod> getHandlersForExceptionType(Type exceptionClass)
    {
-      return Collections.unmodifiableMap(handlers);
+      final Set<AnnotatedMethod> returningHandlers = new TreeSet<AnnotatedMethod>(new ExceptionHandlerComparator());
+      final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
+      final Set<Type> closure = h.getTypeClosure();
+
+      for (Type hierarchyType : closure)
+      {
+         if (this.allHandlers.get(hierarchyType) != null)
+         {
+            returningHandlers.addAll(this.allHandlers.get(hierarchyType));
+         }
+      }
+
+      return Collections.unmodifiableCollection(returningHandlers);
    }
 }

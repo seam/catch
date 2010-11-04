@@ -27,18 +27,21 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
 /**
  */
-public class ExceptionHandlerExecutor
+public class ExceptionHandlerDispatch
 {
    @Inject
    private CatchExtension extension;
 
    /**
     * Observes the event, finds the correct exception handler(s) and invokes them.
+    *
+    * @param eventException
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
    public void executeHandlers(@Observes Throwable eventException)
@@ -46,7 +49,6 @@ public class ExceptionHandlerExecutor
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
 
       Throwable exception = eventException;
-      MethodParameterTypeHelper handlerMethodParameters;
 
       do
       {
@@ -54,21 +56,47 @@ public class ExceptionHandlerExecutor
       }
       while ((exception = exception.getCause()) != null);
 
-      // Finding the correct exception handlers using reflection based on the method
-      // to determine if it's the correct
+      // Inbound handlers
       int indexOfException = 0;
       while (indexOfException < unwrappedExceptions.size())
       {
-         ExceptionHandlingEvent ehe = new ExceptionHandlingEvent(new StackInfo(unwrappedExceptions, indexOfException));
+         ExceptionHandlingEvent ehe = new ExceptionHandlingEvent(new StackInfo(unwrappedExceptions, indexOfException),
+                                                                 true);
 
-         List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(this.extension.getHandlers()
-            .get(unwrappedExceptions.get(indexOfException)));
-
-         // TODO: Sort handlerMethods
+         List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
+            this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
 
          for (AnnotatedMethod handler : handlerMethods)
          {
             // TODO: Get bean from AnnotatedMethod, create bean, call method
+
+            // make use of InjectableMethod#public <T> T invoke(Object receiver, CreationalContext<T> creationalContext, ParameterValueRedefiner redefinition)
+
+            // TODO: Make sure things like mute are handled
+         }
+
+         // TODO rollbacks, throws, etc
+
+         indexOfException++;
+      }
+
+      // Run outbound handlers, same list, just reversed
+      indexOfException = 0;
+      while (indexOfException < unwrappedExceptions.size())
+      {
+         ExceptionHandlingEvent ehe = new ExceptionHandlingEvent(new StackInfo(unwrappedExceptions, indexOfException),
+                                                                 false);
+
+         List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
+            this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
+
+         Collections.reverse(handlerMethods);
+
+         for (AnnotatedMethod handler : handlerMethods)
+         {
+            // TODO: Get bean from AnnotatedMethod, create bean, call method
+
+            // make use of InjectableMethod#public <T> T invoke(Object receiver, CreationalContext<T> creationalContext, ParameterValueRedefiner redefinition)
 
             // TODO: Make sure things like mute are handled
          }

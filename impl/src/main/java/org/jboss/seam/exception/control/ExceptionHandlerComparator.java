@@ -22,65 +22,61 @@
 
 package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.ExceptionHandler;
+import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Set;
 
 /**
  * Comparator to sort exception handlers according to priority (highest number first) then by class hierarchy of the Exception types
  * being handled (most specific first).
  */
-public final class ExceptionHandlerComparator implements Comparator<ExceptionHandler>
+@SuppressWarnings({"MethodWithMoreThanThreeNegations", "unchecked"})
+public final class ExceptionHandlerComparator implements Comparator<AnnotatedMethod>
 {
-   /**
-    * Compares its two arguments for order.  Returns a negative integer, zero, or a positive integer as the first argument is less
-    * than, equal to, or greater than the second.<p>
-    * <p/>
-    * In the foregoing description, the notation <tt>sgn(</tt><i>expression</i><tt>)</tt> designates the mathematical <i>signum</i>
-    * function, which is defined to return one of <tt>-1</tt>, <tt>0</tt>, or <tt>1</tt> according to whether the value of
-    * <i>expression</i> is negative, zero or positive.<p>
-    * <p/>
-    * The implementor must ensure that <tt>sgn(compare(x, y)) == -sgn(compare(y, x))</tt> for all <tt>x</tt> and <tt>y</tt>.  (This
-    * implies that <tt>compare(x, y)</tt> must throw an exception if and only if <tt>compare(y, x)</tt> throws an exception.)<p>
-    * <p/>
-    * The implementor must also ensure that the relation is transitive: <tt>((compare(x, y)&gt;0) &amp;&amp; (compare(y,
-    * z)&gt;0))</tt> implies <tt>compare(x, z)&gt;0</tt>.<p>
-    * <p/>
-    * Finally, the implementor must ensure that <tt>compare(x, y)==0</tt> implies that <tt>sgn(compare(x, z))==sgn(compare(y,
-    * z))</tt> for all <tt>z</tt>.<p>
-    * <p/>
-    * It is generally the case, but <i>not</i> strictly required that <tt>(compare(x, y)==0) == (x.equals(y))</tt>.  Generally
-    * speaking, any comparator that violates this condition should clearly indicate this fact. The recommended language is "Note:
-    * this comparator imposes orderings that are inconsistent with equals."
-    *
-    * @param lhs the first object to be compared.
-    * @param rhs the second object to be compared.
-    * @return a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the
-    *         second.
-    * @throws ClassCastException if the arguments' types prevent them from being compared by this comparator.
-    */
-   public int compare(ExceptionHandler lhs, ExceptionHandler rhs)
-   {
-      if (lhs.getPriority() == rhs.getPriority())
-      {
-         final MethodParameterTypeHelper lhsTypes = new MethodParameterTypeHelper(lhs);
-         final MethodParameterTypeHelper rhsTypes = new MethodParameterTypeHelper(rhs);
 
-         if (lhsTypes.equals(rhsTypes))
-         {
-            return 0;
-         }
-         // the right hand side is the same or a super type of left hand side
-         // In other words lhs is a parent type and show go later in the list
-         for (Class type : rhsTypes.getExceptionTypes())
-         {
-            if (lhsTypes.containsExceptionTypeOrSuperType(type))
-            {
-               return 1;
-            }
-         }
-         return -1;
+   /**
+    * {@inheritDoc}
+    */
+   public int compare(AnnotatedMethod lhs, AnnotatedMethod rhs)
+   {
+      final AnnotatedParameter lhsEventParam = (AnnotatedParameter) lhs.getParameters().get(0);
+      final AnnotatedParameter rhsEventParam = (AnnotatedParameter) rhs.getParameters().get(0);
+
+      final Type lhsExceptionType = ((ParameterizedType) lhsEventParam.getBaseType()).getActualTypeArguments()[0];
+      final Type rhsExceptionType = ((ParameterizedType) rhsEventParam.getBaseType()).getActualTypeArguments()[0];
+
+      if (lhsExceptionType.equals(rhsExceptionType))
+      {
+         final int lhsPrecedence = lhsEventParam.getAnnotation(Handles.class).precedence();
+         final int rhsPrecedence = rhsEventParam.getAnnotation(Handles.class).precedence();
+         return this.comparePrecedence(lhsPrecedence, rhsPrecedence);
       }
-      return rhs.getPriority() - lhs.getPriority();
+      return compareHierarchies(lhsExceptionType, rhsExceptionType);
+   }
+
+   private int compareHierarchies(Type lhsExceptionType, Type rhsExceptionType)
+   {
+      HierarchyDiscovery lhsHierarchy = new HierarchyDiscovery(lhsExceptionType);
+      Set<Type> lhsTypeclosure = lhsHierarchy.getTypeClosure();
+
+      if (lhsTypeclosure.contains(rhsExceptionType))
+      {
+         final int indoxOfLhsType = new ArrayList(lhsTypeclosure).indexOf(lhsExceptionType);
+         final int indoxOfRhsType = new ArrayList(lhsTypeclosure).indexOf(rhsExceptionType);
+
+         return indoxOfLhsType - indoxOfRhsType;
+      }
+      return -1;
+   }
+
+   private int comparePrecedence(final int lhs, final int rhs)
+   {
+      return (lhs - rhs) * -1;
    }
 }

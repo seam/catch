@@ -24,45 +24,37 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionHandlerExecutor;
-import org.jboss.seam.exception.control.ExceptionHandlingEvent;
-import org.jboss.seam.exception.control.StateImpl;
+import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.handler.TestExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(Arquillian.class)
-public class UnsupportedOperationExceptionHandlerTest extends BaseExceptionHandlerTest
+public class ExtensionTest
 {
-   @Inject
-   private UnsupportedOperationExceptionHandler handler;
-
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      return ShrinkWrap.create("test.jar", JavaArchive.class)
-         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
+      return ShrinkWrap.create(JavaArchive.class)
+         .addClasses(CatchExtension.class, TestExceptionHandler.class)
+         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Test
-   public void testHandlerIsCalled() throws IOException
-   {
-      this.handler.shouldCallEnd(true); // Set so I can reuse this handler in different tests
-      ExceptionHandlingEvent event = new ExceptionHandlingEvent(new UnsupportedOperationException(), new StateImpl(
-         this.beanManager));
-      this.beanManager.fireEvent(event);
+   @Inject CatchExtension extension;
 
-      assertTrue(this.handler.isHandleCalled());
-      assertTrue(event.isExceptionHandled());
+   @Test
+   public void assertHandlersAreFound()
+   {
+      assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class).isEmpty());
    }
 }

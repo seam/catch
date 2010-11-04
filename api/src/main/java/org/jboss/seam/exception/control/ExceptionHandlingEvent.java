@@ -24,8 +24,10 @@ package org.jboss.seam.exception.control;
 
 /**
  * Payload for an exception to be handled.
+ *
+ * @param <T> Exception type this event represents
  */
-public class ExceptionHandlingEvent
+public class ExceptionHandlingEvent<T extends Throwable>
 {
    protected enum ExceptionHandlingFlow
    {
@@ -36,17 +38,21 @@ public class ExceptionHandlingEvent
    }
 
    private StackInfo stackInfo;
-   private Throwable exception;
+   private T exception;
    boolean mute;
    private ExceptionHandlingFlow flow;
+   boolean inbound;
+   boolean outbound;
 
-   public ExceptionHandlingEvent(StackInfo stackInfo)
+   public ExceptionHandlingEvent(final StackInfo stackInfo, final boolean inbound)
    {
-      this.exception = stackInfo.getCurrentCause();
+      this.exception = (T) stackInfo.getCurrentCause();
       this.stackInfo = stackInfo;
+      this.inbound = inbound;
+      this.outbound = !inbound;
    }
 
-   public Throwable getException()
+   public T getException()
    {
       return this.exception;
    }
@@ -69,6 +75,16 @@ public class ExceptionHandlingEvent
    public void mute()
    {
       this.mute = true;
+   }
+
+   public boolean isInbound()
+   {
+      return inbound;
+   }
+
+   public boolean isOutbound()
+   {
+      return outbound;
    }
 
    protected boolean isMute()

@@ -33,4 +33,5 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Handles
 {
+   public abstract int precedence() default 0;
 }

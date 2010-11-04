@@ -20,7 +20,7 @@
  *  02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.qualifier;
+package org.jboss.seam.exception.control;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
@@ -35,5 +35,4 @@ import java.lang.annotation.Target;
 @Qualifier
 public @interface HandlesExceptions
 {
-   public abstract Class<? extends Throwable>[] value();
 }

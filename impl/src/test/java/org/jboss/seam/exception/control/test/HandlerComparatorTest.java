@@ -24,52 +24,47 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionHandlerExecutor;
-import org.jboss.seam.exception.control.ExceptionHandlingEvent;
-import org.jboss.seam.exception.control.StateImpl;
+import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.handler.TestExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class MultipleHandlerTest extends BaseExceptionHandlerTest
+public class HandlerComparatorTest
 {
-   @Inject
-   private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
-
-   @Inject
-   private ExceptionExceptionHandler exceptionExceptionHandler;
-
-   @Inject
-   private NullPointerExceptionHandler nullPointerExceptionHandler;
-
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      return ShrinkWrap.create("test.jar", JavaArchive.class)
-         .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
-                     ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
+      return ShrinkWrap.create(JavaArchive.class)
+         .addClasses(CatchExtension.class, TestExceptionHandler.class)
+         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Test
-   public void testAllValidHandlersCalled()
-   {
-      ExceptionHandlingEvent event = new ExceptionHandlingEvent(new UnsupportedOperationException(), new StateImpl(
-         this.beanManager));
-      this.beanManager.fireEvent(event);
+   @Inject CatchExtension extension;
 
-      assertTrue(this.unsupportedOperationExceptionHandler.isHandleCalled());
-      assertTrue(this.exceptionExceptionHandler.isHandleCalled());
-      assertFalse(this.nullPointerExceptionHandler.isHandleCalled());
+   @Test
+   public void assertOrderIsCorrect()
+   {
+      List<AnnotatedMethod> handlers = new ArrayList<AnnotatedMethod>(extension.getHandlersForExceptionType(
+         IllegalArgumentException.class));
+
+      assertEquals(handlers.get(0).getJavaMember().getName(), "catchThrowableP20");
+      assertEquals(handlers.get(1).getJavaMember().getName(), "catchThrowable");
+      assertEquals(handlers.get(2).getJavaMember().getName(), "catchException");
+      assertEquals(handlers.get(3).getJavaMember().getName(), "catchRuntime");
+      assertEquals(handlers.get(4).getJavaMember().getName(), "catchIAE");
    }
 }

@@ -20,48 +20,39 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.HandlerChain;
-import org.jboss.seam.exception.control.State;
-import org.joda.time.DateTime;
+import org.jboss.seam.exception.control.ExceptionHandlingEvent;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.Inbound;
+import org.jboss.seam.exception.control.Outbound;
 
-public class BaseExceptionHandler
+@HandlesExceptions
+public class TestExceptionHandler
 {
-   protected boolean handleCalled;
-   protected boolean callEnd;
-   protected DateTime timeCalled;
-
-   public boolean isHandleCalled()
+   public void catchException(@Handles @Inbound ExceptionHandlingEvent<Exception> event)
    {
-      return this.handleCalled;
+      // Nothing to do currently
    }
 
-   public void shouldCallEnd(boolean callEnd)
+   public void catchRuntime(@Handles @Outbound ExceptionHandlingEvent<RuntimeException> event)
    {
-      this.callEnd = callEnd;
+      // Nothing to do currently
    }
 
-   public DateTime getTimeCalled()
+   public void catchThrowable(@Handles(precedence = 10) @Outbound ExceptionHandlingEvent<Throwable> event)
    {
-      return this.timeCalled;
+      // Nothing to do currently
    }
 
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void baseHandle(HandlerChain chain, State state, Throwable e)
+   public void catchThrowableP20(@Handles(precedence = 20) @Outbound ExceptionHandlingEvent<Throwable> event)
    {
-      this.timeCalled = new DateTime();
-      this.handleCalled = true;
+      // Nothing to do currently
+   }
 
-      if (this.callEnd)
-      {
-         chain.end();
-      }
+   public void catchIAE(@Handles ExceptionHandlingEvent<IllegalArgumentException> event)
+   {
+      // Nothing to do currently
    }
 }
