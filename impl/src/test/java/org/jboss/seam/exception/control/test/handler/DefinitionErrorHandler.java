@@ -29,30 +29,10 @@ import org.jboss.seam.exception.control.Inbound;
 import org.jboss.seam.exception.control.Outbound;
 
 @HandlesExceptions
-public class TestExceptionHandler
+public class DefinitionErrorHandler
 {
-   public void catchException(@Handles @Inbound CatchEvent<Exception> event)
+   public void badHandler(@Handles @Inbound @Outbound CatchEvent<NullPointerException> event)
    {
-      // Nothing to do currently
-   }
-
-   public void catchRuntime(@Handles @Outbound CatchEvent<RuntimeException> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchThrowable(@Handles(precedence = 10) @Outbound CatchEvent<Throwable> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchThrowableP20(@Handles(precedence = 20) @Outbound CatchEvent<Throwable> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
-   {
-      // Nothing to do currently
+      // Nothing to do here
    }
 }

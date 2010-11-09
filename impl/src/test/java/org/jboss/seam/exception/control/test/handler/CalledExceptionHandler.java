@@ -26,33 +26,22 @@ import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.Inbound;
-import org.jboss.seam.exception.control.Outbound;
 
 @HandlesExceptions
-public class TestExceptionHandler
+public class CalledExceptionHandler
 {
-   public void catchException(@Handles @Inbound CatchEvent<Exception> event)
+   public static boolean OUTBOUND_HANDLER_CALLED = false;
+   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
+   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
+
+   public void basicHandler(@Handles CatchEvent<Exception> event)
    {
-      // Nothing to do currently
+      OUTBOUND_HANDLER_CALLED = true;
+      OUTBOUND_HANDLER_TIMES_CALLED++;
    }
 
-   public void catchRuntime(@Handles @Outbound CatchEvent<RuntimeException> event)
+   public void basicInboundHandler(@Handles @Inbound CatchEvent<Exception> event)
    {
-      // Nothing to do currently
-   }
-
-   public void catchThrowable(@Handles(precedence = 10) @Outbound CatchEvent<Throwable> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchThrowableP20(@Handles(precedence = 20) @Outbound CatchEvent<Throwable> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
-   {
-      // Nothing to do currently
+      INBOUND_HANDLER_TIMES_CALLED++;
    }
 }

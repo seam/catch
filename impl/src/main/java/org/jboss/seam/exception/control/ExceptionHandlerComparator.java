@@ -53,9 +53,24 @@ public final class ExceptionHandlerComparator implements Comparator<AnnotatedMet
 
       if (lhsExceptionType.equals(rhsExceptionType))
       {
-         final int lhsPrecedence = lhsEventParam.getAnnotation(Handles.class).precedence();
-         final int rhsPrecedence = rhsEventParam.getAnnotation(Handles.class).precedence();
-         return this.comparePrecedence(lhsPrecedence, rhsPrecedence);
+         // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
+         // inbound, the other is outbound
+         if ((lhsEventParam.isAnnotationPresent(Inbound.class) && rhsEventParam.isAnnotationPresent(Inbound.class))
+             || (!lhsEventParam.isAnnotationPresent(Inbound.class) && !rhsEventParam.isAnnotationPresent(
+            Inbound.class)))
+         {
+            final int lhsPrecedence = lhsEventParam.getAnnotation(Handles.class).precedence();
+            final int rhsPrecedence = rhsEventParam.getAnnotation(Handles.class).precedence();
+            return this.comparePrecedence(lhsPrecedence, rhsPrecedence);
+         }
+         else if (lhsEventParam.isAnnotationPresent(Inbound.class) && !rhsEventParam.isAnnotationPresent(Inbound.class))
+         {
+            return -1; // Inbound first
+         }
+         else
+         {
+            return 1;
+         }
       }
       return compareHierarchies(lhsExceptionType, rhsExceptionType);
    }

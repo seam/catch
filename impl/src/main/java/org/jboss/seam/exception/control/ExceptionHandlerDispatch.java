@@ -22,9 +22,14 @@
 package org.jboss.seam.exception.control;
 
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.weld.extensions.reflection.annotated.InjectableMethod;
 
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,9 +49,10 @@ public class ExceptionHandlerDispatch
     * @param eventException
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes Throwable eventException)
+   public void executeHandlers(@Observes Throwable eventException, final BeanManager bm)
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
+      CreationalContext<Object> ctx = null;
 
       Throwable exception = eventException;
 
@@ -56,54 +62,82 @@ public class ExceptionHandlerDispatch
       }
       while ((exception = exception.getCause()) != null);
 
-      // Inbound handlers
-      int indexOfException = 0;
-      while (indexOfException < unwrappedExceptions.size())
+      try
       {
-         ExceptionHandlingEvent ehe = new ExceptionHandlingEvent(new StackInfo(unwrappedExceptions, indexOfException),
-                                                                 true);
+         ctx = bm.createCreationalContext(null);
 
-         List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
-            this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
-
-         for (AnnotatedMethod handler : handlerMethods)
+         // Inbound handlers
+         int indexOfException = 0;
+         while (indexOfException < unwrappedExceptions.size())
          {
-            // TODO: Get bean from AnnotatedMethod, create bean, call method
+            CatchEvent ehe = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), true);
 
-            // make use of InjectableMethod#public <T> T invoke(Object receiver, CreationalContext<T> creationalContext, ParameterValueRedefiner redefinition)
+            List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
+               this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
 
-            // TODO: Make sure things like mute are handled
+            for (AnnotatedMethod handler : handlerMethods)
+            {
+               if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class))
+               {
+                  invokeHandler(bm, ctx, handler, ehe);
+               }
+
+               // TODO: Make sure things like mute are handled
+            }
+
+            // TODO rollbacks, throws, etc
+
+            indexOfException++;
          }
 
-         // TODO rollbacks, throws, etc
-
-         indexOfException++;
-      }
-
-      // Run outbound handlers, same list, just reversed
-      indexOfException = 0;
-      while (indexOfException < unwrappedExceptions.size())
-      {
-         ExceptionHandlingEvent ehe = new ExceptionHandlingEvent(new StackInfo(unwrappedExceptions, indexOfException),
-                                                                 false);
-
-         List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
-            this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
-
-         Collections.reverse(handlerMethods);
-
-         for (AnnotatedMethod handler : handlerMethods)
+         // Run outbound handlers, same list, just reversed
+         indexOfException = 0;
+         while (indexOfException < unwrappedExceptions.size())
          {
-            // TODO: Get bean from AnnotatedMethod, create bean, call method
+            CatchEvent ehe = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException),
+                                            false);
 
-            // make use of InjectableMethod#public <T> T invoke(Object receiver, CreationalContext<T> creationalContext, ParameterValueRedefiner redefinition)
+            List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
+               this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
 
-            // TODO: Make sure things like mute are handled
+            Collections.reverse(handlerMethods);
+
+            for (AnnotatedMethod handler : handlerMethods)
+            {
+               // Defining Outbound as the absence of Inbound
+               if (!((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class))
+               {
+                  invokeHandler(bm, ctx, handler, ehe);
+               }
+
+               // TODO: Make sure things like mute are handled
+            }
+
+            // TODO rollbacks, throws, etc
+
+            indexOfException++;
          }
 
-         // TODO rollbacks, throws, etc
-
-         indexOfException++;
       }
+      finally
+      {
+         if (ctx != null)
+         {
+            ctx.release();
+         }
+      }
+
+   }
+
+   @SuppressWarnings({"unchecked"})
+   private void invokeHandler(BeanManager bm, CreationalContext<Object> ctx, AnnotatedMethod handler, CatchEvent event)
+   {
+      Bean<?> handlerBean = bm.resolve(bm.getBeans(handler.getJavaMember().getDeclaringClass(),
+                                                   HandlesExceptionsLiteral.INSTANCE));
+      Object handlerInstance = bm.getReference(handlerBean, handler.getBaseType(), ctx);
+
+      InjectableMethod im = new InjectableMethod(handler, handlerBean, bm);
+
+      im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, handlerBean));
    }
 }

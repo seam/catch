@@ -20,39 +20,45 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.Inbound;
-import org.jboss.seam.exception.control.Outbound;
+import org.jboss.weld.extensions.bean.ForwardingInjectionPoint;
 
-@HandlesExceptions
-public class TestExceptionHandler
+import javax.enterprise.inject.spi.InjectionPoint;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+public class CatchInjectionPoint extends ForwardingInjectionPoint
 {
-   public void catchException(@Handles @Inbound CatchEvent<Exception> event)
+   private InjectionPoint delegate;
+   private Set<Annotation> qualifiers;
+
+   public CatchInjectionPoint(InjectionPoint delegate)
    {
-      // Nothing to do currently
+      this.delegate = delegate;
+      this.qualifiers = new HashSet<Annotation>(delegate.getQualifiers());
    }
 
-   public void catchRuntime(@Handles @Outbound CatchEvent<RuntimeException> event)
+   public void addQualifier(Annotation qualifier)
    {
-      // Nothing to do currently
+      this.qualifiers.add(qualifier);
    }
 
-   public void catchThrowable(@Handles(precedence = 10) @Outbound CatchEvent<Throwable> event)
+   public void addAllQualifiers(Collection<Annotation> qualifiers)
    {
-      // Nothing to do currently
+      this.qualifiers.addAll(qualifiers);
    }
 
-   public void catchThrowableP20(@Handles(precedence = 20) @Outbound CatchEvent<Throwable> event)
+   @Override
+   protected InjectionPoint delegate()
    {
-      // Nothing to do currently
+      return this.delegate;
    }
 
-   public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
+   @Override public Set<Annotation> getQualifiers()
    {
-      // Nothing to do currently
+      return this.qualifiers;
    }
 }

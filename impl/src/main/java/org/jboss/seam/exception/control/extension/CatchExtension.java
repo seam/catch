@@ -25,6 +25,8 @@ package org.jboss.seam.exception.control.extension;
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.Inbound;
+import org.jboss.seam.exception.control.Outbound;
 import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
 import javax.enterprise.event.Observes;
@@ -68,6 +70,11 @@ public class CatchExtension implements Extension
             if (((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
             {
                final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
+
+               if (p.isAnnotationPresent(Outbound.class) && p.isAnnotationPresent(Inbound.class))
+               {
+                  pmb.addDefinitionError(new IllegalStateException("A handler cannot be both Inbound and Outbound."));
+               }
                final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
 
                if (this.allHandlers.containsKey(exceptionType))

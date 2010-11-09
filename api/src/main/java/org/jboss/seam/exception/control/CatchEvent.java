@@ -27,7 +27,7 @@ package org.jboss.seam.exception.control;
  *
  * @param <T> Exception type this event represents
  */
-public class ExceptionHandlingEvent<T extends Throwable>
+public class CatchEvent<T extends Throwable>
 {
    protected enum ExceptionHandlingFlow
    {
@@ -44,7 +44,7 @@ public class ExceptionHandlingEvent<T extends Throwable>
    boolean inbound;
    boolean outbound;
 
-   public ExceptionHandlingEvent(final StackInfo stackInfo, final boolean inbound)
+   public CatchEvent(final StackInfo stackInfo, final boolean inbound)
    {
       this.exception = (T) stackInfo.getCurrentCause();
       this.stackInfo = stackInfo;
