@@ -80,4 +80,11 @@ public class CallingHandlersTest
       bm.fireEvent(new IllegalArgumentException());
       assertEquals(1, CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED);
    }
+
+   @Test
+   public void assertAdditionalParamsAreInjected()
+   {
+      bm.fireEvent(new RuntimeException(new IllegalArgumentException()));
+      assertTrue(CalledExceptionHandler.BEANMANAGER_INJECTED);
+   }
 }

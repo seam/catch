@@ -27,6 +27,7 @@ package org.jboss.seam.exception.control;
  *
  * @param <T> Exception type this event represents
  */
+@SuppressWarnings({"unchecked"})
 public class CatchEvent<T extends Throwable>
 {
    protected enum ExceptionHandlingFlow
@@ -34,12 +35,13 @@ public class CatchEvent<T extends Throwable>
       HANDLED,
       PROCEED,
       PROCEED_TO_CAUSE,
-      ABORT
+      ABORT,
+      RETHROW
    }
 
    private StackInfo stackInfo;
    private T exception;
-   boolean mute;
+   boolean unMute;
    private ExceptionHandlingFlow flow;
    boolean inbound;
    boolean outbound;
@@ -72,9 +74,9 @@ public class CatchEvent<T extends Throwable>
       this.flow = ExceptionHandlingFlow.PROCEED_TO_CAUSE;
    }
 
-   public void mute()
+   public void unMute()
    {
-      this.mute = true;
+      this.unMute = true;
    }
 
    public boolean isInbound()
@@ -87,9 +89,9 @@ public class CatchEvent<T extends Throwable>
       return outbound;
    }
 
-   protected boolean isMute()
+   protected boolean isUnMute()
    {
-      return this.mute;
+      return this.unMute;
    }
 
    protected StackInfo getStackInfo()

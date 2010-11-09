@@ -33,7 +33,9 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -49,7 +51,7 @@ public class ExceptionHandlerDispatch
     * @param eventException
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes Throwable eventException, final BeanManager bm)
+   public void executeHandlers(@Observes Throwable eventException, final BeanManager bm) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
       CreationalContext<Object> ctx = null;
@@ -66,36 +68,58 @@ public class ExceptionHandlerDispatch
       {
          ctx = bm.createCreationalContext(null);
 
+         final Set<AnnotatedMethod> processedHandlers = new HashSet<AnnotatedMethod>();
+         boolean rethrow = false;
+
          // Inbound handlers
          int indexOfException = 0;
+         inbound_cause:
          while (indexOfException < unwrappedExceptions.size())
          {
-            CatchEvent ehe = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), true);
+            CatchEvent catchEvent = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), true);
 
             List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
                this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
 
             for (AnnotatedMethod handler : handlerMethods)
             {
-               if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class))
+               if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class)
+                   && !processedHandlers.contains(handler))
                {
-                  invokeHandler(bm, ctx, handler, ehe);
+                  invokeHandler(bm, ctx, handler, catchEvent);
+                  processedHandlers.add(handler);
+
+                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.ABORT)
+                  {
+                     return;
+                  }
+
+                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.PROCEED_TO_CAUSE)
+                  {
+                     continue inbound_cause;
+                  }
+
+                  if (!catchEvent.isUnMute())
+                  {
+                     processedHandlers.add(handler);
+                  }
+
+                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.RETHROW)
+                  {
+                     rethrow = true;
+                  }
                }
-
-               // TODO: Make sure things like mute are handled
             }
-
-            // TODO rollbacks, throws, etc
 
             indexOfException++;
          }
 
          // Run outbound handlers, same list, just reversed
          indexOfException = 0;
+         outbound_cause:
          while (indexOfException < unwrappedExceptions.size())
          {
-            CatchEvent ehe = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException),
-                                            false);
+            CatchEvent catchEvent = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), false);
 
             List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
                this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
@@ -107,17 +131,38 @@ public class ExceptionHandlerDispatch
                // Defining Outbound as the absence of Inbound
                if (!((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class))
                {
-                  invokeHandler(bm, ctx, handler, ehe);
+                  invokeHandler(bm, ctx, handler, catchEvent);
+                  processedHandlers.add(handler);
+
+                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.ABORT)
+                  {
+                     return;
+                  }
+
+                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.PROCEED_TO_CAUSE)
+                  {
+                     continue outbound_cause;
+                  }
+
+                  if (!catchEvent.isUnMute())
+                  {
+                     processedHandlers.add(handler);
+                  }
+
+                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.RETHROW)
+                  {
+                     rethrow = true;
+                  }
                }
 
-               // TODO: Make sure things like mute are handled
             }
-
-            // TODO rollbacks, throws, etc
-
             indexOfException++;
          }
 
+         if (rethrow)
+         {
+            throw eventException;
+         }
       }
       finally
       {

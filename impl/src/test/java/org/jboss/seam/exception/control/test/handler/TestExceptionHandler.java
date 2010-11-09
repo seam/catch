@@ -55,4 +55,14 @@ public class TestExceptionHandler
    {
       // Nothing to do currently
    }
+
+   public void doNothingMethod()
+   {
+      // Method to make sure only @Handles methods are found
+   }
+
+   public void doNothingTwo(String p1, String p2, int p3)
+   {
+      // Same as above
+   }
 }

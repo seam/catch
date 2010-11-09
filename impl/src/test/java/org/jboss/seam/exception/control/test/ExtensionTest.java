@@ -36,6 +36,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(Arquillian.class)
@@ -56,5 +57,11 @@ public class ExtensionTest
    public void assertHandlersAreFound()
    {
       assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class).isEmpty());
+   }
+
+   @Test
+   public void assertFiveHandlersAreFound()
+   {
+      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class).size());
    }
 }

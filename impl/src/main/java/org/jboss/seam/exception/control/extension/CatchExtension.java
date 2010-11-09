@@ -67,7 +67,8 @@ public class CatchExtension implements Extension
 
          for (AnnotatedMethod method : methods)
          {
-            if (((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
+            if (method.getParameters().size() > 0
+                && ((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
             {
                final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
 
