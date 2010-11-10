@@ -24,10 +24,10 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEntryEvent;
 import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.DuringAscTraversal;
 import org.jboss.seam.exception.control.DuringDescTraversal;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.extension.CatchExtension;
@@ -65,7 +65,7 @@ public class EventTest
    @Test
    public void assertEventIsCreatedCorrectly()
    {
-      bm.fireEvent(new CatchEntryEvent(new NullPointerException()));
+      bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
    }
 
    public void verifyDescEvent(@Handles @DuringDescTraversal CatchEvent<NullPointerException> event)

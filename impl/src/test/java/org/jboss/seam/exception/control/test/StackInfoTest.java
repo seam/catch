@@ -24,8 +24,8 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEntryEvent;
 import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.StackInfoHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -58,7 +58,7 @@ public class StackInfoTest
    @Test
    public void assertStackInfoIsCorrect()
    {
-      bm.fireEvent(new CatchEntryEvent(new Exception(new NullPointerException())));
+      bm.fireEvent(new ExceptionToCatchEvent(new Exception(new NullPointerException())));
    }
 
 }

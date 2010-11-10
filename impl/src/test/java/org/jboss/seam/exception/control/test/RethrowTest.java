@@ -24,8 +24,8 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEntryEvent;
 import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.RethrowHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -57,12 +57,12 @@ public class RethrowTest
    @Test(expected = NullPointerException.class)
    public void assertOutboundRethrow()
    {
-      bm.fireEvent(new CatchEntryEvent(new NullPointerException()));
+      bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
    }
 
    @Test(expected = IllegalArgumentException.class)
    public void assertInboundRethrow()
    {
-      bm.fireEvent(new CatchEntryEvent(new IllegalArgumentException()));
+      bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
    }
 }

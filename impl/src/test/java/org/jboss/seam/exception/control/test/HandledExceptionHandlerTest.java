@@ -24,8 +24,8 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEntryEvent;
 import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.ExceptionHandledHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -60,7 +60,8 @@ public class HandledExceptionHandlerTest
    @Test
    public void assertNoHandlersAfterHandledAreCalled()
    {
-      final CatchEntryEvent catchEntryEvent = new CatchEntryEvent(new Exception(new NullPointerException()));
+      final ExceptionToCatchEvent catchEntryEvent = new ExceptionToCatchEvent(new Exception(
+         new NullPointerException()));
       bm.fireEvent(catchEntryEvent);
       assertTrue(ExceptionHandledHandler.NPE_DESC_CALLED);
       assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);
@@ -70,7 +71,7 @@ public class HandledExceptionHandlerTest
    @Test
    public void assertNoHandlersAfterHandledAreCalledDesc()
    {
-      final CatchEntryEvent event = new CatchEntryEvent(new Exception(new IllegalArgumentException()));
+      final ExceptionToCatchEvent event = new ExceptionToCatchEvent(new Exception(new IllegalArgumentException()));
       bm.fireEvent(event);
       assertTrue(ExceptionHandledHandler.IAE_ASC_CALLED);
       assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);

@@ -51,7 +51,7 @@ public class ExceptionHandlerDispatch
     * @param eventException
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes CatchEntryEvent eventException, final BeanManager bm) throws Throwable
+   public void executeHandlers(@Observes ExceptionToCatchEvent eventException, final BeanManager bm) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
       CreationalContext<Object> ctx = null;

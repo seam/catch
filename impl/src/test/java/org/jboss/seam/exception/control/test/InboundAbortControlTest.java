@@ -24,8 +24,8 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEntryEvent;
 import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.AbortingInboundHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -60,7 +60,7 @@ public class InboundAbortControlTest
    @Test
    public void assertNoOtherHandlersCalledAfterAbort()
    {
-      bm.fireEvent(new CatchEntryEvent(new NullPointerException()));
+      bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
       assertTrue(AbortingInboundHandler.abortCalled);
       assertFalse(AbortingInboundHandler.proceedCalled);
    }

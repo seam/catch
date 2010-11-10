@@ -22,12 +22,12 @@
 
 package org.jboss.seam.exception.control;
 
-public class CatchEntryEvent
+public class ExceptionToCatchEvent
 {
    private Throwable exception;
    private boolean handled;
 
-   public CatchEntryEvent(Throwable exception)
+   public ExceptionToCatchEvent(Throwable exception)
    {
       this.exception = exception;
    }
