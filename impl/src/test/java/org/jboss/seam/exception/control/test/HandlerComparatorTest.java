@@ -24,6 +24,7 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -34,7 +35,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,17 +55,18 @@ public class HandlerComparatorTest
    }
 
    @Inject CatchExtension extension;
+   @Inject BeanManager bm;
 
    @Test
    public void assertOrderIsCorrect()
    {
-      List<AnnotatedMethod> handlers = new ArrayList<AnnotatedMethod>(extension.getHandlersForExceptionType(
-         IllegalArgumentException.class));
+      List<HandlerMethod> handlers = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
+         IllegalArgumentException.class, bm));
 
-      assertEquals(handlers.get(0).getJavaMember().getName(), "catchThrowableP20");
-      assertEquals(handlers.get(1).getJavaMember().getName(), "catchThrowable");
-      assertEquals(handlers.get(2).getJavaMember().getName(), "catchException");
-      assertEquals(handlers.get(3).getJavaMember().getName(), "catchRuntime");
-      assertEquals(handlers.get(4).getJavaMember().getName(), "catchIAE");
+      assertEquals(handlers.get(0).getJavaMethod().getName(), "catchThrowableP20");
+      assertEquals(handlers.get(1).getJavaMethod().getName(), "catchThrowable");
+      assertEquals(handlers.get(2).getJavaMethod().getName(), "catchException");
+      assertEquals(handlers.get(3).getJavaMethod().getName(), "catchRuntime");
+      assertEquals(handlers.get(4).getJavaMethod().getName(), "catchIAE");
    }
 }

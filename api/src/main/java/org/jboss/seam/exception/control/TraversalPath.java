@@ -20,19 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringAscTraversal;
-import org.jboss.seam.exception.control.DuringDescTraversal;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
-
-@HandlesExceptions
-public class DefinitionErrorHandler
+/**
+ * Direction of a exception cause chain traversal.
+ */
+public enum TraversalPath
 {
-   public void badHandler(@Handles @DuringDescTraversal @DuringAscTraversal CatchEvent<NullPointerException> event)
-   {
-      // Nothing to do here
-   }
+   ASCENDING,
+   DESCENDING
 }

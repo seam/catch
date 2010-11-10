@@ -23,9 +23,9 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
 @HandlesExceptions
@@ -34,7 +34,7 @@ public class AbortingInboundHandler
    public static boolean abortCalled = false;
    public static boolean proceedCalled = false;
 
-   public void abortHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void abortHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
    {
       abortCalled = true;
       event.abort();

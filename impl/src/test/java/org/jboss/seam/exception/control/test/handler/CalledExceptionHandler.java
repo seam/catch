@@ -23,9 +23,9 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 import javax.enterprise.inject.spi.BeanManager;
 
@@ -43,7 +43,7 @@ public class CalledExceptionHandler
       OUTBOUND_HANDLER_TIMES_CALLED++;
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void basicInboundHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
    {
       INBOUND_HANDLER_TIMES_CALLED++;
       event.proceed();

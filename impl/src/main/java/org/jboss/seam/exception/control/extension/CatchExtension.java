@@ -22,9 +22,9 @@
 
 package org.jboss.seam.exception.control.extension;
 
-import org.jboss.seam.exception.control.DuringAscTraversal;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
+import org.jboss.seam.exception.control.HandlerMethod;
+import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
@@ -88,12 +88,6 @@ public class CatchExtension implements Extension
                 && ((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
             {
                final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
-
-               if (p.isAnnotationPresent(DuringAscTraversal.class) && p.isAnnotationPresent(DuringDescTraversal.class))
-               {
-                  pmb.addDefinitionError(new IllegalStateException(
-                     "A handler cannot be both DuringDescTraversal and DuringAscTraversal."));
-               }
                final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
 
                if (this.allHandlers.containsKey(exceptionType))
@@ -114,12 +108,13 @@ public class CatchExtension implements Extension
     * {@link org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
     *
     * @param exceptionClass Type of exception to narrow handler list
+    * @param bm             active BeanManager
     *
     * @return An order collection of handlers for the given type.
     */
-   public Collection<AnnotatedMethod> getHandlersForExceptionType(Type exceptionClass)
+   public Collection<HandlerMethod> getHandlersForExceptionType(Type exceptionClass, BeanManager bm)
    {
-      final Set<AnnotatedMethod> returningHandlers = new TreeSet<AnnotatedMethod>(new ExceptionHandlerComparator());
+      final Set<HandlerMethod> returningHandlers = new TreeSet<HandlerMethod>(new ExceptionHandlerComparator());
       final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
       final Set<Type> closure = h.getTypeClosure();
 
@@ -127,7 +122,10 @@ public class CatchExtension implements Extension
       {
          if (this.allHandlers.get(hierarchyType) != null)
          {
-            returningHandlers.addAll(this.allHandlers.get(hierarchyType));
+            for (AnnotatedMethod handler : this.allHandlers.get(hierarchyType))
+            {
+               returningHandlers.add(new HandlerMethodImpl(handler, bm));
+            }
          }
       }
 

@@ -23,9 +23,9 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 @HandlesExceptions
 public class UnMuteHandler
@@ -39,7 +39,7 @@ public class UnMuteHandler
       event.unMute();
    }
 
-   public void unMuteHandlerDesc(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void unMuteHandlerDesc(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
    {
       DESC_NUMBER_CALLED++;
       event.unMute();

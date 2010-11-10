@@ -38,5 +38,13 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Handles
 {
+   /**
+    * Direction of the cause chain traversal to listen.
+    */
+   public abstract TraversalPath during() default TraversalPath.ASCENDING;
+
+   /**
+    * Precedence relative to handlers for the same type
+    */
    public abstract int precedence() default 0;
 }

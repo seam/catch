@@ -22,13 +22,9 @@
 package org.jboss.seam.exception.control;
 
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.weld.extensions.reflection.annotated.InjectableMethod;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +67,7 @@ public class ExceptionHandlerDispatch
       {
          ctx = bm.createCreationalContext(null);
 
-         final Set<AnnotatedMethod> processedHandlers = new HashSet<AnnotatedMethod>();
+         final Set<HandlerMethod> processedHandlers = new HashSet<HandlerMethod>();
          boolean rethrow = false;
 
          // DuringDescTraversal handlers
@@ -80,16 +76,15 @@ public class ExceptionHandlerDispatch
          while (exceptionIndex >= 0)
          {
 
-            List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass()));
+            List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
+               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm));
 
-            for (AnnotatedMethod handler : handlerMethods)
+            for (HandlerMethod handler : handlerMethods)
             {
-               if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(DuringDescTraversal.class)
-                   && !processedHandlers.contains(handler))
+               if (handler.getTraversalPath() == TraversalPath.DESCENDING && !processedHandlers.contains(handler))
                {
                   final CatchEvent event = new CatchEvent(new StackInfo(unwrappedExceptions, exceptionIndex), true);
-                  invokeHandler(bm, ctx, handler, event);
+                  handler.notify(event, bm);
 
                   if (!event.isUnMute())
                   {
@@ -125,19 +120,18 @@ public class ExceptionHandlerDispatch
          while (exceptionIndex >= 0)
          {
 
-            List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass()));
+            List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
+               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm));
 
             Collections.reverse(handlerMethods);
 
-            for (AnnotatedMethod handler : handlerMethods)
+            for (HandlerMethod handler : handlerMethods)
             {
                // Defining DuringAscTraversal as the absence of DuringDescTraversal
-               if (!((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(DuringDescTraversal.class)
-                   && !processedHandlers.contains(handler))
+               if (handler.getTraversalPath() == TraversalPath.ASCENDING && !processedHandlers.contains(handler))
                {
                   final CatchEvent event = new CatchEvent(new StackInfo(unwrappedExceptions, exceptionIndex), false);
-                  invokeHandler(bm, ctx, handler, event);
+                  handler.notify(event, bm);
 
                   if (!event.isUnMute())
                   {
@@ -178,17 +172,5 @@ public class ExceptionHandlerDispatch
             ctx.release();
          }
       }
-   }
-
-   @SuppressWarnings({"unchecked"})
-   private void invokeHandler(BeanManager bm, CreationalContext<Object> ctx, AnnotatedMethod handler, CatchEvent event)
-   {
-      Bean<?> handlerBean = bm.resolve(bm.getBeans(handler.getJavaMember().getDeclaringClass(),
-                                                   HandlesExceptionsLiteral.INSTANCE));
-      Object handlerInstance = bm.getReference(handlerBean, handler.getBaseType(), ctx);
-
-      InjectableMethod im = new InjectableMethod(handler, handlerBean, bm);
-
-      im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, handlerBean));
    }
 }

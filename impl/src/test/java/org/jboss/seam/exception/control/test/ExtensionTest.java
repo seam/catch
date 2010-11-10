@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
@@ -52,16 +53,17 @@ public class ExtensionTest
    }
 
    @Inject CatchExtension extension;
+   @Inject BeanManager bm;
 
    @Test
    public void assertHandlersAreFound()
    {
-      assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class).isEmpty());
+      assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class, bm).isEmpty());
    }
 
    @Test
    public void assertFiveHandlersAreFound()
    {
-      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class).size());
+      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm).size());
    }
 }

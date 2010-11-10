@@ -24,48 +24,34 @@ package org.jboss.seam.exception.control;
 
 import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 
 /**
- * Comparator to sort exception handlers according qualifier ({@link DuringDescTraversal} first),
- * precedence (highest to lowest) and finally hierarchy (least to most specific).
+ * Comparator to sort exception handlers according qualifier
+ * ({@link org.jboss.seam.exception.control.TraversalPath#ASCENDING} first), precedence (highest to lowest) and
+ * finally hierarchy (least to most specific).
  */
 @SuppressWarnings({"MethodWithMoreThanThreeNegations", "unchecked"})
-public final class ExceptionHandlerComparator implements Comparator<AnnotatedMethod>
+public final class ExceptionHandlerComparator implements Comparator<HandlerMethod>
 {
 
    /**
     * {@inheritDoc}
     */
-   public int compare(AnnotatedMethod lhs, AnnotatedMethod rhs)
+   public int compare(HandlerMethod lhs, HandlerMethod rhs)
    {
-      final AnnotatedParameter lhsEventParam = (AnnotatedParameter) lhs.getParameters().get(0);
-      final AnnotatedParameter rhsEventParam = (AnnotatedParameter) rhs.getParameters().get(0);
-
-      final Type lhsExceptionType = ((ParameterizedType) lhsEventParam.getBaseType()).getActualTypeArguments()[0];
-      final Type rhsExceptionType = ((ParameterizedType) rhsEventParam.getBaseType()).getActualTypeArguments()[0];
-
-      if (lhsExceptionType.equals(rhsExceptionType))
+      if (lhs.getExceptionType().equals(rhs.getExceptionType()))
       {
          // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
          // inbound, the other is outbound
-         if ((lhsEventParam.isAnnotationPresent(DuringDescTraversal.class) && rhsEventParam.isAnnotationPresent(
-            DuringDescTraversal.class))
-             || (!lhsEventParam.isAnnotationPresent(DuringDescTraversal.class) && !rhsEventParam.isAnnotationPresent(
-            DuringDescTraversal.class)))
+         if (lhs.getTraversalPath() == rhs.getTraversalPath())
          {
-            final int lhsPrecedence = lhsEventParam.getAnnotation(Handles.class).precedence();
-            final int rhsPrecedence = rhsEventParam.getAnnotation(Handles.class).precedence();
-            return this.comparePrecedence(lhsPrecedence, rhsPrecedence);
+            return this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence());
          }
-         else if (lhsEventParam.isAnnotationPresent(DuringDescTraversal.class) && !rhsEventParam.isAnnotationPresent(
-            DuringDescTraversal.class))
+         else if (lhs.getTraversalPath() == TraversalPath.DESCENDING)
          {
             return -1; // DuringDescTraversal first
          }
@@ -74,7 +60,7 @@ public final class ExceptionHandlerComparator implements Comparator<AnnotatedMet
             return 1;
          }
       }
-      return compareHierarchies(lhsExceptionType, rhsExceptionType);
+      return compareHierarchies(lhs.getExceptionType(), rhs.getExceptionType());
    }
 
    private int compareHierarchies(Type lhsExceptionType, Type rhsExceptionType)

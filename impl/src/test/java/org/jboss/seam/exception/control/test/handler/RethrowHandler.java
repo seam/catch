@@ -23,9 +23,9 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 @HandlesExceptions
 public class RethrowHandler
@@ -35,7 +35,7 @@ public class RethrowHandler
       event.rethrow();
    }
 
-   public void rethrowInbound(@Handles @DuringDescTraversal CatchEvent<IllegalArgumentException> event)
+   public void rethrowInbound(@Handles(during = TraversalPath.DESCENDING) CatchEvent<IllegalArgumentException> event)
    {
       event.rethrow();
    }

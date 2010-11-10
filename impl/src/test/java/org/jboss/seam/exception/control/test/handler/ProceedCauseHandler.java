@@ -23,9 +23,9 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 @HandlesExceptions
 public class ProceedCauseHandler
@@ -36,14 +36,14 @@ public class ProceedCauseHandler
    public static int OUTBOUND_NPE_CALLED = 0;
    public static int OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED = 0;
 
-   public void npeInboundHandler(@Handles @DuringDescTraversal CatchEvent<NullPointerException> event)
+   public void npeInboundHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
    {
       INBOUND_NPE_CALLED++;
       event.proceedToCause();
    }
 
    public void npeLowerPrecedenceInboundHandler(
-      @Handles(precedence = -1) @DuringDescTraversal CatchEvent<NullPointerException> event)
+      @Handles(precedence = -1, during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
    {
       INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
       event.proceed();

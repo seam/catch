@@ -25,11 +25,10 @@ package org.jboss.seam.exception.control.test;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringAscTraversal;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -68,13 +67,13 @@ public class EventTest
       bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
    }
 
-   public void verifyDescEvent(@Handles @DuringDescTraversal CatchEvent<NullPointerException> event)
+   public void verifyDescEvent(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
    {
       assertTrue(event.isDescendingTraversal());
       assertFalse(event.isAscendingTraversal());
    }
 
-   public void verifyAscEvent(@Handles @DuringAscTraversal CatchEvent<NullPointerException> event)
+   public void verifyAscEvent(@Handles(during = TraversalPath.ASCENDING) CatchEvent<NullPointerException> event)
    {
       assertFalse(event.isDescendingTraversal());
       assertTrue(event.isAscendingTraversal());

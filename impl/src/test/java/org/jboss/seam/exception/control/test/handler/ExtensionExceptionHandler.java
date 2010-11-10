@@ -23,30 +23,30 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringAscTraversal;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 @HandlesExceptions
 public class ExtensionExceptionHandler
 {
-   public void catchException(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void catchException(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
    {
       // Nothing to do currently
    }
 
-   public void catchRuntime(@Handles @DuringAscTraversal CatchEvent<RuntimeException> event)
+   public void catchRuntime(@Handles(during = TraversalPath.ASCENDING) CatchEvent<RuntimeException> event)
    {
       // Nothing to do currently
    }
 
-   public void catchThrowable(@Handles(precedence = 10) @DuringAscTraversal CatchEvent<Throwable> event)
+   public void catchThrowable(@Handles(precedence = 10, during = TraversalPath.ASCENDING) CatchEvent<Throwable> event)
    {
       // Nothing to do currently
    }
 
-   public void catchThrowableP20(@Handles(precedence = 20) @DuringAscTraversal CatchEvent<Throwable> event)
+   public void catchThrowableP20(
+      @Handles(precedence = 20, during = TraversalPath.ASCENDING) CatchEvent<Throwable> event)
    {
       // Nothing to do currently
    }

@@ -20,34 +20,26 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalPath;
+import javax.enterprise.util.AnnotationLiteral;
 
-@HandlesExceptions
-public class ExceptionHandledHandler
+/**
+ * Annotation literal for {@link HandlesExceptions}.
+ */
+public class HandlesLiteral extends AnnotationLiteral<Handles> implements Handles
 {
-   public static boolean EX_ASC_CALLED = false;
-   public static boolean IAE_ASC_CALLED = false;
-   public static boolean NPE_DESC_CALLED = false;
+   private static final long serialVersionUID = -6775381615228078023L;
 
-   public void exHandler(@Handles CatchEvent<Exception> event)
+   public static final Handles INSTANCE = new HandlesLiteral();
+
+   public TraversalPath during()
    {
-      EX_ASC_CALLED = true;
+      return TraversalPath.ASCENDING;
    }
 
-   public void npeHandler(@Handles CatchEvent<IllegalArgumentException> event)
+   public int precedence()
    {
-      IAE_ASC_CALLED = true;
-      event.handled();
-   }
-
-   public void npeDescHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
-   {
-      NPE_DESC_CALLED = true;
-      event.handled();
+      return 0;
    }
 }
