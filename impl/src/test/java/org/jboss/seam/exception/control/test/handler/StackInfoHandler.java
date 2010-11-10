@@ -23,37 +23,41 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.StackInfo;
 
-import javax.enterprise.inject.spi.BeanManager;
+import static org.junit.Assert.*;
 
 @HandlesExceptions
-public class CalledExceptionHandler
+public class StackInfoHandler
 {
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
-
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public void outerInfoInspector(@Handles CatchEvent<Exception> event)
    {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
+      StackInfo info = event.getStackInfo();
+
+      assertTrue(info.isLast());
+      assertFalse(info.isRoot());
+      assertEquals(0, info.getIndex());
+      assertNull(info.getNextCause());
+      assertEquals(Exception.class, info.getCurrentCause().getClass());
+      assertEquals(2, info.getElements().size());
+      assertEquals(0, info.getRemainingCauses().size());
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void rootInfoInspector(@Handles CatchEvent<NullPointerException> event)
    {
-      INBOUND_HANDLER_TIMES_CALLED++;
-      event.proceed();
-   }
+      StackInfo info = event.getStackInfo();
 
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
-   {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
+      assertFalse(info.isLast());
+      assertTrue(info.isRoot());
+      assertEquals(info.getElements().size() - 1, info.getIndex());
+      assertNotNull(info.getNextCause());
+      assertEquals(NullPointerException.class, info.getCurrentCause().getClass());
+      assertEquals(2, info.getElements().size());
+      assertEquals(1, info.getRemainingCauses().size());
+      assertEquals(event.getException(), info.getCurrentCause());
+
+      event.proceedToCause();
    }
 }

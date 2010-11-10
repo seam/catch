@@ -33,6 +33,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Documented
 @Qualifier
-public @interface Inbound
+public @interface DuringDescTraversal
 {
 }

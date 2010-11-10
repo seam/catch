@@ -30,9 +30,9 @@ import javax.enterprise.inject.spi.BeanManager;
 
 public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
-   final CatchEvent event;
-   final BeanManager bm;
-   final Bean<?> declaringBean;
+   final private CatchEvent event;
+   final private BeanManager bm;
+   final private Bean<?> declaringBean;
 
    public OutboundParameterValueRedefiner(CatchEvent event, final BeanManager manager, Bean<?> declaringBean)
    {

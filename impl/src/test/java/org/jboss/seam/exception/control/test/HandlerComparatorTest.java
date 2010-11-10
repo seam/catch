@@ -25,7 +25,7 @@ package org.jboss.seam.exception.control.test;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.seam.exception.control.test.handler.TestExceptionHandler;
+import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -48,7 +48,7 @@ public class HandlerComparatorTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addClasses(CatchExtension.class, TestExceptionHandler.class)
+         .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
          .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }

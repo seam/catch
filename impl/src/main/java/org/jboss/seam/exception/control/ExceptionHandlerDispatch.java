@@ -51,12 +51,12 @@ public class ExceptionHandlerDispatch
     * @param eventException
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes Throwable eventException, final BeanManager bm) throws Throwable
+   public void executeHandlers(@Observes CatchEntryEvent eventException, final BeanManager bm) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
       CreationalContext<Object> ctx = null;
 
-      Throwable exception = eventException;
+      Throwable exception = eventException.getException();
 
       do
       {
@@ -71,10 +71,10 @@ public class ExceptionHandlerDispatch
          final Set<AnnotatedMethod> processedHandlers = new HashSet<AnnotatedMethod>();
          boolean rethrow = false;
 
-         // Inbound handlers
-         int indexOfException = 0;
+         // DuringDescTraversal handlers
+         int indexOfException = unwrappedExceptions.size() - 1;
          inbound_cause:
-         while (indexOfException < unwrappedExceptions.size())
+         while (indexOfException >= 0)
          {
             CatchEvent catchEvent = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), true);
 
@@ -83,41 +83,43 @@ public class ExceptionHandlerDispatch
 
             for (AnnotatedMethod handler : handlerMethods)
             {
-               if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class)
+               if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(DuringDescTraversal.class)
                    && !processedHandlers.contains(handler))
                {
                   invokeHandler(bm, ctx, handler, catchEvent);
-                  processedHandlers.add(handler);
-
-                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.ABORT)
-                  {
-                     return;
-                  }
-
-                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.PROCEED_TO_CAUSE)
-                  {
-                     continue inbound_cause;
-                  }
 
                   if (!catchEvent.isUnMute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.RETHROW)
+                  switch (catchEvent.getFlow())
                   {
-                     rethrow = true;
+                     case HANDLED:
+                        eventException.setHandled(true);
+                        return;
+                     case PROCEED:
+                        eventException.setHandled(true);
+                        break;
+                     case ABORT:
+                        return;
+                     case PROCEED_TO_CAUSE:
+                        eventException.setHandled(true);
+                        indexOfException--;
+                        continue inbound_cause;
+                     case RETHROW:
+                        rethrow = true;
                   }
                }
             }
 
-            indexOfException++;
+            indexOfException--;
          }
 
          // Run outbound handlers, same list, just reversed
-         indexOfException = 0;
+         indexOfException = unwrappedExceptions.size() - 1;
          outbound_cause:
-         while (indexOfException < unwrappedExceptions.size())
+         while (indexOfException >= 0)
          {
             CatchEvent catchEvent = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), false);
 
@@ -128,40 +130,42 @@ public class ExceptionHandlerDispatch
 
             for (AnnotatedMethod handler : handlerMethods)
             {
-               // Defining Outbound as the absence of Inbound
-               if (!((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(Inbound.class))
+               // Defining DuringAscTraversal as the absence of DuringDescTraversal
+               if (!((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(DuringDescTraversal.class)
+                   && !processedHandlers.contains(handler))
                {
                   invokeHandler(bm, ctx, handler, catchEvent);
-                  processedHandlers.add(handler);
-
-                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.ABORT)
-                  {
-                     return;
-                  }
-
-                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.PROCEED_TO_CAUSE)
-                  {
-                     continue outbound_cause;
-                  }
 
                   if (!catchEvent.isUnMute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  if (catchEvent.getFlow() == CatchEvent.ExceptionHandlingFlow.RETHROW)
+                  switch (catchEvent.getFlow())
                   {
-                     rethrow = true;
+                     case HANDLED:
+                        eventException.setHandled(true);
+                        return;
+                     case PROCEED:
+                        eventException.setHandled(true);
+                        break;
+                     case ABORT:
+                        return;
+                     case PROCEED_TO_CAUSE:
+                        eventException.setHandled(true);
+                        indexOfException--;
+                        continue outbound_cause;
+                     case RETHROW:
+                        rethrow = true;
                   }
                }
-
             }
-            indexOfException++;
+            indexOfException--;
          }
 
          if (rethrow)
          {
-            throw eventException;
+            throw eventException.getException();
          }
       }
       finally
@@ -171,7 +175,6 @@ public class ExceptionHandlerDispatch
             ctx.release();
          }
       }
-
    }
 
    @SuppressWarnings({"unchecked"})

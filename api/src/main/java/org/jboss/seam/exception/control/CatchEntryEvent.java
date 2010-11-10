@@ -20,19 +20,30 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.CatchEvent;
-import org.jboss.seam.exception.control.DuringAscTraversal;
-import org.jboss.seam.exception.control.DuringDescTraversal;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
-
-@HandlesExceptions
-public class DefinitionErrorHandler
+public class CatchEntryEvent
 {
-   public void badHandler(@Handles @DuringDescTraversal @DuringAscTraversal CatchEvent<NullPointerException> event)
+   private Throwable exception;
+   private boolean handled;
+
+   public CatchEntryEvent(Throwable exception)
    {
-      // Nothing to do here
+      this.exception = exception;
+   }
+
+   public Throwable getException()
+   {
+      return exception;
+   }
+
+   public void setHandled(boolean handled)
+   {
+      this.handled = handled;
+   }
+
+   public boolean isHandled()
+   {
+      return handled;
    }
 }

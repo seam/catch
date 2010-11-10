@@ -24,8 +24,10 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.exception.control.CatchEntryEvent;
+import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
+import org.jboss.seam.exception.control.test.handler.AbortingInboundHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -34,34 +36,32 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class ExtensionTest
+public class InboundAbortControlTest
 {
    @Deployment
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
+         .addPackage(CatchEvent.class.getPackage())
+         .addClasses(AbortingInboundHandler.class, CatchExtension.class)
          .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Inject CatchExtension extension;
+   @Inject private BeanManager bm;
 
    @Test
-   public void assertHandlersAreFound()
+   public void assertNoOtherHandlersCalledAfterAbort()
    {
-      assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class).isEmpty());
-   }
-
-   @Test
-   public void assertFiveHandlersAreFound()
-   {
-      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class).size());
+      bm.fireEvent(new CatchEntryEvent(new NullPointerException()));
+      assertTrue(AbortingInboundHandler.abortCalled);
+      assertFalse(AbortingInboundHandler.proceedCalled);
    }
 }

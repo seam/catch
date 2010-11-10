@@ -25,44 +25,23 @@ package org.jboss.seam.exception.control.test.handler;
 import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.Inbound;
-import org.jboss.seam.exception.control.Outbound;
 
+@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
 @HandlesExceptions
-public class TestExceptionHandler
+public class AbortingOutboundHandler
 {
-   public void catchException(@Handles @Inbound CatchEvent<Exception> event)
+   public static boolean abortCalled = false;
+   public static boolean proceedCalled = false;
+
+   public void abortHandler(@Handles CatchEvent<Exception> event)
    {
-      // Nothing to do currently
+      abortCalled = true;
+      event.abort();
    }
 
-   public void catchRuntime(@Handles @Outbound CatchEvent<RuntimeException> event)
+   public void proceedHandler(@Handles CatchEvent<Throwable> event)
    {
-      // Nothing to do currently
-   }
-
-   public void catchThrowable(@Handles(precedence = 10) @Outbound CatchEvent<Throwable> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchThrowableP20(@Handles(precedence = 20) @Outbound CatchEvent<Throwable> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
-   {
-      // Nothing to do currently
-   }
-
-   public void doNothingMethod()
-   {
-      // Method to make sure only @Handles methods are found
-   }
-
-   public void doNothingTwo(String p1, String p2, int p3)
-   {
-      // Same as above
+      proceedCalled = true;
+      event.proceed();
    }
 }

@@ -27,33 +27,27 @@ import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 @HandlesExceptions
-public class CalledExceptionHandler
+public class ExceptionHandledHandler
 {
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
+   public static boolean EX_ASC_CALLED = false;
+   public static boolean IAE_ASC_CALLED = false;
+   public static boolean NPE_DESC_CALLED = false;
 
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public void exHandler(@Handles CatchEvent<Exception> event)
    {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
+      EX_ASC_CALLED = true;
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void npeHandler(@Handles CatchEvent<IllegalArgumentException> event)
    {
-      INBOUND_HANDLER_TIMES_CALLED++;
-      event.proceed();
+      IAE_ASC_CALLED = true;
+      event.handled();
    }
 
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
+   public void npeDescHandler(@Handles @DuringDescTraversal CatchEvent<NullPointerException> event)
    {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
+      NPE_DESC_CALLED = true;
+      event.handled();
    }
 }

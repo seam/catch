@@ -27,33 +27,21 @@ import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 @HandlesExceptions
-public class CalledExceptionHandler
+public class UnMuteHandler
 {
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
+   public static int ASC_NUMBER_CALLED = 0;
+   public static int DESC_NUMBER_CALLED = 0;
 
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public void unMuteHandlerAsc(@Handles CatchEvent<Exception> event)
    {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
+      ASC_NUMBER_CALLED++;
+      event.unMute();
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void unMuteHandlerDesc(@Handles @DuringDescTraversal CatchEvent<Exception> event)
    {
-      INBOUND_HANDLER_TIMES_CALLED++;
-      event.proceed();
-   }
-
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
-   {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
+      DESC_NUMBER_CALLED++;
+      event.unMute();
    }
 }

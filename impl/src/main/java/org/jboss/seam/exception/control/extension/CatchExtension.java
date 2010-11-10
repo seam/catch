@@ -22,11 +22,11 @@
 
 package org.jboss.seam.exception.control.extension;
 
+import org.jboss.seam.exception.control.DuringAscTraversal;
+import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.Inbound;
-import org.jboss.seam.exception.control.Outbound;
 import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
 import javax.enterprise.event.Observes;
@@ -72,9 +72,10 @@ public class CatchExtension implements Extension
             {
                final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
 
-               if (p.isAnnotationPresent(Outbound.class) && p.isAnnotationPresent(Inbound.class))
+               if (p.isAnnotationPresent(DuringAscTraversal.class) && p.isAnnotationPresent(DuringDescTraversal.class))
                {
-                  pmb.addDefinitionError(new IllegalStateException("A handler cannot be both Inbound and Outbound."));
+                  pmb.addDefinitionError(new IllegalStateException(
+                     "A handler cannot be both DuringDescTraversal and DuringAscTraversal."));
                }
                final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
 

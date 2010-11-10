@@ -24,6 +24,7 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.exception.control.CatchEntryEvent;
 import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.CalledExceptionHandler;
@@ -60,7 +61,7 @@ public class CallingHandlersTest
    @Test
    public void assertOutboundHanldersAreCalled()
    {
-      bm.fireEvent(new IllegalArgumentException());
+      bm.fireEvent(new CatchEntryEvent(new IllegalArgumentException()));
 
       assertTrue(CalledExceptionHandler.OUTBOUND_HANDLER_CALLED);
    }
@@ -69,7 +70,7 @@ public class CallingHandlersTest
    public void assertOutboundHanldersAreCalledOnce()
    {
       CalledExceptionHandler.OUTBOUND_HANDLER_TIMES_CALLED = 0;
-      bm.fireEvent(new IllegalArgumentException());
+      bm.fireEvent(new CatchEntryEvent(new IllegalArgumentException()));
       assertEquals(1, CalledExceptionHandler.OUTBOUND_HANDLER_TIMES_CALLED);
    }
 
@@ -77,14 +78,14 @@ public class CallingHandlersTest
    public void assertInboundHanldersAreCalledOnce()
    {
       CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED = 0;
-      bm.fireEvent(new IllegalArgumentException());
+      bm.fireEvent(new CatchEntryEvent(new IllegalArgumentException()));
       assertEquals(1, CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED);
    }
 
    @Test
    public void assertAdditionalParamsAreInjected()
    {
-      bm.fireEvent(new RuntimeException(new IllegalArgumentException()));
+      bm.fireEvent(new CatchEntryEvent(new RuntimeException(new IllegalArgumentException())));
       assertTrue(CalledExceptionHandler.BEANMANAGER_INJECTED);
    }
 }

@@ -24,8 +24,13 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.exception.control.CatchEntryEvent;
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.DuringAscTraversal;
+import org.jboss.seam.exception.control.DuringDescTraversal;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -34,34 +39,45 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class ExtensionTest
+@HandlesExceptions
+public class EventTest
 {
    @Deployment
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
+         .addPackage(CatchEvent.class.getPackage())
+         .addClasses(EventTest.class, CatchExtension.class)
          .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Inject CatchExtension extension;
+   @Inject
+   private BeanManager bm;
 
    @Test
-   public void assertHandlersAreFound()
+   public void assertEventIsCreatedCorrectly()
    {
-      assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class).isEmpty());
+      bm.fireEvent(new CatchEntryEvent(new NullPointerException()));
    }
 
-   @Test
-   public void assertFiveHandlersAreFound()
+   public void verifyDescEvent(@Handles @DuringDescTraversal CatchEvent<NullPointerException> event)
    {
-      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class).size());
+      assertTrue(event.isDescendingTraversal());
+      assertFalse(event.isAscendingTraversal());
    }
+
+   public void verifyAscEvent(@Handles @DuringAscTraversal CatchEvent<NullPointerException> event)
+   {
+      assertFalse(event.isDescendingTraversal());
+      assertTrue(event.isAscendingTraversal());
+   }
+
 }

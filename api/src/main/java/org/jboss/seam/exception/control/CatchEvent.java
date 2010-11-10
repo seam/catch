@@ -52,11 +52,22 @@ public class CatchEvent<T extends Throwable>
       this.stackInfo = stackInfo;
       this.inbound = inbound;
       this.outbound = !inbound;
+      this.flow = ExceptionHandlingFlow.PROCEED;
    }
 
    public T getException()
    {
       return this.exception;
+   }
+
+   public void abort()
+   {
+      this.flow = ExceptionHandlingFlow.ABORT;
+   }
+
+   public void rethrow()
+   {
+      this.flow = ExceptionHandlingFlow.RETHROW;
    }
 
    public void handled()
@@ -79,12 +90,12 @@ public class CatchEvent<T extends Throwable>
       this.unMute = true;
    }
 
-   public boolean isInbound()
+   public boolean isDescendingTraversal()
    {
       return inbound;
    }
 
-   public boolean isOutbound()
+   public boolean isAscendingTraversal()
    {
       return outbound;
    }
@@ -94,7 +105,7 @@ public class CatchEvent<T extends Throwable>
       return this.unMute;
    }
 
-   protected StackInfo getStackInfo()
+   public StackInfo getStackInfo()
    {
       return this.stackInfo;
    }

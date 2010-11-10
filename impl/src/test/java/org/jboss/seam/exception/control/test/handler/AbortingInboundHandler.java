@@ -27,33 +27,22 @@ import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import javax.enterprise.inject.spi.BeanManager;
-
+@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
 @HandlesExceptions
-public class CalledExceptionHandler
+public class AbortingInboundHandler
 {
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
+   public static boolean abortCalled = false;
+   public static boolean proceedCalled = false;
 
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public void abortHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
    {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
+      abortCalled = true;
+      event.abort();
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void proceedHandler(@Handles CatchEvent<NullPointerException> event)
    {
-      INBOUND_HANDLER_TIMES_CALLED++;
+      proceedCalled = true;
       event.proceed();
-   }
-
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
-   {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
    }
 }

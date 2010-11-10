@@ -23,37 +23,46 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.DuringAscTraversal;
 import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 @HandlesExceptions
-public class CalledExceptionHandler
+public class ExtensionExceptionHandler
 {
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
-
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public void catchException(@Handles @DuringDescTraversal CatchEvent<Exception> event)
    {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
+      // Nothing to do currently
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void catchRuntime(@Handles @DuringAscTraversal CatchEvent<RuntimeException> event)
    {
-      INBOUND_HANDLER_TIMES_CALLED++;
-      event.proceed();
+      // Nothing to do currently
    }
 
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
+   public void catchThrowable(@Handles(precedence = 10) @DuringAscTraversal CatchEvent<Throwable> event)
    {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
+      // Nothing to do currently
+   }
+
+   public void catchThrowableP20(@Handles(precedence = 20) @DuringAscTraversal CatchEvent<Throwable> event)
+   {
+      // Nothing to do currently
+   }
+
+   public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
+   {
+      // Nothing to do currently
+   }
+
+   public void doNothingMethod()
+   {
+      // Method to make sure only @Handles methods are found
+   }
+
+   public void doNothingTwo(String p1, String p2, int p3)
+   {
+      // Same as above
    }
 }

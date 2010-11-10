@@ -55,17 +55,19 @@ public final class ExceptionHandlerComparator implements Comparator<AnnotatedMet
       {
          // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
          // inbound, the other is outbound
-         if ((lhsEventParam.isAnnotationPresent(Inbound.class) && rhsEventParam.isAnnotationPresent(Inbound.class))
-             || (!lhsEventParam.isAnnotationPresent(Inbound.class) && !rhsEventParam.isAnnotationPresent(
-            Inbound.class)))
+         if ((lhsEventParam.isAnnotationPresent(DuringDescTraversal.class) && rhsEventParam.isAnnotationPresent(
+            DuringDescTraversal.class))
+             || (!lhsEventParam.isAnnotationPresent(DuringDescTraversal.class) && !rhsEventParam.isAnnotationPresent(
+            DuringDescTraversal.class)))
          {
             final int lhsPrecedence = lhsEventParam.getAnnotation(Handles.class).precedence();
             final int rhsPrecedence = rhsEventParam.getAnnotation(Handles.class).precedence();
             return this.comparePrecedence(lhsPrecedence, rhsPrecedence);
          }
-         else if (lhsEventParam.isAnnotationPresent(Inbound.class) && !rhsEventParam.isAnnotationPresent(Inbound.class))
+         else if (lhsEventParam.isAnnotationPresent(DuringDescTraversal.class) && !rhsEventParam.isAnnotationPresent(
+            DuringDescTraversal.class))
          {
-            return -1; // Inbound first
+            return -1; // DuringDescTraversal first
          }
          else
          {

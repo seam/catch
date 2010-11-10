@@ -43,20 +43,20 @@ public class StackInfo<T extends Throwable>
 
       if (this.index == 0)
       {
-         this.root = true;
+         this.last = true;
       }
 
       if (this.index == elements.size() - 1)
       {
-         this.last = true;
+         this.root = true;
       }
 
-      if (this.index + 1 < this.elements.size())
+      if (this.index - 1 >= 0)
       {
-         this.nextCause = (Throwable) this.elements.toArray()[this.index + 1];
+         this.nextCause = (Throwable) this.elements.toArray()[this.index - 1];
       }
 
-      this.remainingCauses = new ArrayList<Throwable>(elements).subList(index, elements.size() - 1);
+      this.remainingCauses = new ArrayList<Throwable>(this.elements).subList(0, index);
 
       this.currentCause = (Throwable) this.elements.toArray()[this.index];
    }

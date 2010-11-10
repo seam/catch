@@ -27,33 +27,37 @@ import org.jboss.seam.exception.control.DuringDescTraversal;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import javax.enterprise.inject.spi.BeanManager;
-
 @HandlesExceptions
-public class CalledExceptionHandler
+public class ProceedCauseHandler
 {
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
+   public static int INBOUND_NPE_CALLED = 0;
+   public static int INBOUND_NPE_LOWER_PRECEDENCE_CALLED = 0;
 
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public static int OUTBOUND_NPE_CALLED = 0;
+   public static int OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED = 0;
+
+   public void npeInboundHandler(@Handles @DuringDescTraversal CatchEvent<NullPointerException> event)
    {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
+      INBOUND_NPE_CALLED++;
+      event.proceedToCause();
    }
 
-   public void basicInboundHandler(@Handles @DuringDescTraversal CatchEvent<Exception> event)
+   public void npeLowerPrecedenceInboundHandler(
+      @Handles(precedence = -1) @DuringDescTraversal CatchEvent<NullPointerException> event)
    {
-      INBOUND_HANDLER_TIMES_CALLED++;
+      INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
       event.proceed();
    }
 
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
+   public void npeOutboundHandler(@Handles CatchEvent<NullPointerException> event)
    {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
+      OUTBOUND_NPE_CALLED++;
+      event.proceedToCause();
+   }
+
+   public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = 1) CatchEvent<NullPointerException> event)
+   {
+      OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED++;
+      event.proceed();
    }
 }
