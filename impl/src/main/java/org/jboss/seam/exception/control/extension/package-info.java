@@ -20,16 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control;
-
-import javax.enterprise.util.AnnotationLiteral;
-
 /**
- * Annotation literal for {@link HandlesExceptions}.
+ * CDI extensions for Catch.
  */
-public class HandlesExceptionsLiteral extends AnnotationLiteral<HandlesExceptions> implements HandlesExceptions
-{
-   private static final long serialVersionUID = -6775381615228078023L;
-
-   public static final HandlesExceptions INSTANCE = new HandlesExceptionsLiteral();
-}
+package org.jboss.seam.exception.control.extension;

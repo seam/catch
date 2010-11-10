@@ -28,6 +28,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Marker annotation for a method to be considered an Exception Handler.
+ * Handlers are typically in the form of <code>public void ... (@Handles ... CatchEvent<...> ...)</code> methods.
+ * If a method has a return type, it is ignored.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @Documented

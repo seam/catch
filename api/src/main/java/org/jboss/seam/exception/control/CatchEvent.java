@@ -23,13 +23,17 @@
 package org.jboss.seam.exception.control;
 
 /**
- * Payload for an exception to be handled.
+ * Payload for an exception to be handled.  This object is not immutable as small pieces of the state
+ * may be set by the handler.
  *
  * @param <T> Exception type this event represents
  */
 @SuppressWarnings({"unchecked"})
 public class CatchEvent<T extends Throwable>
 {
+   /**
+    * Flow control enum.  Used in the dispatcher to determine how to proceed.
+    */
    protected enum ExceptionHandlingFlow
    {
       HANDLED,
@@ -41,17 +45,30 @@ public class CatchEvent<T extends Throwable>
 
    private StackInfo stackInfo;
    private T exception;
-   boolean unMute;
+   private boolean unMute;
    private ExceptionHandlingFlow flow;
-   boolean inbound;
-   boolean outbound;
+   private boolean descendingTraversal;
+   private boolean ascendingTraversal;
 
-   public CatchEvent(final StackInfo stackInfo, final boolean inbound)
+   /**
+    * Initial state constructor.
+    *
+    * @param stackInfo           Information about the current exception and cause chain.
+    * @param descendingTraversal flag indicating the direction of the cause chain traversal
+    *
+    * @throws IllegalArgumentException if stackInfo is null
+    */
+   public CatchEvent(final StackInfo stackInfo, final boolean descendingTraversal)
    {
+      if (stackInfo == null)
+      {
+         throw new IllegalArgumentException("null is not valid for stackInfo");
+      }
+
       this.exception = (T) stackInfo.getCurrentCause();
       this.stackInfo = stackInfo;
-      this.inbound = inbound;
-      this.outbound = !inbound;
+      this.descendingTraversal = descendingTraversal;
+      this.ascendingTraversal = !descendingTraversal;
       this.flow = ExceptionHandlingFlow.PROCEED;
    }
 
@@ -60,31 +77,51 @@ public class CatchEvent<T extends Throwable>
       return this.exception;
    }
 
+   /**
+    * Instructs the dispatcher to abort further processing of handlers.
+    */
    public void abort()
    {
       this.flow = ExceptionHandlingFlow.ABORT;
    }
 
+   /**
+    * Instructs the dispatcher to rethrow the event exception after handler processing.
+    */
    public void rethrow()
    {
       this.flow = ExceptionHandlingFlow.RETHROW;
    }
 
+   /**
+    * Instructs the dispatcher to terminate additional handler processing and mark the event as handled.
+    */
    public void handled()
    {
       this.flow = ExceptionHandlingFlow.HANDLED;
    }
 
+   /**
+    * Default instruction to dispatcher, continues handler processing.
+    */
    public void proceed()
    {
       this.flow = ExceptionHandlingFlow.PROCEED;
    }
 
+   /**
+    * Similar to {@link org.jboss.seam.exception.control.CatchEvent#proceed()}, but instructs the dispatcher
+    * to proceed to the next element in the cause chain without processing additional handlers for this cause
+    * chain element.
+    */
    public void proceedToCause()
    {
       this.flow = ExceptionHandlingFlow.PROCEED_TO_CAUSE;
    }
 
+   /**
+    * Instructs the dispatcher to allow this handler to be invoked again.
+    */
    public void unMute()
    {
       this.unMute = true;
@@ -92,12 +129,12 @@ public class CatchEvent<T extends Throwable>
 
    public boolean isDescendingTraversal()
    {
-      return inbound;
+      return descendingTraversal;
    }
 
    public boolean isAscendingTraversal()
    {
-      return outbound;
+      return ascendingTraversal;
    }
 
    protected boolean isUnMute()

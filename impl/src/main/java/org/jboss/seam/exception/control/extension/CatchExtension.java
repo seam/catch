@@ -47,6 +47,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * CDI extension to find handlers at startup.
+ */
 @SuppressWarnings({"unchecked"})
 public class CatchExtension implements Extension
 {
@@ -57,6 +60,20 @@ public class CatchExtension implements Extension
       this.allHandlers = new HashMap<Type, Collection<AnnotatedMethod>>();
    }
 
+   /**
+    * Listener to ProcessManagedBean event to locate handlers.
+    *
+    * @param pmb Event from CDI SPI
+    * @param bm  Activated Bean Manager
+    *
+    * @throws TypeNotPresentException if any of the actual type arguments refers to a non-existent type declaration when
+    *                                 trying to obtain the actual type arguments from a {@link ParameterizedType}
+    * @throws java.lang.reflect.MalformedParameterizedTypeException
+    *                                 if any of the
+    *                                 actual type parameters refer to a parameterized type that cannot
+    *                                 be instantiated for any reason when trying to obtain the actual type arguments
+    *                                 from a {@link ParameterizedType}
+    */
    public void findHandlers(@Observes final ProcessManagedBean pmb, final BeanManager bm)
    {
       final AnnotatedType type = pmb.getAnnotatedBeanClass();
@@ -92,6 +109,14 @@ public class CatchExtension implements Extension
       }
    }
 
+   /**
+    * Obtains the applicable handlers for the given type or super type of the given type.  Also makes use of
+    * {@link org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
+    *
+    * @param exceptionClass Type of exception to narrow handler list
+    *
+    * @return An order collection of handlers for the given type.
+    */
    public Collection<AnnotatedMethod> getHandlersForExceptionType(Type exceptionClass)
    {
       final Set<AnnotatedMethod> returningHandlers = new TreeSet<AnnotatedMethod>(new ExceptionHandlerComparator());

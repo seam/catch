@@ -22,9 +22,13 @@
 
 package org.jboss.seam.exception.control;
 
+/**
+ * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
+ * is the handled flag.
+ */
 public class ExceptionToCatchEvent
 {
-   private Throwable exception;
+   private final Throwable exception;
    private boolean handled;
 
    public ExceptionToCatchEvent(Throwable exception)

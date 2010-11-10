@@ -33,8 +33,8 @@ import java.util.Comparator;
 import java.util.Set;
 
 /**
- * Comparator to sort exception handlers according to priority (highest number first) then by class hierarchy of the Exception types
- * being handled (most specific first).
+ * Comparator to sort exception handlers according qualifier ({@link DuringDescTraversal} first),
+ * precedence (highest to lowest) and finally hierarchy (least to most specific).
  */
 @SuppressWarnings({"MethodWithMoreThanThreeNegations", "unchecked"})
 public final class ExceptionHandlerComparator implements Comparator<AnnotatedMethod>

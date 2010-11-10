@@ -26,37 +26,43 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class StackInfo<T extends Throwable>
+/**
+ * Information about the current exception and exception cause chain.  This object is immutable.
+ */
+public class StackInfo
 {
-   private boolean root;
-   private boolean last;
-   private int index;
-   private Throwable nextCause;
-   private Collection<Throwable> remainingCauses;
-   private Collection<Throwable> elements;
-   private Throwable currentCause;
+   private final boolean root;
+   private final boolean last;
+   private final int index;
+   private final Throwable nextCause;
+   private final Collection<Throwable> remainingCauses;
+   private final Collection<Throwable> elements;
+   private final Throwable currentCause;
 
-   public StackInfo(final Collection<Throwable> elements, final int index)
+   /**
+    * Basic constructor.
+    *
+    * @param causeChainElements  collection of all causing elements for an exception from top to bottom (not unwrapped).
+    * @param currentElementIndex index of current element within the causeChainElements.
+    *
+    * @throws IllegalArgumentException if causeChainElements is empty or null.
+    */
+   public StackInfo(final Collection<Throwable> causeChainElements, final int currentElementIndex)
    {
-      this.elements = elements;
-      this.index = index;
-
-      if (this.index == 0)
+      if (causeChainElements == null || causeChainElements.size() == 0)
       {
-         this.last = true;
+         throw new IllegalArgumentException("Null or empty collection of causeChainElements is not valid");
       }
+      this.elements = Collections.unmodifiableCollection(causeChainElements);
+      this.index = currentElementIndex;
 
-      if (this.index == elements.size() - 1)
-      {
-         this.root = true;
-      }
+      this.last = this.index == 0;
 
-      if (this.index - 1 >= 0)
-      {
-         this.nextCause = (Throwable) this.elements.toArray()[this.index - 1];
-      }
+      this.root = this.index == causeChainElements.size() - 1;
 
-      this.remainingCauses = new ArrayList<Throwable>(this.elements).subList(0, index);
+      this.nextCause = this.index - 1 >= 0 ? (Throwable) this.elements.toArray()[this.index - 1] : null;
+
+      this.remainingCauses = new ArrayList<Throwable>(this.elements).subList(0, currentElementIndex);
 
       this.currentCause = (Throwable) this.elements.toArray()[this.index];
    }

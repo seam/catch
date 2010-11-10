@@ -30,7 +30,6 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,19 +38,23 @@ import java.util.Set;
 import java.util.Stack;
 
 /**
+ * Observer of {@link org.jboss.seam.exception.control.ExceptionToCatchEvent} events and handler dispatcher.
+ * All handlers are invoked from this class.  This class is immutable.
  */
 public class ExceptionHandlerDispatch
 {
-   @Inject
-   private CatchExtension extension;
-
    /**
     * Observes the event, finds the correct exception handler(s) and invokes them.
     *
-    * @param eventException
+    * @param eventException exception to be invoked
+    * @param bm             active bean manager
+    * @param extension      catch extension instance to obtain handlers
+    *
+    * @throws Throwable If a handler requests the exception to be re-thrown.
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes ExceptionToCatchEvent eventException, final BeanManager bm) throws Throwable
+   public void executeHandlers(@Observes ExceptionToCatchEvent eventException, final BeanManager bm,
+                               CatchExtension extension) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
       CreationalContext<Object> ctx = null;
@@ -72,28 +75,28 @@ public class ExceptionHandlerDispatch
          boolean rethrow = false;
 
          // DuringDescTraversal handlers
-         int indexOfException = unwrappedExceptions.size() - 1;
+         int exceptionIndex = unwrappedExceptions.size() - 1;
          inbound_cause:
-         while (indexOfException >= 0)
+         while (exceptionIndex >= 0)
          {
-            CatchEvent catchEvent = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), true);
 
             List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
-               this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
+               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass()));
 
             for (AnnotatedMethod handler : handlerMethods)
             {
                if (((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(DuringDescTraversal.class)
                    && !processedHandlers.contains(handler))
                {
-                  invokeHandler(bm, ctx, handler, catchEvent);
+                  final CatchEvent event = new CatchEvent(new StackInfo(unwrappedExceptions, exceptionIndex), true);
+                  invokeHandler(bm, ctx, handler, event);
 
-                  if (!catchEvent.isUnMute())
+                  if (!event.isUnMute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  switch (catchEvent.getFlow())
+                  switch (event.getFlow())
                   {
                      case HANDLED:
                         eventException.setHandled(true);
@@ -105,7 +108,7 @@ public class ExceptionHandlerDispatch
                         return;
                      case PROCEED_TO_CAUSE:
                         eventException.setHandled(true);
-                        indexOfException--;
+                        exceptionIndex--;
                         continue inbound_cause;
                      case RETHROW:
                         rethrow = true;
@@ -113,18 +116,17 @@ public class ExceptionHandlerDispatch
                }
             }
 
-            indexOfException--;
+            exceptionIndex--;
          }
 
          // Run outbound handlers, same list, just reversed
-         indexOfException = unwrappedExceptions.size() - 1;
+         exceptionIndex = unwrappedExceptions.size() - 1;
          outbound_cause:
-         while (indexOfException >= 0)
+         while (exceptionIndex >= 0)
          {
-            CatchEvent catchEvent = new CatchEvent(new StackInfo(unwrappedExceptions, indexOfException), false);
 
             List<AnnotatedMethod> handlerMethods = new ArrayList<AnnotatedMethod>(
-               this.extension.getHandlersForExceptionType(unwrappedExceptions.get(indexOfException).getClass()));
+               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass()));
 
             Collections.reverse(handlerMethods);
 
@@ -134,14 +136,15 @@ public class ExceptionHandlerDispatch
                if (!((AnnotatedParameter) handler.getParameters().get(0)).isAnnotationPresent(DuringDescTraversal.class)
                    && !processedHandlers.contains(handler))
                {
-                  invokeHandler(bm, ctx, handler, catchEvent);
+                  final CatchEvent event = new CatchEvent(new StackInfo(unwrappedExceptions, exceptionIndex), false);
+                  invokeHandler(bm, ctx, handler, event);
 
-                  if (!catchEvent.isUnMute())
+                  if (!event.isUnMute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  switch (catchEvent.getFlow())
+                  switch (event.getFlow())
                   {
                      case HANDLED:
                         eventException.setHandled(true);
@@ -153,14 +156,14 @@ public class ExceptionHandlerDispatch
                         return;
                      case PROCEED_TO_CAUSE:
                         eventException.setHandled(true);
-                        indexOfException--;
+                        exceptionIndex--;
                         continue outbound_cause;
                      case RETHROW:
                         rethrow = true;
                   }
                }
             }
-            indexOfException--;
+            exceptionIndex--;
          }
 
          if (rethrow)
