@@ -19,22 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jboss.seam.exception.control;
 
-import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.util.AnnotationLiteral;
 
 /**
- * The State object is meant to provide any state that may be helpful for the developer in determining what to do with a particular
- * exception handling. It may include and application state, active processes, or other convenience methods for the {@link
- * org.jboss.seam.exception.control.ExceptionHandler} developer.
- * <p/>
- * For example, a servlet state may include methods to retrieve the HttpServletRequest, HttpServletResponse and possibly a
- * navigation convenience method.
+ * Annotation literal for {@link HandlesExceptions}.
  */
-public interface State
+public class HandlesLiteral extends AnnotationLiteral<Handles> implements Handles
 {
-   /**
-    * @return current BeanManager.
-    */
-   public BeanManager getBeanManager();
+   private static final long serialVersionUID = -6775381615228078023L;
+
+   public static final Handles INSTANCE = new HandlesLiteral();
+
+   public TraversalPath during()
+   {
+      return TraversalPath.ASCENDING;
+   }
+
+   public int precedence()
+   {
+      return 0;
+   }
 }

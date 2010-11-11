@@ -19,16 +19,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exception.control;
 
 /**
- * Provides the developer methods to affect the traversal of the chain of {@link org.jboss.seam.exception.control.ExceptionHandler} instances.
+ * CDI extensions for Catch.
  */
-public interface HandlerChain
-{
-   /**
-    * End execution of the chain. Calling this method will immediately stop executing the handler chain, leaving any handlers left
-    * in the chain as uncalled.
-    */
-   void end();
-}
+package org.jboss.seam.exception.control.extension;

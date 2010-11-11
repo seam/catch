@@ -24,51 +24,59 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.impl.ExceptionHandlerExecutor;
-import org.jboss.seam.exception.control.impl.StateImpl;
-import org.jboss.seam.exception.control.ExceptionEvent;
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class MultipleHandlerTest extends BaseExceptionHandlerTest
+@HandlesExceptions
+public class EventTest
 {
-   @Inject
-   private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
-
-   @Inject
-   private ExceptionExceptionHandler exceptionExceptionHandler;
-
-   @Inject
-   private NullPointerExceptionHandler nullPointerExceptionHandler;
-
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionExceptionHandler.class,
-                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+      return ShrinkWrap.create(JavaArchive.class)
+         .addPackage(CatchEvent.class.getPackage())
+         .addClasses(EventTest.class, CatchExtension.class)
+         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
+
+   @Inject
+   private BeanManager bm;
 
    @Test
-   public void testAllValidHandlersCalled()
+   public void assertEventIsCreatedCorrectly()
    {
-      ExceptionEvent event = new ExceptionEvent(new UnsupportedOperationException(), new StateImpl(this.beanManager));
-      this.beanManager.fireEvent(event);
-
-      assertTrue(this.unsupportedOperationExceptionHandler.isHandleCalled());
-      assertTrue(this.exceptionExceptionHandler.isHandleCalled());
-      assertFalse(this.nullPointerExceptionHandler.isHandleCalled());
+      bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
    }
+
+   public void verifyDescEvent(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
+   {
+      assertTrue(event.isDescendingTraversal());
+      assertFalse(event.isAscendingTraversal());
+   }
+
+   public void verifyAscEvent(@Handles(during = TraversalPath.ASCENDING) CatchEvent<NullPointerException> event)
+   {
+      assertFalse(event.isDescendingTraversal());
+      assertTrue(event.isAscendingTraversal());
+   }
+
 }

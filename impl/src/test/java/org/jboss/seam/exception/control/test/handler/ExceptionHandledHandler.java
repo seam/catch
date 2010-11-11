@@ -20,34 +20,34 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.ExceptionHandler;
-import org.jboss.seam.exception.control.HandlerChain;
-import org.jboss.seam.exception.control.State;
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
-import javax.enterprise.context.RequestScoped;
-
-@RequestScoped
-public class NullPointerExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<NullPointerException, State>
+@HandlesExceptions
+public class ExceptionHandledHandler
 {
-   /**
-    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
-    */
-   public int getPriority()
+   public static boolean EX_ASC_CALLED = false;
+   public static boolean IAE_ASC_CALLED = false;
+   public static boolean NPE_DESC_CALLED = false;
+
+   public void exHandler(@Handles CatchEvent<Exception> event)
    {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+      EX_ASC_CALLED = true;
    }
 
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void handle(HandlerChain chain, State state, NullPointerException e)
+   public void npeHandler(@Handles CatchEvent<IllegalArgumentException> event)
    {
-      super.baseHandle(chain, state, e);
+      IAE_ASC_CALLED = true;
+      event.handled();
+   }
+
+   public void npeDescHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
+   {
+      NPE_DESC_CALLED = true;
+      event.handled();
    }
 }

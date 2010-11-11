@@ -20,31 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.impl;
-
-import org.jboss.seam.exception.control.HandlerChain;
+package org.jboss.seam.exception.control;
 
 /**
- * Implementation of the {@link org.jboss.seam.exception.control.HandlerChain} interface. Provides a package private method to check if the chain needs to end.
+ * Direction of a exception cause chain traversal.
  */
-public class HandlerChainImpl implements HandlerChain
+public enum TraversalPath
 {
-   private boolean chainEnd;
-
-   /**
-    * End execution of the chain. Calling this method will immediately stop executing the handler chain, leaving any handlers left
-    * in the chain as uncalled.
-    */
-   public void end()
-   {
-      this.chainEnd = true;
-   }
-
-   /**
-    * @return flag indicating if the chain should continue execution
-    */
-   boolean isChainEnd()
-   {
-      return this.chainEnd;
-   }
+   ASCENDING,
+   DESCENDING
 }

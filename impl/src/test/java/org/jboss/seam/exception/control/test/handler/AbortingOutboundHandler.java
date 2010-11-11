@@ -20,34 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.ExceptionHandler;
-import org.jboss.seam.exception.control.HandlerChain;
-import org.jboss.seam.exception.control.State;
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
 
-import javax.enterprise.context.RequestScoped;
-
-@RequestScoped
-public class ExceptionExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<Exception, State>
+@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+@HandlesExceptions
+public class AbortingOutboundHandler
 {
-   /**
-    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
-    */
-   public int getPriority()
+   public static boolean abortCalled = false;
+   public static boolean proceedCalled = false;
+
+   public void abortHandler(@Handles CatchEvent<Exception> event)
    {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+      abortCalled = true;
+      event.abort();
    }
 
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void handle(HandlerChain chain, State state, Exception e)
+   public void proceedHandler(@Handles CatchEvent<Throwable> event)
    {
-      super.baseHandle(chain, state, e);
+      proceedCalled = true;
+      event.proceed();
    }
 }

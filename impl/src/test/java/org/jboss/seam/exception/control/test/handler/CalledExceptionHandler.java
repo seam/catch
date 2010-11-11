@@ -20,34 +20,40 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.impl;
+package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.State;
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
 
 import javax.enterprise.inject.spi.BeanManager;
 
-/**
- * Basic {@link org.jboss.seam.exception.control.State} implementation.
- */
-public class StateImpl implements State
+@HandlesExceptions
+public class CalledExceptionHandler
 {
-   private final BeanManager beanManager;
+   public static boolean OUTBOUND_HANDLER_CALLED = false;
+   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
+   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
+   public static boolean BEANMANAGER_INJECTED = false;
 
-   /**
-    * Constructor
-    *
-    * @param beanManager instance of {@link BeanManager}.
-    */
-   public StateImpl(BeanManager beanManager)
+   public void basicHandler(@Handles CatchEvent<Exception> event)
    {
-      this.beanManager = beanManager;
+      OUTBOUND_HANDLER_CALLED = true;
+      OUTBOUND_HANDLER_TIMES_CALLED++;
    }
 
-   /**
-    * @return current BeanManager.
-    */
-   public BeanManager getBeanManager()
+   public void basicInboundHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
    {
-      return this.beanManager;
+      INBOUND_HANDLER_TIMES_CALLED++;
+      event.proceed();
+   }
+
+   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
+   {
+      if (bm != null)
+      {
+         BEANMANAGER_INJECTED = true;
+      }
    }
 }

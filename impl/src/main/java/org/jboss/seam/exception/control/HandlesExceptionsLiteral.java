@@ -20,13 +20,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import javax.enterprise.util.AnnotationLiteral;
 
-public abstract class BaseExceptionHandlerTest
+/**
+ * Annotation literal for {@link HandlesExceptions}.
+ */
+public class HandlesExceptionsLiteral extends AnnotationLiteral<HandlesExceptions> implements HandlesExceptions
 {
-   @Inject
-   protected BeanManager beanManager;
+   private static final long serialVersionUID = -6775381615228078023L;
+
+   public static final HandlesExceptions INSTANCE = new HandlesExceptionsLiteral();
 }

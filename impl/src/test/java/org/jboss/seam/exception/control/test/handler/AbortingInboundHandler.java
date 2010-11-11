@@ -19,25 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.exception.control;
 
-/**
- * Registers an exception handler for a specific exception and state, this is the main entry point for using Seam's exception
- * handling infrastructure.
- */
-public interface ExceptionHandler<E extends Throwable, S extends State>
+package org.jboss.seam.exception.control.test.handler;
+
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalPath;
+
+@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+@HandlesExceptions
+public class AbortingInboundHandler
 {
-   /**
-    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
-    */
-   int getPriority();
+   public static boolean abortCalled = false;
+   public static boolean proceedCalled = false;
 
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   void handle(HandlerChain chain, S state, E e);
+   public void abortHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
+   {
+      abortCalled = true;
+      event.abort();
+   }
+
+   public void proceedHandler(@Handles CatchEvent<NullPointerException> event)
+   {
+      proceedCalled = true;
+      event.proceed();
+   }
 }

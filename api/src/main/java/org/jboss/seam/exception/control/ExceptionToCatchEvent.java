@@ -20,48 +20,34 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control;
 
-import org.jboss.seam.exception.control.HandlerChain;
-import org.jboss.seam.exception.control.State;
-import org.joda.time.DateTime;
-
-public class BaseExceptionHandler
+/**
+ * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
+ * is the handled flag.
+ */
+public class ExceptionToCatchEvent
 {
-   protected boolean handleCalled;
-   protected boolean callEnd;
-   protected DateTime timeCalled;
+   private final Throwable exception;
+   private boolean handled;
 
-   public boolean isHandleCalled()
+   public ExceptionToCatchEvent(Throwable exception)
    {
-      return this.handleCalled;
+      this.exception = exception;
    }
 
-   public void shouldCallEnd(boolean callEnd)
+   public Throwable getException()
    {
-      this.callEnd = callEnd;
+      return exception;
    }
 
-   public DateTime getTimeCalled()
+   public void setHandled(boolean handled)
    {
-      return this.timeCalled;
+      this.handled = handled;
    }
 
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void baseHandle(HandlerChain chain, State state, Throwable e)
+   public boolean isHandled()
    {
-      this.timeCalled = new DateTime();
-      this.handleCalled = true;
-
-      if (this.callEnd)
-      {
-         chain.end();
-      }
+      return handled;
    }
 }

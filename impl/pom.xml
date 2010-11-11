@@ -41,7 +41,7 @@
 
       <dependency>
          <groupId>org.jboss.arquillian.container</groupId>
-         <artifactId>arquillian-weld-embedded</artifactId>
+         <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
          <scope>test</scope>
       </dependency>
 
@@ -58,6 +58,11 @@
       </dependency>
 
       <dependency>
+         <groupId>org.jboss.weld</groupId>
+         <artifactId>weld-extensions</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>org.glassfish.web</groupId>
          <artifactId>el-impl</artifactId>
          <scope>test</scope>
@@ -66,6 +71,19 @@
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-simple</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.spec</groupId>
+         <artifactId>jboss-javaee-6.0</artifactId>
+         <scope>test</scope>
+         <type>pom</type>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.logging</groupId>
+         <artifactId>jboss-logging</artifactId>
          <scope>test</scope>
       </dependency>
 

@@ -22,33 +22,20 @@
 
 package org.jboss.seam.exception.control.test;
 
-import org.jboss.seam.exception.control.ExceptionHandler;
-import org.jboss.seam.exception.control.HandlerChain;
-import org.jboss.seam.exception.control.State;
-
-import javax.enterprise.context.RequestScoped;
-
-@RequestScoped
-public class UnsupportedOperationExceptionHandler extends BaseExceptionHandler implements ExceptionHandler<UnsupportedOperationException, State>
-{
-
-   /**
-    * @return the numeric priority of this handler in relationship to other handlers, 1 being top priority
-    */
-   public int getPriority()
-   {
-      return 1;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   /**
-    * Method called to execute logic for an uncaught exception.
-    *
-    * @param chain Chain object used to continue handling chain
-    * @param state container for any useful application state
-    * @param e     uncaught exception
-    */
-   public void handle(HandlerChain chain, State state, UnsupportedOperationException e)
-   {
-      super.baseHandle(chain, state, e);
-   }
-}
+//@RunWith(Arquillian.class)
+//public class ExtensionErrorTest
+//{
+//   @Deployment
+//   public static Archive<?> createTestArchive()
+//   {
+//      return ShrinkWrap.create(JavaArchive.class)
+//         .addClasses(CatchExtension.class, DefinitionErrorHandler.class)
+//         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+//         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+//   }
+//
+//   @Test(expected = IllegalStateException.class)
+//   public void assertHandlersAreFound()
+//   {
+//   }
+//}

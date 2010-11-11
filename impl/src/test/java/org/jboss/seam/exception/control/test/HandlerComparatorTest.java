@@ -24,44 +24,49 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionEvent;
-import org.jboss.seam.exception.control.impl.ExceptionHandlerExecutor;
-import org.jboss.seam.exception.control.impl.StateImpl;
+import org.jboss.seam.exception.control.HandlerMethod;
+import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class UnsupportedOperationExceptionHandlerTest extends BaseExceptionHandlerTest
+public class HandlerComparatorTest
 {
-   @Inject
-   private UnsupportedOperationExceptionHandler handler;
-
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class, ExceptionHandlerExecutor.class)
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+      return ShrinkWrap.create(JavaArchive.class)
+         .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
+         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Test
-   public void testHandlerIsCalled() throws IOException
-   {
-      this.handler.shouldCallEnd(true); // Set so I can reuse this handler in different tests
-      ExceptionEvent event = new ExceptionEvent(new UnsupportedOperationException(), new StateImpl(this.beanManager));
-      this.beanManager.fireEvent(event);
+   @Inject CatchExtension extension;
+   @Inject BeanManager bm;
 
-      assertTrue(this.handler.isHandleCalled());
-      assertTrue(event.isExceptionHandled());
+   @Test
+   public void assertOrderIsCorrect()
+   {
+      List<HandlerMethod> handlers = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
+         IllegalArgumentException.class, bm));
+
+      assertEquals(handlers.get(0).getJavaMethod().getName(), "catchThrowableP20");
+      assertEquals(handlers.get(1).getJavaMethod().getName(), "catchThrowable");
+      assertEquals(handlers.get(2).getJavaMethod().getName(), "catchException");
+      assertEquals(handlers.get(3).getJavaMethod().getName(), "catchRuntime");
+      assertEquals(handlers.get(4).getJavaMethod().getName(), "catchIAE");
    }
 }

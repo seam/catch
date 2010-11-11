@@ -19,56 +19,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionEvent;
-import org.jboss.seam.exception.control.impl.ExceptionHandlerExecutor;
-import org.jboss.seam.exception.control.impl.StateImpl;
+import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.handler.UnMuteHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class UnwrapExceptionTest extends BaseExceptionHandlerTest
+public class UnMuteHandlerTest
 {
-   @Inject
-   private UnsupportedOperationExceptionHandler unsupportedOperationExceptionHandler;
-
-   @Inject
-   private NullPointerExceptionHandler nullPointerExceptionHandler;
-
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      return ShrinkWrap.create("test.jar", JavaArchive.class)
-            .addClasses(UnsupportedOperationExceptionHandler.class,
-                  ExceptionHandlerExecutor.class, NullPointerExceptionHandler.class)
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+      return ShrinkWrap.create(JavaArchive.class)
+         .addPackage(CatchEvent.class.getPackage())
+         .addClasses(UnMuteHandler.class, CatchExtension.class)
+         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
+   @Inject
+   private BeanManager bm;
+
    @Test
-   public void assertInnerExceptionHandledOnlyCalled()
+   public void assertCorrectNumberOfCallsForUnMute()
    {
-      Exception e = new UnsupportedOperationException("test", new NullPointerException("test"));
+      bm.fireEvent(new ExceptionToCatchEvent(new Exception(new NullPointerException())));
 
-      this.nullPointerExceptionHandler.shouldCallEnd(true);
-
-      ExceptionEvent event = new ExceptionEvent(e, new StateImpl(this.beanManager));
-      this.beanManager.fireEvent(event);
-
-      assertTrue(this.nullPointerExceptionHandler.isHandleCalled());
-      assertFalse(this.unsupportedOperationExceptionHandler.isHandleCalled());
-
+      assertEquals(2, UnMuteHandler.ASC_NUMBER_CALLED);
+      assertEquals(2, UnMuteHandler.DESC_NUMBER_CALLED);
    }
 }
