@@ -45,7 +45,7 @@ import java.util.Set;
 public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 {
    private final Class<?> beanClass;
-   private final Bean<?> bean;
+   private Bean<?> bean;
    private final Set<Annotation> qualifiers;
    private final Type exceptionType;
    private final AnnotatedMethod handler;
@@ -82,11 +82,6 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       this.qualifiers = Beans.getQualifiers(bm, handlesParam.getAnnotations());
       this.beanClass = method.getJavaMember().getDeclaringClass();
       this.exceptionType = ((ParameterizedType) handlesParam.getBaseType()).getActualTypeArguments()[0];
-
-      this.bean = bm.resolve(bm.getBeans(this.beanClass, HandlesExceptionsLiteral.INSTANCE));
-
-      // Have to remove the @Handles annotation as it's really not part of the qualifiers we want
-      this.qualifiers.remove(HandlesLiteral.INSTANCE);
    }
 
    /**
@@ -100,9 +95,13 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    /**
     * {@inheritDoc}
     */
-   public Bean<?> getBean()
+   public synchronized Bean<?> getBean(BeanManager bm)
    {
-      return this.bean;
+      if (this.bean == null)
+      {
+         this.bean = bm.resolve(bm.getBeans(this.beanClass, HandlesExceptionsLiteral.INSTANCE));
+      }
+      return this.bean;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    /**
@@ -131,9 +130,9 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       try
       {
          ctx = bm.createCreationalContext(null);
-         Object handlerInstance = bm.getReference(this.bean, this.beanClass, ctx);
-         InjectableMethod im = new InjectableMethod(this.handler, this.bean, bm);
-         im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this.bean));
+         Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
+         InjectableMethod im = new InjectableMethod(this.handler, getBean(bm), bm);
+         im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, getBean(bm)));
       }
       finally
       {
@@ -166,5 +165,70 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    public Method getJavaMethod()
    {
       return this.javaMethod;
+   }
+
+   @Override
+   public boolean equals(Object o)
+   {
+      if (this == o)
+      {
+         return true;
+      }
+      if (o == null || getClass() != o.getClass())
+      {
+         return false;
+      }
+
+      HandlerMethodImpl that = (HandlerMethodImpl) o;
+
+      if (precedence != that.precedence)
+      {
+         return false;
+      }
+      if (!beanClass.equals(that.beanClass))
+      {
+         return false;
+      }
+      if (!exceptionType.equals(that.exceptionType))
+      {
+         return false;
+      }
+      if (!handler.equals(that.handler))
+      {
+         return false;
+      }
+      if (!javaMethod.equals(that.javaMethod))
+      {
+         return false;
+      }
+      if (!qualifiers.equals(that.qualifiers))
+      {
+         return false;
+      }
+      if (traversalPath != that.traversalPath)
+      {
+         return false;
+      }
+
+      return true;
+   }
+
+   @Override
+   public int hashCode()
+   {
+      int result = beanClass.hashCode();
+      result = 5 * result + qualifiers.hashCode();
+      result = 5 * result + exceptionType.hashCode();
+      result = 5 * result + handler.hashCode();
+      result = 5 * result + traversalPath.hashCode();
+      result = 5 * result + precedence;
+      result = 5 * result + javaMethod.hashCode();
+      return result;
+   }
+
+   @Override public String toString()
+   {
+      return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ").append(
+         this.handler.toString()).toString();
    }
 }

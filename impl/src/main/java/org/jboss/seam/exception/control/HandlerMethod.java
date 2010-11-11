@@ -38,8 +38,10 @@ public interface HandlerMethod<T extends Throwable>
 
    /**
     * Obtains the Bean reference that declares the observer method.
+    *
+    * @param bm Active BeanManager
     */
-   Bean<?> getBean();
+   Bean<?> getBean(BeanManager bm);
 
    /**
     * Obtains the set of handled event qualifiers.

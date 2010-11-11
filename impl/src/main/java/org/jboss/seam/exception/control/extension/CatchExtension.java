@@ -54,11 +54,11 @@ import java.util.TreeSet;
 @SuppressWarnings({"unchecked"})
 public class CatchExtension implements Extension
 {
-   private final Map<? super Type, Collection<AnnotatedMethod>> allHandlers;
+   private final Map<? super Type, Collection<HandlerMethod>> allHandlers;
 
    public CatchExtension()
    {
-      this.allHandlers = new HashMap<Type, Collection<AnnotatedMethod>>();
+      this.allHandlers = new HashMap<Type, Collection<HandlerMethod>>();
    }
 
    /**
@@ -93,11 +93,12 @@ public class CatchExtension implements Extension
 
                if (this.allHandlers.containsKey(exceptionType))
                {
-                  this.allHandlers.get(exceptionType).add(method);
+                  this.allHandlers.get(exceptionType).add(new HandlerMethodImpl(method, bm));
                }
                else
                {
-                  this.allHandlers.put(exceptionType, new HashSet<AnnotatedMethod>(Arrays.asList(method)));
+                  this.allHandlers.put(exceptionType, new HashSet<HandlerMethod>(Arrays.asList(new HandlerMethodImpl(
+                     method, bm))));
                }
             }
          }
@@ -125,18 +126,24 @@ public class CatchExtension implements Extension
       {
          if (this.allHandlers.get(hierarchyType) != null)
          {
-            for (AnnotatedMethod handler : this.allHandlers.get(hierarchyType))
+            for (HandlerMethod handler : this.allHandlers.get(hierarchyType))
             {
-               HandlerMethod handlerMethod = new HandlerMethodImpl(handler, bm);
-               if (handlerQualifiers.isEmpty() && handlerMethod.getQualifiers().isEmpty())
+               if (handler.getQualifiers().isEmpty())
                {
-                  returningHandlers.add(handlerMethod);
+                  returningHandlers.add(handler);
                }
                else
                {
-                  if (!handlerQualifiers.isEmpty() && handlerMethod.getQualifiers().containsAll(handlerQualifiers))
+                  if (!handlerQualifiers.isEmpty())
                   {
-                     returningHandlers.add(handlerMethod);
+                     // containsAny functionality
+                     for (Annotation qualifier : handlerQualifiers)
+                     {
+                        if (handler.getQualifiers().contains(qualifier))
+                        {
+                           returningHandlers.add(handler);
+                        }
+                     }
                   }
                }
             }

@@ -26,6 +26,7 @@ import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.test.qualifier.Arquillian;
 import org.jboss.seam.exception.control.test.qualifier.Testing;
 
 @HandlesExceptions
@@ -58,6 +59,16 @@ public class ExtensionExceptionHandler
    }
 
    public void qualifiedHandler(@Handles @Testing CatchEvent<Exception> event)
+   {
+      // Method to verify the qualifiers are working correctly for handlers
+   }
+
+   public void arqHandler(@Handles @Arquillian CatchEvent<Throwable> event)
+   {
+      // Method to verify the qualifiers are working correctly for handlers
+   }
+
+   public void arqTestingHandler(@Handles @Arquillian @Testing CatchEvent<Throwable> event)
    {
       // Method to verify the qualifiers are working correctly for handlers
    }

@@ -43,13 +43,28 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
     */
    public int compare(HandlerMethod lhs, HandlerMethod rhs)
    {
+      if (lhs.equals(rhs))
+      {
+         return 0;
+      }
+
       if (lhs.getExceptionType().equals(rhs.getExceptionType()))
       {
          // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
          // inbound, the other is outbound
          if (lhs.getTraversalPath() == rhs.getTraversalPath())
          {
-            return this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence());
+            final int returnValue = this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence());
+            // Compare number of qualifiers if they exist so handlers that handle the same type
+            // are both are returned and not thrown out (order doesn't really matter)
+            if (returnValue == 0 && !lhs.getQualifiers().isEmpty())
+            {
+               return -1;
+            }
+
+            // Either precedence is non-zero or lhs doesn't have qualifiers so return the precedence compare
+            // If it's 0 this is essentially the same handler for our purposes
+            return returnValue;
          }
          else if (lhs.getTraversalPath() == TraversalPath.DESCENDING)
          {
