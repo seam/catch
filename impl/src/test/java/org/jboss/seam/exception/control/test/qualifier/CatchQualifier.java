@@ -31,6 +31,6 @@ import java.lang.annotation.Target;
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface Testing
+public @interface CatchQualifier
 {
 }

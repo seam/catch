@@ -27,7 +27,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.seam.exception.control.test.qualifier.ArquillianLiteral;
-import org.jboss.seam.exception.control.test.qualifier.TestingLiteral;
+import org.jboss.seam.exception.control.test.qualifier.CatchQualifierLiteral;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -78,7 +78,7 @@ public class ExtensionTest
    public void assertQualifiedHandlerAndOthersAreFound()
    {
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
-      qualifiers.add(TestingLiteral.INSTANCE);
+      qualifiers.add(CatchQualifierLiteral.INSTANCE);
       assertEquals(7, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers).size());
    }
 
@@ -86,7 +86,7 @@ public class ExtensionTest
    public void assertAllValidHandlersAreFound()
    {
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
-      qualifiers.add(TestingLiteral.INSTANCE);
+      qualifiers.add(CatchQualifierLiteral.INSTANCE);
       qualifiers.add(ArquillianLiteral.INSTANCE);
       assertEquals(8, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers).size());
    }

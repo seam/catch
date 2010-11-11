@@ -24,8 +24,8 @@ package org.jboss.seam.exception.control.test.qualifier;
 
 import javax.enterprise.util.AnnotationLiteral;
 
-public class TestingLiteral extends AnnotationLiteral<Testing> implements Testing
+public class CatchQualifierLiteral extends AnnotationLiteral<CatchQualifier> implements CatchQualifier
 {
    private static final long serialVersionUID = 6052715391406598552L;
-   public static final Testing INSTANCE = new TestingLiteral();
+   public static final CatchQualifier INSTANCE = new CatchQualifierLiteral();
 }
