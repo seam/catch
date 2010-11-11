@@ -44,7 +44,7 @@ public interface HandlerMethod<T extends Throwable>
    /**
     * Obtains the set of handled event qualifiers.
     */
-   Set<Annotation> getHandlesQualifiers();
+   Set<Annotation> getQualifiers();
 
    /**
     * Obtains the handled event type.

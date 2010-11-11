@@ -36,6 +36,7 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessManagedBean;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -107,12 +108,14 @@ public class CatchExtension implements Extension
     * Obtains the applicable handlers for the given type or super type of the given type.  Also makes use of
     * {@link org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
     *
-    * @param exceptionClass Type of exception to narrow handler list
-    * @param bm             active BeanManager
+    * @param exceptionClass    Type of exception to narrow handler list
+    * @param bm                active BeanManager
+    * @param handlerQualifiers additional handlerQualifiers to limit handlers
     *
     * @return An order collection of handlers for the given type.
     */
-   public Collection<HandlerMethod> getHandlersForExceptionType(Type exceptionClass, BeanManager bm)
+   public Collection<HandlerMethod> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
+                                                                Set<Annotation> handlerQualifiers)
    {
       final Set<HandlerMethod> returningHandlers = new TreeSet<HandlerMethod>(new ExceptionHandlerComparator());
       final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
@@ -124,7 +127,18 @@ public class CatchExtension implements Extension
          {
             for (AnnotatedMethod handler : this.allHandlers.get(hierarchyType))
             {
-               returningHandlers.add(new HandlerMethodImpl(handler, bm));
+               HandlerMethod handlerMethod = new HandlerMethodImpl(handler, bm);
+               if (handlerQualifiers.isEmpty() && handlerMethod.getQualifiers().isEmpty())
+               {
+                  returningHandlers.add(handlerMethod);
+               }
+               else
+               {
+                  if (!handlerQualifiers.isEmpty() && handlerMethod.getQualifiers().containsAll(handlerQualifiers))
+                  {
+                     returningHandlers.add(handlerMethod);
+                  }
+               }
             }
          }
       }

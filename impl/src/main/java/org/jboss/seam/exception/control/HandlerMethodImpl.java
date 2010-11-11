@@ -108,7 +108,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    /**
     * {@inheritDoc}
     */
-   public Set<Annotation> getHandlesQualifiers()
+   public Set<Annotation> getQualifiers()
    {
       return Collections.unmodifiableSet(this.qualifiers);
    }

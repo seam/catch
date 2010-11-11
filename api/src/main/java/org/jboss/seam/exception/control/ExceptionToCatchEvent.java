@@ -22,6 +22,10 @@
 
 package org.jboss.seam.exception.control;
 
+import java.lang.annotation.Annotation;
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
  * is the handled flag.
@@ -30,10 +34,29 @@ public class ExceptionToCatchEvent
 {
    private final Throwable exception;
    private boolean handled;
+   private final Set<Annotation> qualifiers;
 
+   /**
+    * Constructor that adds qualifiers for the handler(s) to run.
+    * Typically only integrators will be using this constructor.
+    *
+    * @param exception  Exception to handle
+    * @param qualifiers qualifiers to use to narrow the handlers called
+    *                   <p/>
+    *                   public ExceptionToCatchEvent(Throwable exception, Annotation> ... qualifiers)
+    *                   {
+    *                   this.exception = exception;
+    *                   this.qualifiers = new HashSet<Annotation>(Arrays.asList(qualifiers));
+    *                   }
+    *                   <p/>
+    *                   /**
+    *                   Standard constructor.
+    * @param exception  Exception to handle
+    */
    public ExceptionToCatchEvent(Throwable exception)
    {
       this.exception = exception;
+      this.qualifiers = Collections.emptySet();
    }
 
    public Throwable getException()
@@ -49,5 +72,10 @@ public class ExceptionToCatchEvent
    public boolean isHandled()
    {
       return handled;
+   }
+
+   public Set<Annotation> getQualifiers()
+   {
+      return Collections.unmodifiableSet(qualifiers);
    }
 }

@@ -26,6 +26,7 @@ import org.jboss.seam.exception.control.CatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.test.qualifier.Testing;
 
 @HandlesExceptions
 public class ExtensionExceptionHandler
@@ -54,6 +55,11 @@ public class ExtensionExceptionHandler
    public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
    {
       // Nothing to do currently
+   }
+
+   public void qualifiedHandler(@Handles @Testing CatchEvent<Exception> event)
+   {
+      // Method to verify the qualifiers are working correctly for handlers
    }
 
    public void doNothingMethod()

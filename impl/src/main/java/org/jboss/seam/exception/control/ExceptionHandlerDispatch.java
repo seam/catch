@@ -77,7 +77,8 @@ public class ExceptionHandlerDispatch
          {
 
             List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm));
+               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(),
+                                                     bm, eventException.getQualifiers()));
 
             for (HandlerMethod handler : handlerMethods)
             {
@@ -121,7 +122,8 @@ public class ExceptionHandlerDispatch
          {
 
             List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm));
+               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm,
+                                                     eventException.getQualifiers()));
 
             Collections.reverse(handlerMethods);
 

@@ -37,7 +37,9 @@ import org.junit.runner.RunWith;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -61,7 +63,7 @@ public class HandlerComparatorTest
    public void assertOrderIsCorrect()
    {
       List<HandlerMethod> handlers = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
-         IllegalArgumentException.class, bm));
+         IllegalArgumentException.class, bm, Collections.<Annotation>emptySet()));
 
       assertEquals(handlers.get(0).getJavaMethod().getName(), "catchThrowableP20");
       assertEquals(handlers.get(1).getJavaMethod().getName(), "catchThrowable");
