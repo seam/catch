@@ -27,9 +27,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Information about the current exception and exception cause chain.  This object is immutable.
+ * Information about the current exception and exception cause container.  This object is immutable.
  */
-public class StackInfo
+public class CauseContainer
 {
    private final boolean root;
    private final boolean last;
@@ -47,7 +47,7 @@ public class StackInfo
     *
     * @throws IllegalArgumentException if causeChainElements is empty or null.
     */
-   public StackInfo(final Collection<Throwable> causeChainElements, final int currentElementIndex)
+   public CauseContainer(final Collection<Throwable> causeChainElements, final int currentElementIndex)
    {
       if (causeChainElements == null || causeChainElements.size() == 0)
       {
@@ -67,7 +67,7 @@ public class StackInfo
       this.currentCause = (Throwable) this.elements.toArray()[this.index];
    }
 
-   public Collection<Throwable> getElements()
+   public Collection<Throwable> getCauseElements()
    {
       return Collections.unmodifiableCollection(this.elements);
    }

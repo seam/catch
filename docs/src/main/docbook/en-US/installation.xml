@@ -4,11 +4,10 @@
 <chapter id="exception.handling.installation">
    <title>Installation</title>
    <para>
-      The Seam Exception Handling API is the only compile time dependency a project needs, and an implementation must
-      also be included, either explicitly or via some other module depending on it (and exposing their own specialized
-      extension) is all that is needed during runtime. If you are using
-      <ulink url="http://maven.apache.org/">Maven</ulink>
-      as your build tool, you can add the following dependency to
+      The Seam Catch API is the only compile time dependency a project needs, and an implementation must also be 
+      included, either explicitly or via some other module depending on it (and exposing their own specialized
+      extensions) is all that is needed during runtime. If you are using
+      <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool, you can add the following dependency to
       your pom.xml file:
    </para>
    <programlisting role="XML"><![CDATA[
@@ -34,8 +33,7 @@
    </note>
    <tip>
       <para>
-         Replace ${seam-catch-version} with the most recent or appropriate version of Seam Exception
-         Handling.
+         Replace ${seam-catch-version} with the most recent or appropriate version of Seam Catch.
       </para>
    </tip>
    <!--

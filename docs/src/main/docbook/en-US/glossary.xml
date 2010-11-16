@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+   <glossary> 
+     <title>Seam Catch Glossary</title>
+
+     <glossdiv>
+        <title>C</title>
+
+        <glossentry id="causingcontainer">
+          <glossterm>Causing Container</glossterm>
+          <glossdef>
+             <para>
+                An exception chain is made up of many different exceptions or causes until the root exception is found at the 
+                bottom of the chain. When all of the causes are removed or looked at this forms the causing container. The 
+                container may be traversed either ascending (root cause first) or descending (outer most first).
+             </para>
+          </glossdef>
+        </glossentry>
+     </glossdiv>
+
+     <glossdiv>
+        <title>H</title>
+
+        <glossentry id="handlerbean">
+          <glossterm>Handler Bean</glossterm>
+          <glossdef>
+             <para>
+                A CDI enabled Bean which contains handler methods. 
+                Annotated with the @HandlesExceptions annotation.
+             </para>
+             <glosseealso otherterm="handlermethod">handler methods</glosseealso>
+          </glossdef>
+        </glossentry>
+
+        <glossentry id="handlermethod">
+          <glossterm>Handler Method</glossterm>
+          <glossdef>
+            A method within a handler bean which is marked as a handler using 
+            the @Handlers on the first argument, which must be an instance of 
+            CatchEvent. Handler methods typically are public with a void return. Other parameters of 
+            the method after the first will be treated as injection points and will be resolved via CDI and injected upon 
+            invocation.
+         </glossdef>
+         <glosseealso otherterm="handlerbean">handler bean</glosseealso>
+        </glossentry>
+     </glossdiv>
+
+   </glossary> 
+   <!--
+   vim:et:ts=3:sw=3:tw=120
+   -->    
+</chapter>

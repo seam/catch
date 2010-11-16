@@ -1,64 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="exception.handling.framwork_integration">
+<chapter id="exception.handling.framework_integration">
 	<title>Framework Integration</title>
 
 	<para>
-      Integration of Seam Exception Handling into other frameworks consists of two main areas:
+      Integration of Seam Catch with other frameworks consists of one main step, and one other optional (but highly
+      encouraged) step:
    </para>
 
    <itemizedlist>
-      <listitem>creating and firing an <literal>ExceptionEvent</literal></listitem>
-      <listitem>extending and implementing a <literal>State</literal></listitem>
+      <listitem>creating and firing an <literal>ExceptionToCatchEvent</literal></listitem>
+      <listitem>adding any default handlers and qualifiers with annotation literals (optional)</listitem>
    </itemizedlist>
 
-	<section id="exception.handling.framwork_integration.exceptionevent">
-		<title>Creating and Firing an ExceptionEvent</title>
+	<section id="exception.handling.framework_integration.exceptiontocatchevent">
+		<title>Creating and Firing an ExceptionToCatchEvent</title>
 		
 		<para>
-         An <literal>ExceptionEvent</literal> is constructed by passing a <literal>Throwable</literal> and a
-         <literal>State</literal> implementation.  Firing that event is done via CDI events, please consult the CDI API
-         or specification for more information.
-		</para>
-
-      <para>
-         To ease the burden of the application developers, it is suggested that the following two approaches be taken
-         for allowing creation of <literal>ExceptionEvent</literal> objects
-      </para>
-
-      <itemizedlist>
-         <listitem>
-            tie into the exception handling mechanism of the underlying framework
-         </listitem>
-         <listitem>
-            create a shortcut means of creating and firing events that takes a <literal>Throwable</literal>
-         </listitem>
-      </itemizedlist>
-
-      <para>
-         By tying into the underlying framework's exception handling, any uncaught exception should be routed through
-         the Seam Exception Handling system and allow user created handlers to be invoked.  This is the typical way of
-         using the Seam Exception Handling framework.  This also should follow best practices for the specific framework
-         and allow more fine fleshed out <literal>State</literal> implementations to be passed to the handlers.
+         An <literal>ExceptionToCatchEvent</literal> is constructed by passing a <literal>Throwable</literal> and
+         optionally qualifiers for handlers.  Firing the event is done via CDI events (either straight from the
+         <literal>BeanManager</literal> or injecting a <literal>Event&lt;ExceptionToCatchEvent&gt;</literal> and calling fire).
       </para>
 
       <para>
-         A shortcut method of creating and firing the <literal>ExceptionEvent</literal> could be used in catch blocks,
-         but possibly would not allow as fleshed out of a <literal>State</literal> object.
-      </para>
+         To ease the burden on the application developers, the integration should tie into the exception handling 
+         mechanism of the integrating framework, if any exist.  By tying into the framework's exception handling, 
+         any uncaught exceptions should be routed through the Seam Catch system and allow handlers to be invoked.  
+         This is the typical way of using the Seam Catch framework. Of course, it doesn't stop the application 
+         developer from firing their own <literal>ExceptionToCatchEvent</literal> within a catch block.
+      </para> 
 	</section>
 
-   <section id="exception.handling.framwork_integration.state">
-      <title>Extending State</title>
+   <section id="exception.handling.framework_integration.built-in">
+      <title>Default Handlers and Qualifiers</title>
 
-      <para>
-         The basic <literal>State</literal> interface is very generic and only contains a
-         <literal>BeanManager</literal>. A new interface extending the basic one should be created for the framework.
-         This new interface should contain additional state or framework objects that the application developers could
-         use to determine handling of a specific exception, display messages to the users, and / or perform other
-         framework specific actions such as navigation, graceful termination, etc.
-      </para>
+      <section id="exception.handling.framework_integration.built-in.default_handlers">
+         <title>Default Handlers</title>
+
+         <para>
+            An integration with Catch can define it's own handlers to always be used. It's recommended that any
+            built-in handler from an integration have a very low precedence, be a handler for as generic an 
+            exception as is suitable (i.e. Seam Persistence could have a built-in handler for PersistenceExceptions to 
+            rollback a transaction, etc), and make use of qualifiers specific for the integration. This helps limit any 
+            collisions with handlers the application developer may create.
+         </para>
+
+         <note>
+            Hopefully at some point there will be a way to conditionally enable handlers so the application developer
+            will be able to selectively enable any default handlers. Currently this does not exist, but is something
+            that will be explored.
+         </note>
+      </section>
+
+      <section id="exception.handling.framework_integration.built-in.qualifiers">
+         <title>Qualifiers</title>
+
+         <para>
+            Catch supports qualifiers for the <literal>CatchEvent</literal>. To add a qualifier to be used when firing 
+            handlers they must be add to the <literal>ExceptionToCatchEvent</literal> via the constructor (please see
+            API docs for more info). Qualifiers for integrations should be used to avoid collisions in the application
+            error handling both when defining handlers and when firing events from the integration.
+         </para>
+      </section> 
+
    </section>
 <!--
 vim:et:ts=3:sw=3:tw=120

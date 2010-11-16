@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="introduction">
-   <title>Seam Exception Handling Introduction</title>
+   <title>Seam Catch Introduction</title>
   
    <para>
-      The Seam Exception Handling module creates a simple, yet robust base for other modules and users
+      The Seam Catch module creates a simple, yet robust base for other modules and users
       to create a custom and complete exception handling process. Exception handling is done using
       CDI events, keeping exception handling noninvasive and also helping the program or module to stay 
       minimally coupled to the exception handling framework.
