@@ -39,6 +39,7 @@ import javax.enterprise.inject.spi.ProcessManagedBean;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -88,6 +89,11 @@ public class CatchExtension implements Extension
             if (method.getParameters().size() > 0
                 && ((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
             {
+               if (method.getJavaMember().getExceptionTypes().length != 0)
+               {
+                  pmb.addDefinitionError(new IllegalArgumentException(
+                     MessageFormat.format("Handler method %s must not throw exceptions", method.getJavaMember())));
+               }
                final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
                final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
 

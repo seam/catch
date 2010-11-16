@@ -43,7 +43,7 @@ public class CatchEvent<T extends Throwable>
       RETHROW
    }
 
-   private StackInfo stackInfo;
+   private CauseContainer causeContainer;
    private T exception;
    private boolean unMute;
    private ExceptionHandlingFlow flow;
@@ -53,20 +53,20 @@ public class CatchEvent<T extends Throwable>
    /**
     * Initial state constructor.
     *
-    * @param stackInfo           Information about the current exception and cause chain.
+    * @param causeContainer           Information about the current exception and cause chain.
     * @param descendingTraversal flag indicating the direction of the cause chain traversal
     *
-    * @throws IllegalArgumentException if stackInfo is null
+    * @throws IllegalArgumentException if causeContainer is null
     */
-   public CatchEvent(final StackInfo stackInfo, final boolean descendingTraversal)
+   public CatchEvent(final CauseContainer causeContainer, final boolean descendingTraversal)
    {
-      if (stackInfo == null)
+      if (causeContainer == null)
       {
-         throw new IllegalArgumentException("null is not valid for stackInfo");
+         throw new IllegalArgumentException("null is not valid for causeContainer");
       }
 
-      this.exception = (T) stackInfo.getCurrentCause();
-      this.stackInfo = stackInfo;
+      this.exception = (T) causeContainer.getCurrentCause();
+      this.causeContainer = causeContainer;
       this.descendingTraversal = descendingTraversal;
       this.ascendingTraversal = !descendingTraversal;
       this.flow = ExceptionHandlingFlow.PROCEED;
@@ -142,9 +142,9 @@ public class CatchEvent<T extends Throwable>
       return this.unMute;
    }
 
-   public StackInfo getStackInfo()
+   public CauseContainer getCauseContainer()
    {
-      return this.stackInfo;
+      return this.causeContainer;
    }
 
    protected ExceptionHandlingFlow getFlow()

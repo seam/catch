@@ -24,6 +24,7 @@ package org.jboss.seam.exception.control;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -42,16 +43,18 @@ public class ExceptionToCatchEvent
     *
     * @param exception  Exception to handle
     * @param qualifiers qualifiers to use to narrow the handlers called
-    *                   <p/>
-    *                   public ExceptionToCatchEvent(Throwable exception, Annotation> ... qualifiers)
-    *                   {
-    *                   this.exception = exception;
-    *                   this.qualifiers = new HashSet<Annotation>(Arrays.asList(qualifiers));
-    *                   }
-    *                   <p/>
-    *                   /**
-    *                   Standard constructor.
-    * @param exception  Exception to handle
+    */
+   public ExceptionToCatchEvent(Throwable exception, Annotation... qualifiers)
+   {
+      this.exception = exception;
+      this.qualifiers = new HashSet<Annotation>();
+      Collections.addAll(this.qualifiers, qualifiers);
+   }
+
+   /**
+    * Basic constructor without any qualifiers defined.
+    *
+    * @param exception Exception to handle.
     */
    public ExceptionToCatchEvent(Throwable exception)
    {

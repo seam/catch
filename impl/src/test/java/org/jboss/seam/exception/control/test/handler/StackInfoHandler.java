@@ -23,9 +23,9 @@
 package org.jboss.seam.exception.control.test.handler;
 
 import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CauseContainer;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.StackInfo;
 
 import static org.junit.Assert.*;
 
@@ -34,27 +34,27 @@ public class StackInfoHandler
 {
    public void outerInfoInspector(@Handles CatchEvent<Exception> event)
    {
-      StackInfo info = event.getStackInfo();
+      CauseContainer info = event.getCauseContainer();
 
       assertTrue(info.isLast());
       assertFalse(info.isRoot());
       assertEquals(0, info.getIndex());
       assertNull(info.getNextCause());
       assertEquals(Exception.class, info.getCurrentCause().getClass());
-      assertEquals(2, info.getElements().size());
+      assertEquals(2, info.getCauseElements().size());
       assertEquals(0, info.getRemainingCauses().size());
    }
 
    public void rootInfoInspector(@Handles CatchEvent<NullPointerException> event)
    {
-      StackInfo info = event.getStackInfo();
+      CauseContainer info = event.getCauseContainer();
 
       assertFalse(info.isLast());
       assertTrue(info.isRoot());
-      assertEquals(info.getElements().size() - 1, info.getIndex());
+      assertEquals(info.getCauseElements().size() - 1, info.getIndex());
       assertNotNull(info.getNextCause());
       assertEquals(NullPointerException.class, info.getCurrentCause().getClass());
-      assertEquals(2, info.getElements().size());
+      assertEquals(2, info.getCauseElements().size());
       assertEquals(1, info.getRemainingCauses().size());
       assertEquals(event.getException(), info.getCurrentCause());
 
