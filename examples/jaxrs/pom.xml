@@ -188,16 +188,16 @@
          <artifactId>seam-rest</artifactId>
          <scope>compile</scope>
       </dependency>
-      <dependency>
-         <groupId>org.jboss.seam.persistence</groupId>
-         <artifactId>seam-persistence-api</artifactId>
-         <scope>compile</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.seam.persistence</groupId>
-         <artifactId>seam-persistence-impl</artifactId>
-         <scope>runtime</scope>
-      </dependency>
+      <!--      <dependency>-->
+      <!--         <groupId>org.jboss.seam.persistence</groupId>-->
+      <!--         <artifactId>seam-persistence-api</artifactId>-->
+      <!--         <scope>compile</scope>-->
+      <!--      </dependency>-->
+      <!--      <dependency>-->
+      <!--         <groupId>org.jboss.seam.persistence</groupId>-->
+      <!--         <artifactId>seam-persistence-impl</artifactId>-->
+      <!--         <scope>runtime</scope>-->
+      <!--      </dependency>-->
       <dependency>
          <groupId>org.jboss.weld</groupId>
          <artifactId>weld-extensions</artifactId>

@@ -24,10 +24,11 @@ package org.jboss.seam.exception.control.example.jaxrs.resource;
 
 import org.jboss.seam.exception.control.example.jaxrs.entity.Author;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,10 +40,12 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_XML)
 @Consumes(MediaType.APPLICATION_XML)
 @Path("author")
+@Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class AuthorResource
 {
-   @Inject private EntityManager em;
+   @PersistenceContext
+   private EntityManager em;
 
    @GET
    public List<Author> getAllAuthors()

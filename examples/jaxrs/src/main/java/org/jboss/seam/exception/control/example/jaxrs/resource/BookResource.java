@@ -25,10 +25,11 @@ package org.jboss.seam.exception.control.example.jaxrs.resource;
 import org.jboss.seam.exception.control.example.jaxrs.entity.Book;
 import org.jboss.seam.rest.validation.ValidateRequest;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -42,9 +43,11 @@ import java.util.List;
 @Path("book")
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @ValidateRequest
+@Stateless
 public class BookResource
 {
-   @Inject private EntityManager em;
+   @PersistenceContext
+   private EntityManager em;
 
    @GET
    public List<Book> getAllAuthors()

@@ -25,14 +25,17 @@ package org.jboss.seam.exception.control.example.jaxrs.db;
 import org.jboss.seam.exception.control.example.jaxrs.entity.Author;
 import org.jboss.seam.exception.control.example.jaxrs.entity.Book;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
+@Stateless
 public class InitDatabaseBean
 {
-   @Inject private EntityManager em;
+   @PersistenceContext
+   private EntityManager em;
 
    @TransactionAttribute(TransactionAttributeType.REQUIRED)
    public void seedDatabase()
