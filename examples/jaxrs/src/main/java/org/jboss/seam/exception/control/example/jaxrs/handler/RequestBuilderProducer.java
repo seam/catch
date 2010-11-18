@@ -20,20 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.example.jaxrs.db;
+package org.jboss.seam.exception.control.example.jaxrs.handler;
 
-import org.jboss.seam.persistence.SeamManaged;
-
-import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import javax.ws.rs.core.Response;
 
-public class ManagedPeristenceContextProducer
+public class RequestBuilderProducer
 {
-   @PersistenceUnit(unitName = "libraryDatabase")
-   @ConversationScoped
    @Produces
-   @SeamManaged
-   EntityManagerFactory emf;
+   @RequestScoped
+   @RestCatch
+   public Response.ResponseBuilder createErrorResponseBuilder()
+   {
+      return Response.serverError();
+   }
 }

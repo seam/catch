@@ -25,9 +25,10 @@ package org.jboss.seam.exception.control.example.jaxrs.handler;
 import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -37,22 +38,24 @@ import javax.ws.rs.ext.Provider;
 @ApplicationScoped
 public class CatchBridge implements ExceptionMapper<Throwable>
 {
-   @Inject @RestCatch
-   private Response.ResponseBuilder responseBuilder;
+//   @Inject @RestCatch
+//   private Response.ResponseBuilder responseBuilder;
 
    @Inject Event<ExceptionToCatchEvent> event;
 
-   @Produces
-   @RequestScoped
-   @RestCatch
-   public Response.ResponseBuilder createErrorResponseBuilder()
-   {
-      return Response.serverError();
-   }
+   @Inject BeanManager bm;
 
    public Response toResponse(Throwable exception)
    {
+      final Class<Response.ResponseBuilder> responseBuilderType = Response.ResponseBuilder.class;
+
+      final Bean<?> bean = this.bm.resolve(this.bm.getBeans(responseBuilderType, RestCatchLiteral.INSTANCE));
+      final CreationalContext<?> ctx = this.bm.createCreationalContext(bean);
+      final Response.ResponseBuilder responseBuilder = (Response.ResponseBuilder) this.bm.getReference(bean,
+                                                                                                       responseBuilderType,
+                                                                                                       ctx);
+
       event.fire(new ExceptionToCatchEvent(exception, RestCatchLiteral.INSTANCE));
-      return this.responseBuilder.build();
+      return responseBuilder.build();
    }
 }

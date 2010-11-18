@@ -32,6 +32,11 @@
    <dependencyManagement>
       <dependencies>
          <dependency>
+            <groupId>org.jboss.seam.xml</groupId>
+            <artifactId>seam-xml-config</artifactId>
+            <version>${seam.xml.version}</version>
+         </dependency>
+         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
             <version>${jboss.logging.version}</version>
