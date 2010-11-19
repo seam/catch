@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationPath("/api/*")
+@ApplicationPath("/api")
 public class LibraryApplication extends Application
 {
    @Override

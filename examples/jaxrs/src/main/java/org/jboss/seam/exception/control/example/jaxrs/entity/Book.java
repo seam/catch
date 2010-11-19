@@ -39,7 +39,7 @@ import java.util.List;
 @Entity
 @XmlRootElement
 @NamedQueries({
-   @NamedQuery(name = "booksByTitle", query = "select b from Book b where b.title = :title"),
+   @NamedQuery(name = "booksById", query = "select b from Book b where b.id = :id"),
    @NamedQuery(name = "books", query = "select b from Book b")
 })
 

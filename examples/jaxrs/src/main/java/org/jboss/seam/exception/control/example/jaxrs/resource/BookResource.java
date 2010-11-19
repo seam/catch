@@ -56,9 +56,9 @@ public class BookResource
    }
 
    @GET
-   @Path("{title:[A-Za-z]+}")
-   public Book getAuthorByName(@PathParam("title") String authorName)
+   @Path("{id:[0-9]+}")
+   public Book getBookById(@PathParam("id") Long bookId)
    {
-      return this.em.createNamedQuery("booksByTitle", Book.class).setParameter("title", authorName).getSingleResult();
+      return this.em.createNamedQuery("booksById", Book.class).setParameter("id", bookId).getSingleResult();
    }
 }

@@ -215,6 +215,35 @@
       </dependency>
    </dependencies>
 
+   <build>
+      <finalName>catch-jaxrs-example</finalName>
+      <plugins>
+         <plugin>
+            <!-- no unit tests, surefire would instead run functional tests in incorrect phase -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <skip>true</skip>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>selenium-maven-plugin</artifactId>
+            <version>1.0.1</version>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.0</version>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>failsafe-maven-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+
+
    <profiles>
       <profile>
          <id>jboss-public-repository</id>
@@ -258,6 +287,45 @@
             </pluginRepository>
          </pluginRepositories>
       </profile>
+      <profile>
+         <id>jboss-as</id>
+         <!-- Excluded dependencies -->
+         <dependencies>
+            <dependency>
+               <groupId>org.jboss.logging</groupId>
+               <artifactId>jboss-logging</artifactId>
+               <scope>provided</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-api</artifactId>
+               <scope>provided</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-simple</artifactId>
+               <scope>provided</scope>
+            </dependency>
+
+         </dependencies>
+
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-war-plugin</artifactId>
+                  <configuration>
+                     <webResources>
+                        <resource>
+                           <directory>src/main/jboss</directory>
+                        </resource>
+                     </webResources>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+
    </profiles>
 
    <scm>

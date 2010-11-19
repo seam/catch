@@ -55,7 +55,8 @@ public class CatchBridge implements ExceptionMapper<Throwable>
                                                                                                        responseBuilderType,
                                                                                                        ctx);
 
-      event.fire(new ExceptionToCatchEvent(exception, RestCatchLiteral.INSTANCE));
+      this.bm.fireEvent(new ExceptionToCatchEvent(exception, RestCatchLiteral.INSTANCE));
+//      event.fire(new ExceptionToCatchEvent(exception, RestCatchLiteral.INSTANCE));
       return responseBuilder.build();
    }
 }

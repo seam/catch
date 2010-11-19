@@ -20,13 +20,9 @@
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
-<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:rest="urn:java:org.jboss.seam.rest.exceptions" xmlns:s="urn:java:ee"
-       xsi:schemaLocation="
-	http://java.sun.com/xml/ns/javaee
-	http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
-   <interceptors>
-      <class>org.jboss.seam.rest.validation.ValidationInterceptor</class>
-      <!--      <class>org.jboss.seam.persistence.transaction.TransactionInterceptor</class>-->
-   </interceptors>
-</beans>
+<web-app version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+</web-app>

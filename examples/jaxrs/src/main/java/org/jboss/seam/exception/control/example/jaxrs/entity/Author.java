@@ -40,7 +40,7 @@ import java.util.List;
 @Entity
 @XmlRootElement
 @NamedQueries({
-   @NamedQuery(name = "authorsByName", query = "select a from Author a where a.name = :name"),
+   @NamedQuery(name = "authorsById", query = "select a from Author a where a.id = :id"),
    @NamedQuery(name = "authors", query = "select a from Author a")
 })
 public class Author
