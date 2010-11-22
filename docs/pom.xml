@@ -71,11 +71,4 @@
       </profile>
    </profiles>
 
-   <!--
-   <scm>
-      <connection>scm:git:git://github.com/seam/mail.git</connection>
-      <developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
-      <url>http://github.com/seam/mail</url>
-   </scm>
-   -->
 </project>
