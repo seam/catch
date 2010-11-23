@@ -214,7 +214,7 @@
    </dependencies>
 
    <build>
-      <finalName>catch-jaxrs-example</finalName>
+      <finalName>seam-catch-example-jaxrs</finalName>
       <plugins>
          <plugin>
             <!-- no unit tests, surefire would instead run functional tests in incorrect phase -->
