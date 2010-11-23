@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -34,18 +34,18 @@ public class ExceptionHandledHandler
    public static boolean IAE_ASC_CALLED = false;
    public static boolean NPE_DESC_CALLED = false;
 
-   public void exHandler(@Handles CatchEvent<Exception> event)
+   public void exHandler(@Handles CaughtException<Exception> event)
    {
       EX_ASC_CALLED = true;
    }
 
-   public void npeHandler(@Handles CatchEvent<IllegalArgumentException> event)
+   public void npeHandler(@Handles CaughtException<IllegalArgumentException> event)
    {
       IAE_ASC_CALLED = true;
       event.handled();
    }
 
-   public void npeDescHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
+   public void npeDescHandler(@Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       NPE_DESC_CALLED = true;
       event.handled();

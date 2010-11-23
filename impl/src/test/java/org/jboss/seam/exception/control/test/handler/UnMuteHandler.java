@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -33,13 +33,13 @@ public class UnMuteHandler
    public static int ASC_NUMBER_CALLED = 0;
    public static int DESC_NUMBER_CALLED = 0;
 
-   public void unMuteHandlerAsc(@Handles CatchEvent<Exception> event)
+   public void unMuteHandlerAsc(@Handles CaughtException<Exception> event)
    {
       ASC_NUMBER_CALLED++;
       event.unMute();
    }
 
-   public void unMuteHandlerDesc(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
+   public void unMuteHandlerDesc(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       DESC_NUMBER_CALLED++;
       event.unMute();

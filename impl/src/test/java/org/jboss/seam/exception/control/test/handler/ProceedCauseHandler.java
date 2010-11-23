@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -36,26 +36,27 @@ public class ProceedCauseHandler
    public static int OUTBOUND_NPE_CALLED = 0;
    public static int OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED = 0;
 
-   public void npeInboundHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
+   public void npeInboundHandler(
+      @Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_CALLED++;
       event.proceedToCause();
    }
 
    public void npeLowerPrecedenceInboundHandler(
-      @Handles(precedence = -1, during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
+      @Handles(precedence = -1, during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
       event.proceed();
    }
 
-   public void npeOutboundHandler(@Handles CatchEvent<NullPointerException> event)
+   public void npeOutboundHandler(@Handles CaughtException<NullPointerException> event)
    {
       OUTBOUND_NPE_CALLED++;
       event.proceedToCause();
    }
 
-   public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = 1) CatchEvent<NullPointerException> event)
+   public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = 1) CaughtException<NullPointerException> event)
    {
       OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED++;
       event.proceed();

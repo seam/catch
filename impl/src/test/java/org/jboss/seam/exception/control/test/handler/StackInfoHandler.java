@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.CauseContainer;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 @HandlesExceptions
 public class StackInfoHandler
 {
-   public void outerInfoInspector(@Handles CatchEvent<Exception> event)
+   public void outerInfoInspector(@Handles CaughtException<Exception> event)
    {
       CauseContainer info = event.getCauseContainer();
 
@@ -45,7 +45,7 @@ public class StackInfoHandler
       assertEquals(0, info.getRemainingCauses().size());
    }
 
-   public void rootInfoInspector(@Handles CatchEvent<NullPointerException> event)
+   public void rootInfoInspector(@Handles CaughtException<NullPointerException> event)
    {
       CauseContainer info = event.getCauseContainer();
 

@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.example.jaxrs.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.rest.exceptions.ErrorMessageWrapper;
@@ -34,7 +34,7 @@ import javax.ws.rs.core.Response;
 @HandlesExceptions
 public class RestHandlerContainer
 {
-   public void genericRestHandler(@Handles(precedence = -100) @RestCatch CatchEvent<Throwable> event,
+   public void genericRestHandler(@Handles(precedence = -100) @RestCatch CaughtException<Throwable> event,
                                   @RestCatch Response.ResponseBuilder responseBuilder,
                                   ExceptionMappingConfiguration exceptionMapping)
    {

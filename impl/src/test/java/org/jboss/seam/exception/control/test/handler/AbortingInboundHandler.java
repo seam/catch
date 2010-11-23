@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -34,13 +34,13 @@ public class AbortingInboundHandler
    public static boolean abortCalled = false;
    public static boolean proceedCalled = false;
 
-   public void abortHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
+   public void abortHandler(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       abortCalled = true;
       event.abort();
    }
 
-   public void proceedHandler(@Handles CatchEvent<NullPointerException> event)
+   public void proceedHandler(@Handles CaughtException<NullPointerException> event)
    {
       proceedCalled = true;
       event.proceed();

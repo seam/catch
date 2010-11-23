@@ -29,7 +29,7 @@ package org.jboss.seam.exception.control;
  * @param <T> Exception type this event represents
  */
 @SuppressWarnings({"unchecked"})
-public class CatchEvent<T extends Throwable>
+public class CaughtException<T extends Throwable>
 {
    /**
     * Flow control enum.  Used in the dispatcher to determine how to proceed.
@@ -53,12 +53,12 @@ public class CatchEvent<T extends Throwable>
    /**
     * Initial state constructor.
     *
-    * @param causeContainer           Information about the current exception and cause chain.
+    * @param causeContainer      Information about the current exception and cause chain.
     * @param descendingTraversal flag indicating the direction of the cause chain traversal
     *
     * @throws IllegalArgumentException if causeContainer is null
     */
-   public CatchEvent(final CauseContainer causeContainer, final boolean descendingTraversal)
+   public CaughtException(final CauseContainer causeContainer, final boolean descendingTraversal)
    {
       if (causeContainer == null)
       {
@@ -110,7 +110,7 @@ public class CatchEvent<T extends Throwable>
    }
 
    /**
-    * Similar to {@link org.jboss.seam.exception.control.CatchEvent#proceed()}, but instructs the dispatcher
+    * Similar to {@link CaughtException#proceed()}, but instructs the dispatcher
     * to proceed to the next element in the cause chain without processing additional handlers for this cause
     * chain element.
     */

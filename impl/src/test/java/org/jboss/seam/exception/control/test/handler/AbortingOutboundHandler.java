@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
@@ -33,13 +33,13 @@ public class AbortingOutboundHandler
    public static boolean abortCalled = false;
    public static boolean proceedCalled = false;
 
-   public void abortHandler(@Handles CatchEvent<Exception> event)
+   public void abortHandler(@Handles CaughtException<Exception> event)
    {
       abortCalled = true;
       event.abort();
    }
 
-   public void proceedHandler(@Handles CatchEvent<Throwable> event)
+   public void proceedHandler(@Handles CaughtException<Throwable> event)
    {
       proceedCalled = true;
       event.proceed();

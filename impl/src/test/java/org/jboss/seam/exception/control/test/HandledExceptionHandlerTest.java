@@ -24,7 +24,7 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.ExceptionHandledHandler;
@@ -49,7 +49,7 @@ public class HandledExceptionHandlerTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addPackage(CatchEvent.class.getPackage())
+         .addPackage(CaughtException.class.getPackage())
          .addClasses(ExceptionHandledHandler.class, CatchExtension.class)
          .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));

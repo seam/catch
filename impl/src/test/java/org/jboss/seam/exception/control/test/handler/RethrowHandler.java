@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -30,12 +30,13 @@ import org.jboss.seam.exception.control.TraversalPath;
 @HandlesExceptions
 public class RethrowHandler
 {
-   public void rethrow(@Handles CatchEvent<NullPointerException> event)
+   public void rethrow(@Handles CaughtException<NullPointerException> event)
    {
       event.rethrow();
    }
 
-   public void rethrowInbound(@Handles(during = TraversalPath.DESCENDING) CatchEvent<IllegalArgumentException> event)
+   public void rethrowInbound(
+      @Handles(during = TraversalPath.DESCENDING) CaughtException<IllegalArgumentException> event)
    {
       event.rethrow();
    }

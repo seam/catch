@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -32,43 +32,44 @@ import org.jboss.seam.exception.control.test.qualifier.CatchQualifier;
 @HandlesExceptions
 public class ExtensionExceptionHandler
 {
-   public void catchException(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
+   public void catchException(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       // Nothing to do currently
    }
 
-   public void catchRuntime(@Handles(during = TraversalPath.ASCENDING) CatchEvent<RuntimeException> event)
+   public void catchRuntime(@Handles(during = TraversalPath.ASCENDING) CaughtException<RuntimeException> event)
    {
       // Nothing to do currently
    }
 
-   public void catchThrowable(@Handles(precedence = 10, during = TraversalPath.ASCENDING) CatchEvent<Throwable> event)
+   public void catchThrowable(
+      @Handles(precedence = 10, during = TraversalPath.ASCENDING) CaughtException<Throwable> event)
    {
       // Nothing to do currently
    }
 
    public void catchThrowableP20(
-      @Handles(precedence = 20, during = TraversalPath.ASCENDING) CatchEvent<Throwable> event)
+      @Handles(precedence = 20, during = TraversalPath.ASCENDING) CaughtException<Throwable> event)
    {
       // Nothing to do currently
    }
 
-   public void catchIAE(@Handles CatchEvent<IllegalArgumentException> event)
+   public void catchIAE(@Handles CaughtException<IllegalArgumentException> event)
    {
       // Nothing to do currently
    }
 
-   public void qualifiedHandler(@Handles @CatchQualifier CatchEvent<Exception> event)
+   public void qualifiedHandler(@Handles @CatchQualifier CaughtException<Exception> event)
    {
       // Method to verify the qualifiers are working correctly for handlers
    }
 
-   public void arqHandler(@Handles @Arquillian CatchEvent<Throwable> event)
+   public void arqHandler(@Handles @Arquillian CaughtException<Throwable> event)
    {
       // Method to verify the qualifiers are working correctly for handlers
    }
 
-   public void arqTestingHandler(@Handles @Arquillian @CatchQualifier CatchEvent<Throwable> event)
+   public void arqTestingHandler(@Handles @Arquillian @CatchQualifier CaughtException<Throwable> event)
    {
       // Method to verify the qualifiers are working correctly for handlers
    }

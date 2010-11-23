@@ -124,7 +124,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     * {@inheritDoc}
     */
    @SuppressWarnings({"unchecked"})
-   public void notify(final CatchEvent<T> event, final BeanManager bm)
+   public void notify(final CaughtException<T> event, final BeanManager bm)
    {
       CreationalContext ctx = null;
       try

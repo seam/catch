@@ -2,35 +2,46 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="exception.handling.framework_integration">
-	<title>Framework Integration</title>
+   <title>Framework Integration</title>
 
-	<para>
+   <para>
       Integration of Seam Catch with other frameworks consists of one main step, and one other optional (but highly
       encouraged) step:
    </para>
 
    <itemizedlist>
-      <listitem>creating and firing an <literal>ExceptionToCatchEvent</literal></listitem>
+      <listitem>creating and firing an
+         <literal>ExceptionToCatchEvent</literal>
+      </listitem>
       <listitem>adding any default handlers and qualifiers with annotation literals (optional)</listitem>
    </itemizedlist>
 
-	<section id="exception.handling.framework_integration.exceptiontocatchevent">
-		<title>Creating and Firing an ExceptionToCatchEvent</title>
-		
-		<para>
-         An <literal>ExceptionToCatchEvent</literal> is constructed by passing a <literal>Throwable</literal> and
-         optionally qualifiers for handlers.  Firing the event is done via CDI events (either straight from the
-         <literal>BeanManager</literal> or injecting a <literal>Event&lt;ExceptionToCatchEvent&gt;</literal> and calling fire).
+   <section id="exception.handling.framework_integration.exceptiontocatchevent">
+      <title>Creating and Firing an ExceptionToCatchEvent</title>
+
+      <para>
+         An
+         <literal>ExceptionToCatchEvent</literal>
+         is constructed by passing a
+         <literal>Throwable</literal>
+         and
+         optionally qualifiers for handlers. Firing the event is done via CDI events (either straight from the
+         <literal>BeanManager</literal>
+         or injecting a
+         <literal>Event&lt;ExceptionToCatchEvent&gt;</literal>
+         and calling fire).
       </para>
 
       <para>
-         To ease the burden on the application developers, the integration should tie into the exception handling 
-         mechanism of the integrating framework, if any exist.  By tying into the framework's exception handling, 
-         any uncaught exceptions should be routed through the Seam Catch system and allow handlers to be invoked.  
-         This is the typical way of using the Seam Catch framework. Of course, it doesn't stop the application 
-         developer from firing their own <literal>ExceptionToCatchEvent</literal> within a catch block.
-      </para> 
-	</section>
+         To ease the burden on the application developers, the integration should tie into the exception handling
+         mechanism of the integrating framework, if any exist. By tying into the framework's exception handling,
+         any uncaught exceptions should be routed through the Seam Catch system and allow handlers to be invoked.
+         This is the typical way of using the Seam Catch framework. Of course, it doesn't stop the application
+         developer from firing their own
+         <literal>ExceptionToCatchEvent</literal>
+         within a catch block.
+      </para>
+   </section>
 
    <section id="exception.handling.framework_integration.built-in">
       <title>Default Handlers and Qualifiers</title>
@@ -40,9 +51,9 @@
 
          <para>
             An integration with Catch can define it's own handlers to always be used. It's recommended that any
-            built-in handler from an integration have a very low precedence, be a handler for as generic an 
-            exception as is suitable (i.e. Seam Persistence could have a built-in handler for PersistenceExceptions to 
-            rollback a transaction, etc), and make use of qualifiers specific for the integration. This helps limit any 
+            built-in handler from an integration have a very low precedence, be a handler for as generic an
+            exception as is suitable (i.e. Seam Persistence could have a built-in handler for PersistenceExceptions to
+            rollback a transaction, etc), and make use of qualifiers specific for the integration. This helps limit any
             collisions with handlers the application developer may create.
          </para>
 
@@ -57,15 +68,18 @@
          <title>Qualifiers</title>
 
          <para>
-            Catch supports qualifiers for the <literal>CatchEvent</literal>. To add a qualifier to be used when firing 
-            handlers they must be add to the <literal>ExceptionToCatchEvent</literal> via the constructor (please see
+            Catch supports qualifiers for the<literal>CaughtException</literal>. To add a qualifier to be used when
+            firing
+            handlers they must be add to the
+            <literal>ExceptionToCatchEvent</literal>
+            via the constructor (please see
             API docs for more info). Qualifiers for integrations should be used to avoid collisions in the application
             error handling both when defining handlers and when firing events from the integration.
          </para>
-      </section> 
+      </section>
 
    </section>
-<!--
-vim:et:ts=3:sw=3:tw=120
--->    
+   <!--
+   vim:et:ts=3:sw=3:tw=120
+   -->
 </chapter>

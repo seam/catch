@@ -59,7 +59,7 @@ public interface HandlerMethod<T extends Throwable>
     * @param event event to pass to the handler.
     * @param bm    Active BeanManager
     */
-   void notify(CatchEvent<T> event, BeanManager bm);
+   void notify(CaughtException<T> event, BeanManager bm);
 
    /**
     * Obtains the direction of the traversal path the handler will be listening.

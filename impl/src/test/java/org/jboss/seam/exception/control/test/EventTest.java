@@ -24,7 +24,7 @@ package org.jboss.seam.exception.control.test;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
@@ -52,7 +52,7 @@ public class EventTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addPackage(CatchEvent.class.getPackage())
+         .addPackage(CaughtException.class.getPackage())
          .addClasses(EventTest.class, CatchExtension.class)
          .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
          .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
@@ -67,13 +67,13 @@ public class EventTest
       bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
    }
 
-   public void verifyDescEvent(@Handles(during = TraversalPath.DESCENDING) CatchEvent<NullPointerException> event)
+   public void verifyDescEvent(@Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       assertTrue(event.isDescendingTraversal());
       assertFalse(event.isAscendingTraversal());
    }
 
-   public void verifyAscEvent(@Handles(during = TraversalPath.ASCENDING) CatchEvent<NullPointerException> event)
+   public void verifyAscEvent(@Handles(during = TraversalPath.ASCENDING) CaughtException<NullPointerException> event)
    {
       assertFalse(event.isDescendingTraversal());
       assertTrue(event.isAscendingTraversal());

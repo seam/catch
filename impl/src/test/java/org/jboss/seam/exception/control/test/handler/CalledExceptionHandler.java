@@ -22,7 +22,7 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
-import org.jboss.seam.exception.control.CatchEvent;
+import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -37,19 +37,19 @@ public class CalledExceptionHandler
    public static int INBOUND_HANDLER_TIMES_CALLED = 0;
    public static boolean BEANMANAGER_INJECTED = false;
 
-   public void basicHandler(@Handles CatchEvent<Exception> event)
+   public void basicHandler(@Handles CaughtException<Exception> event)
    {
       OUTBOUND_HANDLER_CALLED = true;
       OUTBOUND_HANDLER_TIMES_CALLED++;
    }
 
-   public void basicInboundHandler(@Handles(during = TraversalPath.DESCENDING) CatchEvent<Exception> event)
+   public void basicInboundHandler(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       INBOUND_HANDLER_TIMES_CALLED++;
       event.proceed();
    }
 
-   public void extraInjections(@Handles CatchEvent<IllegalArgumentException> event, BeanManager bm)
+   public void extraInjections(@Handles CaughtException<IllegalArgumentException> event, BeanManager bm)
    {
       if (bm != null)
       {

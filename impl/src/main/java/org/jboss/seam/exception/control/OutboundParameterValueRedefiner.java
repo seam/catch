@@ -29,23 +29,23 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
 /**
- * Redefiner allowing to inject a non contextual instance of {@link CatchEvent} into the first parameter.
+ * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter.
  * This class is immutable.
  */
 public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
-   final private CatchEvent event;
+   final private CaughtException event;
    final private BeanManager bm;
    final private Bean<?> declaringBean;
 
    /**
     * Sole constructor.
     *
-    * @param event         instance of CatchEvent to inject.
+    * @param event         instance of CaughtException to inject.
     * @param manager       active BeanManager
     * @param declaringBean Class containing the handler method
     */
-   public OutboundParameterValueRedefiner(CatchEvent event, final BeanManager manager, Bean<?> declaringBean)
+   public OutboundParameterValueRedefiner(CaughtException event, final BeanManager manager, Bean<?> declaringBean)
    {
       this.event = event;
       this.bm = manager;

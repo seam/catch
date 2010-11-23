@@ -2,24 +2,27 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="exception.handling.client_usage">
-	<title>Usage</title>
-	<para>
+   <title>Usage</title>
+   <para>
       An end user of the Seam Catch Framework is typically only concerned with Exception Handlers (methods in Handler
-      Beans, which are similar to CDI Observers). Handler Beans are CDI beans with the 
-      <literal>@HandlesExceptions</literal> annotation.  There may be other resources made available by other modules 
-      which can be injected into handler methods on an as needed basis.  For further information, please check the API 
+      Beans, which are similar to CDI Observers). Handler Beans are CDI beans with the
+      <literal>@HandlesExceptions</literal>
+      annotation. There may be other resources made available by other modules
+      which can be injected into handler methods on an as needed basis. For further information, please check the API
       docs, or examples.
-	</para>
+   </para>
 
-	<section id="exception.handling.client_usage.annotations">
+   <section id="exception.handling.client_usage.annotations">
       <title>Annotations</title>
 
       <section>
          <title>@HandlesExceptions</title>
-         
+
          <para>
-            The <literal>@HandlesException</literal> annotation is simply a marker annotation instructing the Seam 
-            Catch CDI extension to scan the bean for handler methods.  
+            The
+            <literal>@HandlesException</literal>
+            annotation is simply a marker annotation instructing the Seam
+            Catch CDI extension to scan the bean for handler methods.
          </para>
 
          <para>
@@ -29,7 +32,7 @@
          <programlisting role="JAVA"><![CDATA[@HandlesExceptions
 public class MyHandlers
 {
-    public void catchAllHandler(@Handles(during = TraversalPath.DESCENDING) @MyFramework CatchEvent<Throwable> event, Logger log)
+    public void catchAllHandler(@Handles(during = TraversalPath.DESCENDING) @MyFramework CaughtException<Throwable> event, Logger log)
     {
         log.warn("Exception occured: " + event.getException().getMessage());
     }
@@ -38,15 +41,30 @@ public class MyHandlers
 
          <para>
             This is a complete and valid handler showing all the current features of handlers. The Handler Bean is
-            defined by the class level annotation <literal>@HandlesExceptions</literal> and the actual handler is
-            defined by the method that takes a <literal>CatchEvent</literal> of type <literal>Throwable</literal> which
-            is annotated using the <literal>@Handles</literal> annotation. Also notice the handler is qualified using
-            the <literal>@MyFramework</literal> qualifier. This works the same as qualifers in CDI Observers,
-            it will only be invoked for exceptions (it catches type <literal>Throwable</literal>) where the
-            initial <literal>ExceptionToCatchEvent</literal> was created with the <literal>@MyFramework</literal> 
-            annotation passed to the constructor. The Logger instance is also injected into the handler when it is 
-            invoked. The handler has a default precedence of 0 and a <literal>TraversalPath</literal> of 
-            <literal>DESCENDING</literal>. It does not modify flow control of other handlers however and simply uses 
+            defined by the class level annotation
+            <literal>@HandlesExceptions</literal>
+            and the actual handler is
+            defined by the method that takes a
+            <literal>CaughtException</literal>
+            of type
+            <literal>Throwable</literal>
+            which
+            is annotated using the
+            <literal>@Handles</literal>
+            annotation. Also notice the handler is qualified using
+            the
+            <literal>@MyFramework</literal>
+            qualifier. This works the same as qualifers in CDI Observers,
+            it will only be invoked for exceptions (it catches type<literal>Throwable</literal>) where the
+            initial
+            <literal>ExceptionToCatchEvent</literal>
+            was created with the
+            <literal>@MyFramework</literal>
+            annotation passed to the constructor. The Logger instance is also injected into the handler when it is
+            invoked. The handler has a default precedence of 0 and a
+            <literal>TraversalPath</literal>
+            of
+            <literal>DESCENDING</literal>. It does not modify flow control of other handlers however and simply uses
             the default proceed.
          </para>
 
@@ -57,8 +75,11 @@ public class MyHandlers
          <title>@Handles</title>
 
          <para>
-            <literal>@Handles</literal> is a parameter annotation that specifies a method as an exception handler.  It 
-            acts similar to the <literal>@Observes</literal> annotation from CDI. In addition to promoting a normal 
+            <literal>@Handles</literal>
+            is a parameter annotation that specifies a method as an exception handler. It
+            acts similar to the
+            <literal>@Observes</literal>
+            annotation from CDI. In addition to promoting a normal
             method to an exception handler it also carries data about the handler:
          </para>
 
@@ -68,70 +89,83 @@ public class MyHandlers
                exception type, zero being the default)
             </listitem>
             <listitem>the direction of the traversal path during which the handler is invoked
-               (<literal>TraversalPath.ASCENDING</literal> being default)
+               (
+               <literal>TraversalPath.ASCENDING</literal>
+               being default)
             </listitem>
          </itemizedlist>
 
          <para>
-            The <literal>@Handles</literal> annotation must be placed on the first parameter of the method, which must 
-            be of type CatchEvent. Handler methods are similar to CDI Obeservers and follow the same principals and 
-            guidelines (such as invocation, injection of parameters, qualifiers, etc). They differ from Observer 
+            The
+            <literal>@Handles</literal>
+            annotation must be placed on the first parameter of the method, which must
+            be of type CaughtException. Handler methods are similar to CDI Obeservers and follow the same principals and
+            guidelines (such as invocation, injection of parameters, qualifiers, etc). They differ from Observer
             methods in that:
          </para>
 
          <itemizedlist>
             <listitem>they are ordered before they are invoked</listitem>
-            <listitem>the first parameter of the method must be a generized CatchEvent object</listitem>
+            <listitem>the first parameter of the method must be a generized CaughtException object</listitem>
          </itemizedlist>
 
          <para>
-            A handler is guaranteed to only be invoked once per exception (unless it is unmuted via the CatchEvent
-            object by calling <literal>unMute()</literal>). Handlers must not throw checked exceptions, and should 
-            avoid throwing unchecked exceptions. 
-         </para> 
+            A handler is guaranteed to only be invoked once per exception (unless it is unmuted via the CaughtException
+            object by calling<literal>unMute()</literal>). Handlers must not throw checked exceptions, and should
+            avoid throwing unchecked exceptions.
+         </para>
       </section>
 
    </section>
-         
+
    <section id="exception.handling.client_usage.adding_handlers">
       <title>Adding Handlers</title>
       <para>
          Adding a handler is simply creating a class and a method the follows the above rules (class annotated with
-         <literal>@HandlesExceptions</literal> and a method with the first parameter being a CatchEvent and annotated
-         with <literal>@Handles</literal>). Catch will discover all handler methods at deploy time. See the example
+         <literal>@HandlesExceptions</literal>
+         and a method with the first parameter being a CaughtException and annotated
+         with<literal>@Handles</literal>). Catch will discover all handler methods at deploy time. See the example
          above for a simple, but complete handler.
       </para>
-   </section> 
+   </section>
 
    <section id="exception.handling.client_usage.ordering_handlers">
       <title>Ordering of Handlers</title>
       <para>
          The ordering of handlers is multifaceted. Based on the traversal path of the causing container handlers are
-         ordered according to the hiearchy of the excption type (most specific first if 
-         <literal>TraversalPath.ASCENDING</literal>, least specific first if 
-         <literal>TraversalPath.DESCENDING</literal> traversal), and the precedence when two handlers are for the 
+         ordered according to the hiearchy of the excption type (most specific first if
+         <literal>TraversalPath.ASCENDING</literal>, least specific first if
+         <literal>TraversalPath.DESCENDING</literal>
+         traversal), and the precedence when two handlers are for the
          same exception type.
       </para>
       <para>
-         The <literal>precedence</literal> of a handler helps determine the order of the handler relative to other
+         The
+         <literal>precedence</literal>
+         of a handler helps determine the order of the handler relative to other
          handlers of the same exception type. It follows a high-to-low integer schema (the higher the precedence, the
-         sooner the handler is invoked during traversal of the causing chain). 
+         sooner the handler is invoked during traversal of the causing chain).
       </para>
-   </section> 
+   </section>
 
    <section id="exception.handling.client_usage.traversal">
       <title>Traversal of the causing container</title>
 
       <para>
          When an exception is handled with Catch the causing container is unwrapped to get at each exception. The
-         first pass (<literal>TraversalPath.DESCENDING</literal>) starts with the outer most exception working it's 
-         way to the root exception. The traversal is then reversed and traversed from root cause up. This allows 
-         handlers to take part in various stages of the causing container. At each entry in the container, handlers 
-         are invoked based on the exception type (either an exact match or a super type) of the entry. For example 
-         if the exception type is <literal>SocketException</literal>, handlers for types 
-         <literal>SocketException</literal>, <literal>IOException,</literal> <literal>Exception</literal> and 
-         <literal>Throwable</literal> would all invoked (in that order), however, a handler for 
-         <literal>BindException</literal> would not be invoked.
+         first pass (<literal>TraversalPath.DESCENDING</literal>) starts with the outer most exception working it's
+         way to the root exception. The traversal is then reversed and traversed from root cause up. This allows
+         handlers to take part in various stages of the causing container. At each entry in the container, handlers
+         are invoked based on the exception type (either an exact match or a super type) of the entry. For example
+         if the exception type is<literal>SocketException</literal>, handlers for types
+         <literal>SocketException</literal>,
+         <literal>IOException,</literal>
+         <literal>Exception</literal>
+         and
+         <literal>Throwable</literal>
+         would all invoked (in that order), however, a handler for
+         <literal>BindException</literal>
+         would not be invoked.
       </para>
    </section>
 
@@ -143,61 +177,78 @@ public class MyHandlers
       </para>
 
       <itemizedlist>
-         <listitem><literal>CatchEvent</literal></listitem>
-         <listitem><literal>CauseContainer</literal></listitem>
+         <listitem>
+            <literal>CaughtException</literal>
+         </listitem>
+         <listitem>
+            <literal>CauseContainer</literal>
+         </listitem>
       </itemizedlist>
 
       <section id="exception.handling.client_usage.api.catchevent">
-         <title>CatchEvent</title>
+         <title>CaughtException</title>
 
          <para>
-            <literal>CatchEvent</literal> contains methods to interact with the handling procces, allowing a level of flow
-            control to be available to handler (such as re-throwing the exception, or aborting), and allowing a handler to
-            be unmuted. Once a handler is invoked it is muted, meaning it will not be run again for that causing container,
-            unless it is explicitly marked as unmuted via the <literal>CatchEvent.unMute()</literal> object.
-         </para> 
+            <literal>CaughtException</literal>
+            contains methods to interact with the handling procces, allowing a level of flow
+            control to be available to handler (such as re-throwing the exception, or aborting), and allowing a handler
+            to
+            be unmuted. Once a handler is invoked it is muted, meaning it will not be run again for that causing
+            container,
+            unless it is explicitly marked as unmuted via the
+            <literal>CaughtException.unMute()</literal>
+            object.
+         </para>
 
          <para>
-            Five methods exist on the <literal>CatchEvent</literal> object to give flow control to the handler
+            Five methods exist on the
+            <literal>CaughtException</literal>
+            object to give flow control to the handler
          </para>
 
          <itemizedlist>
             <listitem>
-               <literal>abort()</literal> - terminate all handling immediately after this handler, does not mark the
+               <literal>abort()</literal>
+               - terminate all handling immediately after this handler, does not mark the
                exception as handled, does not re-throw the exception.
             </listitem>
             <listitem>
-               <literal>rethrow()</literal> - continues through all handlers, but once all handlers have been called
-               (assuming another handler does not call abort() or handled()) the initial exception passed to Catch is 
-               rethrown.  Does not mark the exception as handled.
+               <literal>rethrow()</literal>
+               - continues through all handlers, but once all handlers have been called
+               (assuming another handler does not call abort() or handled()) the initial exception passed to Catch is
+               rethrown. Does not mark the exception as handled.
             </listitem>
             <listitem>
-               <literal>handled()</literal> - marks the exception as handled and terminates further handling.
+               <literal>handled()</literal>
+               - marks the exception as handled and terminates further handling.
             </listitem>
             <listitem>
-               <literal>proceed()</literal> - default. Marks the exception as handled and proceeds with the rest of the
+               <literal>proceed()</literal>
+               - default. Marks the exception as handled and proceeds with the rest of the
                handlers.
             </listitem>
             <listitem>
-               <literal>proceedToCause()</literal> - marks the exception as handled, but proceeds to the next cause in 
+               <literal>proceedToCause()</literal>
+               - marks the exception as handled, but proceeds to the next cause in
                the cause container, without calling other handlers for the current cause.
             </listitem>
          </itemizedlist>
-               
+
       </section>
 
       <section id="exception.handling.client_usage.api.stackinfo">
          <title>CauseContainer</title>
 
          <para>
-            <literal>CauseContainer</literal> contains information about the cause container relative to the current cause.
+            <literal>CauseContainer</literal>
+            contains information about the cause container relative to the current cause.
             Please see API docs for more information, all methods are fairly self-explanatory.
          </para>
       </section>
 
    </section>
 
-<!--
-vim:et:ts=3:sw=3:tw=120
--->    
+   <!--
+   vim:et:ts=3:sw=3:tw=120
+   -->
 </chapter>
