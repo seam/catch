@@ -97,9 +97,4 @@
       </plugins>
    </build>
 
-   <scm>
-      <connection>scm:git:git://github.com/seam/catch.git</connection>
-      <url>http://github.com/seam/catch</url>
-   </scm>
-
 </project>
