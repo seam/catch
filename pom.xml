@@ -16,7 +16,7 @@
    <name>Seam Catch Parent</name>
 
    <properties>
-      <seam.version>3.0.0.b01</seam.version>
+      <seam.version>3.0.0.b03</seam.version>
       <joda-time.version>1.6</joda-time.version>
       <jboss.javaee.version>1.0.0.Beta4</jboss.javaee.version>
       <jboss.logging.version>3.0.0.Beta4</jboss.logging.version>
@@ -35,7 +35,7 @@
       <dependencies>
          <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>seam</artifactId>
+            <artifactId>seam-bom</artifactId>
             <version>${seam.version}</version>
             <type>pom</type>
             <scope>import</scope>
