@@ -35,4 +35,10 @@
       </profile>
    </profiles>
 
+   <scm>
+      <connection>scm:git:git://github.com/seam/catch.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
+      <url>http://github.com/seam/catch</url>
+   </scm>
+
 </project>
