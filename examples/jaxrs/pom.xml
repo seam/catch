@@ -10,7 +10,7 @@
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
-   <artifactId>catch-jaxrs-example</artifactId>
+   <artifactId>seam-catch-example-jaxrs</artifactId>
    <packaging>war</packaging>
    <version>3.0.0-SNAPSHOT</version>
    <name>Seam Catch JAX-RS example</name>
@@ -325,12 +325,6 @@
       </profile>
 
    </profiles>
-
-   <scm>
-      <connection>scm:git:git://github.com/seam/catch.git</connection>
-      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
-      <url>https://github.com/seam/catch</url>
-   </scm>
 
 </project>
 
