@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.jboss.seam.catch</groupId>
       <artifactId>seam-catch-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0.SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -23,28 +23,28 @@
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-api</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>3.0.0.SNAPSHOT</version>
          <optional>false</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-impl</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>3.0.0.SNAPSHOT</version>
          <optional>false</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-api</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>3.0.0.SNAPSHOT</version>
          <classifier>sources</classifier>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-api</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>3.0.0.SNAPSHOT</version>
          <classifier>javadoc</classifier>
          <optional>true</optional>
       </dependency>
@@ -52,14 +52,14 @@
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-impl</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>3.0.0.SNAPSHOT</version>
          <classifier>sources</classifier>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-impl</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>3.0.0.SNAPSHOT</version>
          <classifier>javadoc</classifier>
          <optional>true</optional>
       </dependency>
@@ -75,4 +75,10 @@
          </plugin>
       </plugins>
    </build>
+
+   <scm>
+      <connection>scm:git:git://github.com/seam/catch.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
+      <url>http://github.com/seam/catch</url>
+   </scm>
 </project>

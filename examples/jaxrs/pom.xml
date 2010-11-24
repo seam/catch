@@ -5,14 +5,14 @@
    <parent>
       <groupId>org.jboss.seam.catch</groupId>
       <artifactId>seam-catch-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0.SNAPSHOT</version>
       <relativePath>../../pom.xml</relativePath>
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-example-jaxrs</artifactId>
    <packaging>war</packaging>
-   <version>3.0.0-SNAPSHOT</version>
+   <version>3.0.0.SNAPSHOT</version>
    <name>Seam Catch JAX-RS example</name>
 
    <properties>
@@ -325,6 +325,12 @@
       </profile>
 
    </profiles>
+
+   <scm>
+      <connection>scm:git:git://github.com/seam/catch.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
+      <url>http://github.com/seam/catch</url>
+   </scm>
 
 </project>
 

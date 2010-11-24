@@ -5,7 +5,7 @@
    <parent>
       <artifactId>seam-catch-parent</artifactId>
       <groupId>org.jboss.seam.catch</groupId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0.SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -96,4 +96,9 @@
       </plugins>
    </build>
 
+   <scm>
+      <connection>scm:git:git://github.com/seam/catch.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
+      <url>http://github.com/seam/catch</url>
+   </scm>
 </project>

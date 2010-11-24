@@ -4,13 +4,13 @@
    <parent>
       <groupId>org.jboss.seam.catch</groupId>
       <artifactId>seam-catch-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0.SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-reference-guide</artifactId>
-   <version>3.0.0-SNAPSHOT</version>
+   <version>3.0.0.SNAPSHOT</version>
    <packaging>jdocbook</packaging>
    <name>Seam Catch Module Reference Guide</name>
 
@@ -69,5 +69,11 @@
          </build>
       </profile>
    </profiles>
+
+   <scm>
+      <connection>scm:git:git://github.com/seam/catch.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
+      <url>http://github.com/seam/catch</url>
+   </scm>
 
 </project>
