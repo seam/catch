@@ -23,4 +23,4 @@
 /**
  * An extensible exception handling handling framework.
  */
-package org.jboss.seam.exceptionhandling;
+package org.jboss.seam.exception.control;

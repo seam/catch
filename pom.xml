@@ -77,9 +77,9 @@
             </property>
          </activation>
          <modules>
-            <module>dist</module>
             <module>docs</module>
             <module>examples/jaxrs</module>
+            <module>dist</module>
          </modules>
       </profile>
    </profiles>

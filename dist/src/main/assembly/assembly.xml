@@ -16,6 +16,7 @@
          <outputDirectory>.</outputDirectory>
          <includes>
             <include>readme.txt</include>
+            <include>license.txt</include>
          </includes>
       </fileSet>
    </fileSets>
@@ -26,8 +27,12 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.catch:seam-catch</include>
+            <include>org.jboss.seam.catch:seam-catch-api</include>
+            <include>org.jboss.seam.catch:seam-catch-impl</include>
          </includes>
+         <excludes>
+            <exclude>org.jboss.seam.catch:seam-catch-*:jar:javadoc</exclude>
+         </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
       <!-- Add necessary dependencies -->
@@ -41,16 +46,30 @@
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
       <!-- Pull in the example projects -->
-      <!--
       <dependencySet>
          <outputDirectory>examples</outputDirectory>
+         <!--
+         <unpack>true</unpack>
+         -->
+         <useProjectArtifact>false</useProjectArtifact>
+         <includes>
+            <include>org.jboss.seam.catch:seam-catch-example-*</include>
+         </includes>
+      </dependencySet>
+      <!-- Pull in JavaDoc -->
+      <dependencySet>
+         <outputDirectory>docs/api</outputDirectory>
          <unpack>true</unpack>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.mail:seam-mail-examples-sendmail</include>
+            <include>org.jboss.seam.catch:seam-catch-api:jar:javadoc</include>
          </includes>
+         <unpackOptions>
+            <excludes>
+               <exclude>META-INF/</exclude>
+            </excludes>
+         </unpackOptions>
       </dependencySet>
-      -->
       <!-- Pull in docbook artifacts -->
       <dependencySet>
          <outputDirectory>doc/reference</outputDirectory>

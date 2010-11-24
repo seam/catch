@@ -12,7 +12,7 @@
    <artifactId>seam-catch-reference-guide</artifactId>
    <version>3.0.0-SNAPSHOT</version>
    <packaging>jdocbook</packaging>
-   <name>Seam Exception Handling Module Reference Guide</name>
+   <name>Seam Catch Module Reference Guide</name>
 
    <properties>
       <pdf.name>${project.artifactId}.pdf</pdf.name>
@@ -69,11 +69,5 @@
          </build>
       </profile>
    </profiles>
-
-   <scm>
-      <connection>scm:git:git://github.com/seam/catch.git</connection>
-      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
-      <url>http://github.com/seam/catch</url>
-   </scm>
 
 </project>

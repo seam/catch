@@ -5,7 +5,7 @@
 
    <toc/>
 
-   <title>Seam Exception Handling</title>
+   <title>Seam Catch</title>
    <xi:include href="introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
    <xi:include href="installation.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
    <xi:include href="client_usage.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /> 

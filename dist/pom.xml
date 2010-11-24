@@ -10,8 +10,8 @@
    </parent>
 
    <artifactId>seam-catch-distribution</artifactId>
-   <name>Seam Exception Handling Module Distribution</name>
-   <description>Builds a Seam Exception Handling module release distribution</description>
+   <name>Seam Catch Module Distribution</name>
+   <description>Builds the Seam Catch module release distribution</description>
    <packaging>pom</packaging>
 
    <properties>
@@ -39,6 +39,7 @@
          <artifactId>seam-catch-api</artifactId>
          <version>3.0.0-SNAPSHOT</version>
          <classifier>sources</classifier>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -54,6 +55,7 @@
          <artifactId>seam-catch-impl</artifactId>
          <version>3.0.0-SNAPSHOT</version>
          <classifier>sources</classifier>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -61,6 +63,22 @@
          <artifactId>seam-catch-impl</artifactId>
          <version>3.0.0-SNAPSHOT</version>
          <classifier>javadoc</classifier>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-reference-guide</artifactId>
+         <version>3.0.0-SNAPSHOT</version>
+         <type>war</type>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-example-jaxrs</artifactId>
+         <version>3.0.0-SNAPSHOT</version>
+         <type>war</type>
          <optional>true</optional>
       </dependency>
 
@@ -76,9 +94,4 @@
       </plugins>
    </build>
 
-   <scm>
-      <connection>scm:git:git://github.com/seam/catch.git</connection>
-      <developerConnection>scm:git:git@github.com:seam/catch.git</developerConnection>
-      <url>http://github.com/seam/catch</url>
-   </scm>
 </project>
