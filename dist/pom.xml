@@ -10,8 +10,8 @@
    </parent>
 
    <artifactId>seam-catch-distribution</artifactId>
-   <name>Seam Exception Handling Module Distribution</name>
-   <description>Builds a Seam Exception Handling module release distribution</description>
+   <name>Seam Catch Module Distribution</name>
+   <description>Builds the Seam Catch module release distribution</description>
    <packaging>pom</packaging>
 
    <properties>

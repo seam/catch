@@ -16,6 +16,7 @@
          <outputDirectory>.</outputDirectory>
          <includes>
             <include>readme.txt</include>
+            <include>license.txt</include>
          </includes>
       </fileSet>
    </fileSets>
