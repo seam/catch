@@ -5,7 +5,7 @@
    <parent>
       <artifactId>seam-catch-parent</artifactId>
       <groupId>org.jboss.seam.catch</groupId>
-      <version>3.0.0.SNAPSHOT</version>
+      <version>3.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
