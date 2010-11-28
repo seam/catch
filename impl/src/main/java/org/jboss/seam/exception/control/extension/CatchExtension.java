@@ -22,20 +22,6 @@
 
 package org.jboss.seam.exception.control.extension;
 
-import org.jboss.seam.exception.control.ExceptionHandlerComparator;
-import org.jboss.seam.exception.control.HandlerMethod;
-import org.jboss.seam.exception.control.HandlerMethodImpl;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
-
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessManagedBean;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -48,6 +34,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.ProcessBean;
+
+import org.jboss.seam.exception.control.ExceptionHandlerComparator;
+import org.jboss.seam.exception.control.HandlerMethod;
+import org.jboss.seam.exception.control.HandlerMethodImpl;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
 /**
  * CDI extension to find handlers at startup.
@@ -63,7 +64,7 @@ public class CatchExtension implements Extension
    }
 
    /**
-    * Listener to ProcessManagedBean event to locate handlers.
+    * Listener to ProcessBean event to locate handlers.
     *
     * @param pmb Event from CDI SPI
     * @param bm  Activated Bean Manager
@@ -76,9 +77,15 @@ public class CatchExtension implements Extension
     *                                 be instantiated for any reason when trying to obtain the actual type arguments
     *                                 from a {@link ParameterizedType}
     */
-   public void findHandlers(@Observes final ProcessManagedBean pmb, final BeanManager bm)
+   public void findHandlers(@Observes final ProcessBean pmb, final BeanManager bm)
    {
-      final AnnotatedType type = pmb.getAnnotatedBeanClass();
+      // TODO also ignore decorators and interceptors
+      if (!(pmb.getAnnotated() instanceof AnnotatedType))
+      {
+         return;
+      }
+      
+      final AnnotatedType type = (AnnotatedType) pmb.getAnnotated();
 
       if (type.isAnnotationPresent(HandlesExceptions.class))
       {
