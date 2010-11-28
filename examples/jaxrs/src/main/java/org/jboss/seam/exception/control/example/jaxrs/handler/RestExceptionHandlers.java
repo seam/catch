@@ -26,8 +26,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.jboss.seam.exceptionctrl.
-
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.CauseContainer;
 import org.jboss.seam.exception.control.Handles;
@@ -53,7 +51,7 @@ public class RestExceptionHandlers
     * exception that occurs during a REST resource request by sending an HTTP error response.
     */
    public void configurableExceptionHandler(@Handles(precedence = -100) @RestRequest final CaughtException<Throwable> event,
-                                  @CatchResource final ResponseBuilderHolder responseBuilderHolder,
+                                  @CatchResource final ResponseBuilder responseBuilder,
                                   @RestRequest final List<ExceptionResponse> exceptionResponses)
    {
       final Class<?> exceptionClass = event.getException().getClass();
@@ -62,14 +60,13 @@ public class RestExceptionHandlers
       {
          if (exceptionClass.equals(response.getForType()))
          {
-            ResponseBuilder responseBuilder = responseBuilderHolder.getResponseBuilder().status(response.getStatusCode());
+            responseBuilder.status(response.getStatusCode());
 
             if (response.getMessage() != null)
             {
-               responseBuilder = responseBuilder.entity(new ErrorMessageWrapper(response.getMessage()));
+               responseBuilder.entity(new ErrorMessageWrapper(response.getMessage()));
             }
-            
-            responseBuilderHolder.setResponseBuilder(responseBuilder);
+
             //event.proceed(); ??
             break;
          }

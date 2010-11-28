@@ -9,13 +9,12 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.example.jaxrs.handler.CatchResource;
-import org.jboss.seam.exception.control.example.jaxrs.handler.ResponseBuilderHolder;
 import org.jboss.seam.rest.exceptions.ErrorMessageWrapper;
 
 public class ExceptionResponseServiceHandler
 {
    @Inject @CatchResource
-   private ResponseBuilderHolder holder;
+   private ResponseBuilder builder;
    
    @AroundInvoke
    public Object processException(InvocationContext ctx)
@@ -33,18 +32,17 @@ public class ExceptionResponseServiceHandler
                message = c.getException().getMessage();
             }
             
-            ResponseBuilder builder = holder.getResponseBuilder().status(r.status());
+            builder.status(r.status());
             if (message != null && message.length() > 0)
             {
-               builder = builder.entity(new ErrorMessageWrapper(message));
+               builder.entity(new ErrorMessageWrapper(message));
             }
             
-            holder.setResponseBuilder(builder);
             c.handled();
          }
          else
          {
-            holder.setResponseBuilder(holder.getResponseBuilder().entity(new ErrorMessageWrapper("Unknown error")));
+            builder.entity(new ErrorMessageWrapper("Unknown error"));
             c.handled();
          }
       }

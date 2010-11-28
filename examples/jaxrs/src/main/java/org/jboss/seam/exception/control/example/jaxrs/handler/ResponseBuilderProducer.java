@@ -36,15 +36,12 @@ import javax.ws.rs.core.Response.ResponseBuilder;
  */
 @CatchResource
 @RequestScoped
-public class ResponseBuilderHolder
+public class ResponseBuilderProducer
 {
    private ResponseBuilder responseBuilder;
    
-   public void setResponseBuilder(ResponseBuilder builder)
-   {
-      this.responseBuilder = builder;
-   }
-   
+   @Produces
+   @CatchResource
    public ResponseBuilder getResponseBuilder()
    {
       return responseBuilder;
