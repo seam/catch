@@ -99,7 +99,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    {
       if (this.bean == null)
       {
-         this.bean = bm.resolve(bm.getBeans(this.beanClass, HandlesExceptionsLiteral.INSTANCE));
+         this.bean = bm.resolve(bm.getBeans(this.beanClass));
       }
       return this.bean;  //To change body of implemented methods use File | Settings | File Templates.
    }
