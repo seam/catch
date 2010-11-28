@@ -1,4 +1,4 @@
-#seach-catch
+#seam-catch
 
 ##Next Generation Exception Handling
 
