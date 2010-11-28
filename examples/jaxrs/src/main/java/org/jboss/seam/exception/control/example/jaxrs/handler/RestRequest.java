@@ -28,9 +28,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * A qualifier used to distinguish Seam Catch handler methods that are appropriate for a REST resource request.
+ *
+ * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
+ */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
-public @interface RestCatch
+public @interface RestRequest
 {
 }

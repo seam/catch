@@ -22,17 +22,44 @@
 
 package org.jboss.seam.exception.control.example.jaxrs.handler;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
-public class RequestBuilderProducer
+/**
+ * A request-scoped resource for customizing an REST error response from within
+ * a Seam Catch exception handler.
+ * 
+ * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
+ */
+@CatchResource
+@RequestScoped
+public class ResponseBuilderHolder
 {
-   @Produces
-   @RequestScoped
-   @RestCatch
-   public Response.ResponseBuilder createErrorResponseBuilder()
+   private ResponseBuilder responseBuilder;
+   
+   public void setResponseBuilder(ResponseBuilder builder)
    {
-      return Response.serverError();
+      this.responseBuilder = builder;
+   }
+   
+   public ResponseBuilder getResponseBuilder()
+   {
+      return responseBuilder;
+   }
+   
+   @Produces
+   @CatchResource
+   public Response buildCatchResponse()
+   {
+      return responseBuilder.build();
+   }
+   
+   @PostConstruct
+   public void initialize()
+   {
+      responseBuilder = Response.serverError();
    }
 }

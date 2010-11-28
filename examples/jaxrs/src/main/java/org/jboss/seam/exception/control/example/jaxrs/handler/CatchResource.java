@@ -22,11 +22,20 @@
 
 package org.jboss.seam.exception.control.example.jaxrs.handler;
 
-import javax.enterprise.util.AnnotationLiteral;
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class RestCatchLiteral extends AnnotationLiteral<RestCatch> implements RestCatch
+/**
+ * Used to qualify a resource needed for handling an exception within Seam Catch.
+ * 
+ * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
+ */
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+public @interface CatchResource
 {
-   private static final long serialVersionUID = 1437877200809906569L;
-
-   public static final RestCatch INSTANCE = new RestCatchLiteral();
 }

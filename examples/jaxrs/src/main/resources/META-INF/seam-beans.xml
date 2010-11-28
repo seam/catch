@@ -20,26 +20,41 @@
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
-<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:rest="urn:java:org.jboss.seam.rest.exceptions" xmlns:s="urn:java:ee"
-       xsi:schemaLocation="
-	http://java.sun.com/xml/ns/javaee
-	http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+<beans xmlns="urn:java:ee" xmlns:rest="urn:java:org.jboss.seam.rest.exceptions" xmlns:e="urn:java:org.jboss.seam.exception.control.example.jaxrs.handler">
 
+   <!-- uses parallel types to what is in the REST module, but more CDI-ish
+   <e:ExceptionResponseMappings>
+      <replaces/>
+      <e:RestRequest/>
+      <e:mappings>
+         <Produces/>
+         <e:RestRequest/>
+         <value>
+            <e:ExceptionResponse forType="javax.persistence.NoResultException"
+               statusCode="404" message="The resource requested does not exist"/>
+         </value>
+         <value>
+            <e:ExceptionResponse forType="java.lang.IllegalArgumentException"
+               statusCode="400" message="Illegal value"/>
+         </value>
+      </e:mappings>
+   </e:ExceptionResponseMappings>
+   -->
+
+   <!-- uses the types from the REST module
    <rest:ExceptionMappingConfiguration>
-      <s:replaces/>
+      <replaces/>
       <rest:exceptionMappings>
-         <s:value>
-            <rest:ExceptionMapping exceptionType="javax.persistence.NoResultException" statusCode="404">
-               <rest:message>Requested resource does not exist.</rest:message>
-            </rest:ExceptionMapping>
-         </s:value>
-         <s:value>
-            <rest:ExceptionMapping exceptionType="java.lang.IllegalArgumentException" statusCode="400">
-               <rest:message>Illegal value.</rest:message>
-            </rest:ExceptionMapping>
-         </s:value>
+         <value>
+            <rest:ExceptionMapping exceptionType="javax.persistence.NoResultException"
+               statusCode="404" message="The resource requested does not exist"/>
+         </value>
+         <value>
+            <rest:ExceptionMapping exceptionType="java.lang.IllegalArgumentException"
+               statusCode="400" message="Illegal value"/>
+         </value>
       </rest:exceptionMappings>
    </rest:ExceptionMappingConfiguration>
+   -->
 
 </beans>

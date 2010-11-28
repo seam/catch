@@ -20,28 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.seam.exception.control.example.jaxrs;
+package org.jboss.seam.exception.control.example.jaxrs.handler;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.enterprise.util.AnnotationLiteral;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-
-import org.jboss.seam.exception.control.example.jaxrs.handler.CatchExceptionMapper;
-import org.jboss.seam.exception.control.example.jaxrs.resource.AuthorResource;
-import org.jboss.seam.exception.control.example.jaxrs.resource.BookResource;
-
-@ApplicationPath("/api")
-public class LibraryApplication extends Application
+public class RestRequestLiteral extends AnnotationLiteral<RestRequest> implements RestRequest
 {
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>();
-      classes.add(BookResource.class);
-      classes.add(AuthorResource.class);
-      classes.add(CatchExceptionMapper.class);
-      return classes;
-   }
+   private static final long serialVersionUID = 1437877200809906569L;
+
+   public static final RestRequest INSTANCE = new RestRequestLiteral();
 }

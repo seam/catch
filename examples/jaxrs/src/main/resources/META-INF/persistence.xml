@@ -28,6 +28,7 @@
    <persistence-unit name="libraryDatabase">
       <jta-data-source>jdbc/__default</jta-data-source>
       <properties>
+         <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
          <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
          <!--         <property name="eclipselink.create-ddl-jdbc-file-name" value="seam-catch-jaxrs-create.sql"/>-->
          <!--         <property name="eclipselink.drop-ddl-jdbc-file-name" value="seam-catch-jaxrs-drop.sql"/>-->
