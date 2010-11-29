@@ -70,6 +70,10 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 
       this.handler = method;
       this.javaMethod = method.getJavaMember();
+      if (!this.javaMethod.isAccessible())
+      {
+         this.javaMethod.setAccessible(true);
+      }
       final AnnotatedParameter handlesParam = (AnnotatedParameter) method.getParameters().get(0);
 
       if (!handlesParam.isAnnotationPresent(Handles.class))
