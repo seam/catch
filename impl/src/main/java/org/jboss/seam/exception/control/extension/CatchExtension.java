@@ -136,22 +136,16 @@ public class CatchExtension implements Extension
          {
             for (HandlerMethod handler : this.allHandlers.get(hierarchyType))
             {
-               if (handler.getQualifiers().isEmpty())
+               if (handler.getQualifiers().isEmpty() && handlerQualifiers.isEmpty())
                {
                   returningHandlers.add(handler);
                }
                else
                {
-                  if (!handlerQualifiers.isEmpty())
+                  if (!handlerQualifiers.isEmpty() && handler.getQualifiers().containsAll(handlerQualifiers)
+                      && handler.getQualifiers().size() == handlerQualifiers.size())
                   {
-                     // containsAny functionality
-                     for (Annotation qualifier : handlerQualifiers)
-                     {
-                        if (handler.getQualifiers().contains(qualifier))
-                        {
-                           returningHandlers.add(handler);
-                        }
-                     }
+                     returningHandlers.add(handler);
                   }
                }
             }

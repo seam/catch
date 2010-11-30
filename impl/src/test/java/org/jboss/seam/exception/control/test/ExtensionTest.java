@@ -75,7 +75,7 @@ public class ExtensionTest
    {
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
       qualifiers.add(CatchQualifierLiteral.INSTANCE);
-      assertEquals(7, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers).size());
+      assertEquals(1, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers).size());
    }
 
    @Test
@@ -84,6 +84,6 @@ public class ExtensionTest
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
       qualifiers.add(CatchQualifierLiteral.INSTANCE);
       qualifiers.add(ArquillianLiteral.INSTANCE);
-      assertEquals(8, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers).size());
+      assertEquals(1, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers).size());
    }
 }
