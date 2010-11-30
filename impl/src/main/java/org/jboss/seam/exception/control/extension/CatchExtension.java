@@ -48,7 +48,7 @@ import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 /**
  * CDI extension to find handlers at startup.
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked", "WebBeanObservesInspection"})
 public class CatchExtension implements Extension
 {
    private final Map<? super Type, Collection<HandlerMethod>> allHandlers;
@@ -79,7 +79,7 @@ public class CatchExtension implements Extension
       {
          return;
       }
-      
+
       final AnnotatedType type = (AnnotatedType) pmb.getAnnotated();
 
       if (type.isAnnotationPresent(HandlesExceptions.class))

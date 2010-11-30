@@ -85,12 +85,11 @@
 
          <para>
             Catch supports qualifiers for the<literal>CaughtException</literal>. To add a qualifier to be used when
-            firing
-            handlers they must be add to the
+            firing handlers they must be add to the
             <literal>ExceptionToCatchEvent</literal>
-            via the constructor (please see
-            API docs for more info). Qualifiers for integrations should be used to avoid collisions in the application
-            error handling both when defining handlers and when firing events from the integration.
+            via the constructor (please
+            see API docs for more info). Qualifiers for integrations should be used to avoid collisions in the
+            application error handling both when defining handlers and when firing events from the integration.
          </para>
       </section>
 

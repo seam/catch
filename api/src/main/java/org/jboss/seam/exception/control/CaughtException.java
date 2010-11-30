@@ -38,9 +38,9 @@ public class CaughtException<T extends Throwable>
       RETHROW
    }
 
-   private CauseContainer causeContainer;
+   private ExceptionStack exceptionStack;
    private T exception;
-   private boolean unMute;
+   private boolean unmute;
    private ExceptionHandlingFlow flow;
    private boolean descendingTraversal;
    private boolean ascendingTraversal;
@@ -48,20 +48,20 @@ public class CaughtException<T extends Throwable>
    /**
     * Initial state constructor.
     *
-    * @param causeContainer      Information about the current exception and cause chain.
+    * @param exceptionStack      Information about the current exception and cause chain.
     * @param descendingTraversal flag indicating the direction of the cause chain traversal
     *
-    * @throws IllegalArgumentException if causeContainer is null
+    * @throws IllegalArgumentException if exceptionStack is null
     */
-   public CaughtException(final CauseContainer causeContainer, final boolean descendingTraversal)
+   public CaughtException(final ExceptionStack exceptionStack, final boolean descendingTraversal)
    {
-      if (causeContainer == null)
+      if (exceptionStack == null)
       {
-         throw new IllegalArgumentException("null is not valid for causeContainer");
+         throw new IllegalArgumentException("null is not valid for exceptionStack");
       }
 
-      this.exception = (T) causeContainer.getCurrentCause();
-      this.causeContainer = causeContainer;
+      this.exception = (T) exceptionStack.getCurrent();
+      this.exceptionStack = exceptionStack;
       this.descendingTraversal = descendingTraversal;
       this.ascendingTraversal = !descendingTraversal;
       this.flow = ExceptionHandlingFlow.PROCEED;
@@ -117,9 +117,9 @@ public class CaughtException<T extends Throwable>
    /**
     * Instructs the dispatcher to allow this handler to be invoked again.
     */
-   public void unMute()
+   public void unmute()
    {
-      this.unMute = true;
+      this.unmute = true;
    }
 
    public boolean isDescendingTraversal()
@@ -132,14 +132,14 @@ public class CaughtException<T extends Throwable>
       return ascendingTraversal;
    }
 
-   protected boolean isUnMute()
+   protected boolean isUnmute()
    {
-      return this.unMute;
+      return this.unmute;
    }
 
-   public CauseContainer getCauseContainer()
+   public ExceptionStack getCauseContainer()
    {
-      return this.causeContainer;
+      return this.exceptionStack;
    }
 
    protected ExceptionHandlingFlow getFlow()

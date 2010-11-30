@@ -24,15 +24,15 @@ import java.util.Collections;
 /**
  * Information about the current exception and exception cause container.  This object is immutable.
  */
-public class CauseContainer
+public class ExceptionStack
 {
    private final boolean root;
    private final boolean last;
    private final int index;
-   private final Throwable nextCause;
-   private final Collection<Throwable> remainingCauses;
+   private final Throwable next;
+   private final Collection<Throwable> remaining;
    private final Collection<Throwable> elements;
-   private final Throwable currentCause;
+   private final Throwable current;
 
    /**
     * Basic constructor.
@@ -42,7 +42,7 @@ public class CauseContainer
     *
     * @throws IllegalArgumentException if causeChainElements is empty or null.
     */
-   public CauseContainer(final Collection<Throwable> causeChainElements, final int currentElementIndex)
+   public ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex)
    {
       if (causeChainElements == null || causeChainElements.size() == 0)
       {
@@ -55,11 +55,11 @@ public class CauseContainer
 
       this.root = this.index == causeChainElements.size() - 1;
 
-      this.nextCause = this.index - 1 >= 0 ? (Throwable) this.elements.toArray()[this.index - 1] : null;
+      this.next = this.index - 1 >= 0 ? (Throwable) this.elements.toArray()[this.index - 1] : null;
 
-      this.remainingCauses = new ArrayList<Throwable>(this.elements).subList(0, currentElementIndex);
+      this.remaining = new ArrayList<Throwable>(this.elements).subList(0, currentElementIndex);
 
-      this.currentCause = (Throwable) this.elements.toArray()[this.index];
+      this.current = (Throwable) this.elements.toArray()[this.index];
    }
 
    public Collection<Throwable> getCauseElements()
@@ -77,14 +77,14 @@ public class CauseContainer
       return this.last;
    }
 
-   public Throwable getNextCause()
+   public Throwable getNext()
    {
-      return this.nextCause;
+      return this.next;
    }
 
-   public Collection<Throwable> getRemainingCauses()
+   public Collection<Throwable> getRemaining()
    {
-      return Collections.unmodifiableCollection(this.remainingCauses);
+      return Collections.unmodifiableCollection(this.remaining);
    }
 
    public boolean isRoot()
@@ -92,8 +92,8 @@ public class CauseContainer
       return this.root;
    }
 
-   public Throwable getCurrentCause()
+   public Throwable getCurrent()
    {
-      return currentCause;
+      return current;
    }
 }

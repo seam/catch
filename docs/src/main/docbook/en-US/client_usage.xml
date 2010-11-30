@@ -64,15 +64,13 @@ public class MyHandlers
             <literal>CaughtException</literal>
             of type
             <literal>Throwable</literal>
-            which
-            is annotated using the
+            which is annotated using the
             <literal>@Handles</literal>
-            annotation. Also notice the handler is qualified using
-            the
+            annotation. Also notice the handler is qualified
+            using the
             <literal>@MyFramework</literal>
             qualifier. This works the same as qualifers in CDI Observers,
-            it will only be invoked for exceptions (it catches type<literal>Throwable</literal>) where the
-            initial
+            it will only be invoked for exceptions (it catches type<literal>Throwable</literal>) where the initial
             <literal>ExceptionToCatchEvent</literal>
             was created with the
             <literal>@MyFramework</literal>
@@ -114,10 +112,9 @@ public class MyHandlers
          <para>
             The
             <literal>@Handles</literal>
-            annotation must be placed on the first parameter of the method, which must
-            be of type CaughtException. Handler methods are similar to CDI Obeservers and follow the same principals and
-            guidelines (such as invocation, injection of parameters, qualifiers, etc). They differ from Observer
-            methods in that:
+            annotation must be placed on the first parameter of the method, which must be of type CaughtException.
+            Handler methods are similar to CDI Obeservers and follow the same principals and guidelines (such as
+            invocation, injection of parameters, qualifiers, etc). They differ from Observer methods in that:
          </para>
 
          <itemizedlist>
@@ -197,7 +194,7 @@ public class MyHandlers
             <literal>CaughtException</literal>
          </listitem>
          <listitem>
-            <literal>CauseContainer</literal>
+            <literal>ExceptionStack</literal>
          </listitem>
       </itemizedlist>
 
@@ -206,12 +203,10 @@ public class MyHandlers
 
          <para>
             <literal>CaughtException</literal>
-            contains methods to interact with the handling procces, allowing a level of flow
-            control to be available to handler (such as re-throwing the exception, or aborting), and allowing a handler
-            to
-            be unmuted. Once a handler is invoked it is muted, meaning it will not be run again for that causing
-            container,
-            unless it is explicitly marked as unmuted via the
+            contains methods to interact with the handling procces, allowing a
+            level of flow control to be available to handler (such as re-throwing the exception, or aborting), and
+            allowing a handler to be unmuted. Once a handler is invoked it is muted, meaning it will not be run again
+            for that causing container, unless it is explicitly marked as unmuted via the
             <literal>CaughtException.unMute()</literal>
             object.
          </para>
@@ -253,12 +248,12 @@ public class MyHandlers
       </section>
 
       <section id="exception.handling.client_usage.api.stackinfo">
-         <title>CauseContainer</title>
+         <title>ExceptionStack</title>
 
          <para>
-            <literal>CauseContainer</literal>
-            contains information about the cause container relative to the current cause.
-            Please see API docs for more information, all methods are fairly self-explanatory.
+            <literal>ExceptionStack</literal>
+            contains information about the cause container relative to the current
+            cause. Please see API docs for more information, all methods are fairly self-explanatory.
          </para>
       </section>
 

@@ -25,20 +25,21 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.seam.exception.control.CatchResource;
 import org.jboss.seam.exception.control.ExceptionToCatchEvent;
 
 /**
  * A JAX-RS ExceptionMapper implementation that maps all exceptions (i.e.,
  * Throwable) raised during a JAX-RS request to the Seam Catch exception
  * handling bus.
- * 
+ * <p/>
  * <p>
  * Exceptions are send to Seam Catch by firing an event of type
  * {@link ExceptionToCatchEvent} to the CDI event bus. The event payload
  * contains the exception and the qualifier &#064;RestRequest. The qualifier
  * allows handlers that deal specifically with REST requests to be selected.
  * </p>
- * 
+ *
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
  */
 @Provider

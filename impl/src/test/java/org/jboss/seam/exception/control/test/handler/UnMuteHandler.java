@@ -31,12 +31,12 @@ public class UnMuteHandler
    public void unMuteHandlerAsc(@Handles CaughtException<Exception> event)
    {
       ASC_NUMBER_CALLED++;
-      event.unMute();
+      event.unmute();
    }
 
    public void unMuteHandlerDesc(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       DESC_NUMBER_CALLED++;
-      event.unMute();
+      event.unmute();
    }
 }
