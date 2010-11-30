@@ -17,16 +17,20 @@
 
 package org.jboss.seam.exception.control.example.jaxrs.handler;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.inject.Qualifier;
-
+/**
+ * A qualifier used to distinguish Seam Catch handler methods that are appropriate for a REST resource request.
+ *
+ * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
+ */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
-public @interface RestCatch
+public @interface RestRequest
 {
 }

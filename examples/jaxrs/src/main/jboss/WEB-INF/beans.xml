@@ -24,20 +24,4 @@
       <class>org.jboss.seam.rest.validation.ValidationInterceptor</class>
       <!--      <class>org.jboss.seam.persistence.transaction.TransactionInterceptor</class>-->
    </interceptors>
-
-   <rest:ExceptionMappingConfiguration>
-      <s:replaces/>
-      <rest:exceptionMappings>
-         <s:value>
-            <rest:ExceptionMapping exceptionType="javax.persistence.NoResultException" statusCode="404">
-               <rest:message>Requested resource does not exist.</rest:message>
-            </rest:ExceptionMapping>
-         </s:value>
-         <s:value>
-            <rest:ExceptionMapping exceptionType="java.lang.IllegalArgumentException" statusCode="400">
-               <rest:message>Illegal value.</rest:message>
-            </rest:ExceptionMapping>
-         </s:value>
-      </rest:exceptionMappings>
-   </rest:ExceptionMappingConfiguration>
 </beans>

@@ -31,7 +31,6 @@ import javax.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@Qualifier
 public @interface HandlesExceptions
 {
 }

@@ -17,17 +17,11 @@
 
 package org.jboss.seam.exception.control.example.jaxrs.handler;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.ws.rs.core.Response;
+import javax.enterprise.util.AnnotationLiteral;
 
-public class RequestBuilderProducer
+public class RestRequestLiteral extends AnnotationLiteral<RestRequest> implements RestRequest
 {
-   @Produces
-   @RequestScoped
-   @RestCatch
-   public Response.ResponseBuilder createErrorResponseBuilder()
-   {
-      return Response.serverError();
-   }
+   private static final long serialVersionUID = 1437877200809906569L;
+
+   public static final RestRequest INSTANCE = new RestRequestLiteral();
 }

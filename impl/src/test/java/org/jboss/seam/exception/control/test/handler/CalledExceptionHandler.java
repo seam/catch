@@ -29,6 +29,7 @@ public class CalledExceptionHandler
 {
    public static boolean OUTBOUND_HANDLER_CALLED = false;
    public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
+   public static boolean PROTECTED_HANDLER_CALLED = false;
    public static int INBOUND_HANDLER_TIMES_CALLED = 0;
    public static boolean BEANMANAGER_INJECTED = false;
 
@@ -50,5 +51,10 @@ public class CalledExceptionHandler
       {
          BEANMANAGER_INJECTED = true;
       }
+   }
+   
+   void protectedHandler(@Handles CaughtException<IllegalStateException> event)
+   {
+      PROTECTED_HANDLER_CALLED = true;
    }
 }

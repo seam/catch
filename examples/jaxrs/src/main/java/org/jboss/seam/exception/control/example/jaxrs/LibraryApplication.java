@@ -24,7 +24,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import org.jboss.seam.exception.control.example.jaxrs.handler.CatchBridge;
+import org.jboss.seam.exception.control.example.jaxrs.handler.CatchExceptionMapper;
 import org.jboss.seam.exception.control.example.jaxrs.resource.AuthorResource;
 import org.jboss.seam.exception.control.example.jaxrs.resource.BookResource;
 

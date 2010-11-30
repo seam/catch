@@ -66,6 +66,12 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 
       this.handler = method;
       this.javaMethod = method.getJavaMember();
+
+      // TODO: Make this use a security manager block or when Solder does it we should be fine
+      if (!this.javaMethod.isAccessible())
+      {
+         this.javaMethod.setAccessible(true);
+      }
       final AnnotatedParameter handlesParam = (AnnotatedParameter) method.getParameters().get(0);
 
       if (!handlesParam.isAnnotationPresent(Handles.class))
@@ -95,7 +101,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    {
       if (this.bean == null)
       {
-         this.bean = bm.resolve(bm.getBeans(this.beanClass, HandlesExceptionsLiteral.INSTANCE));
+         this.bean = bm.resolve(bm.getBeans(this.beanClass));
       }
       return this.bean;  //To change body of implemented methods use File | Settings | File Templates.
    }

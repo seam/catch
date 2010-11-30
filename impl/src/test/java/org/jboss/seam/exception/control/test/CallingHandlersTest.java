@@ -83,4 +83,11 @@ public class CallingHandlersTest
       bm.fireEvent(new ExceptionToCatchEvent(new RuntimeException(new IllegalArgumentException())));
       assertTrue(CalledExceptionHandler.BEANMANAGER_INJECTED);
    }
+   
+   @Test
+   public void assertProtectedHandlersAreCalled()
+   {
+      bm.fireEvent(new ExceptionToCatchEvent(new IllegalStateException()));
+      assertTrue(CalledExceptionHandler.PROTECTED_HANDLER_CALLED);
+   }
 }
