@@ -35,7 +35,7 @@ public class LibraryApplication extends Application
    public Set<Class<?>> getClasses()
    {
       final Set<Class<?>> classes = new HashSet<Class<?>>();
-      classes.addAll(Arrays.asList(CatchBridge.class, AuthorResource.class, BookResource.class));
+      classes.addAll(Arrays.asList(CatchExceptionMapper.class, AuthorResource.class, BookResource.class));
 
       return classes;
    }
