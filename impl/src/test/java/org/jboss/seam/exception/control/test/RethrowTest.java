@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.RethrowHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -52,12 +52,12 @@ public class RethrowTest
    @Test(expected = NullPointerException.class)
    public void assertOutboundRethrow()
    {
-      bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
+      bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
    }
 
    @Test(expected = IllegalArgumentException.class)
    public void assertInboundRethrow()
    {
-      bm.fireEvent(new ExceptionToCatchEvent(new IllegalArgumentException()));
+      bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
    }
 }

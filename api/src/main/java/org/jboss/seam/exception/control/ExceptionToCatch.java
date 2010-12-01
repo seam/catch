@@ -26,7 +26,7 @@ import java.util.Set;
  * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
  * is the handled flag.
  */
-public class ExceptionToCatchEvent
+public class ExceptionToCatch
 {
    private final Throwable exception;
    private boolean handled;
@@ -39,7 +39,7 @@ public class ExceptionToCatchEvent
     * @param exception  Exception to handle
     * @param qualifiers qualifiers to use to narrow the handlers called
     */
-   public ExceptionToCatchEvent(Throwable exception, Annotation... qualifiers)
+   public ExceptionToCatch(Throwable exception, Annotation... qualifiers)
    {
       this.exception = exception;
       this.qualifiers = new HashSet<Annotation>();
@@ -51,7 +51,7 @@ public class ExceptionToCatchEvent
     *
     * @param exception Exception to handle.
     */
-   public ExceptionToCatchEvent(Throwable exception)
+   public ExceptionToCatch(Throwable exception)
    {
       this.exception = exception;
       this.qualifiers = Collections.emptySet();

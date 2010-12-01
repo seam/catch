@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalPath;
@@ -59,7 +59,7 @@ public class EventTest
    @Test
    public void assertEventIsCreatedCorrectly()
    {
-      bm.fireEvent(new ExceptionToCatchEvent(new NullPointerException()));
+      bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
    }
 
    public void verifyDescEvent(@Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)

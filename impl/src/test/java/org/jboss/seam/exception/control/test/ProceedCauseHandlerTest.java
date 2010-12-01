@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.ProceedCauseHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -54,7 +54,7 @@ public class ProceedCauseHandlerTest
    @Test
    public void assertCorrectNumberOfHandlerCallsForProceedCause()
    {
-      bm.fireEvent(new ExceptionToCatchEvent(new Exception(new IllegalArgumentException(new NullPointerException()))));
+      bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
       assertEquals(0, ProceedCauseHandler.INBOUND_NPE_LOWER_PRECEDENCE_CALLED);
       assertEquals(1, ProceedCauseHandler.INBOUND_NPE_CALLED);
 

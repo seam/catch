@@ -26,7 +26,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.jboss.seam.exception.control.CatchResource;
-import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatch;
 
 /**
  * A JAX-RS ExceptionMapper implementation that maps all exceptions (i.e.,
@@ -35,7 +35,7 @@ import org.jboss.seam.exception.control.ExceptionToCatchEvent;
  * <p/>
  * <p>
  * Exceptions are send to Seam Catch by firing an event of type
- * {@link ExceptionToCatchEvent} to the CDI event bus. The event payload
+ * {@link ExceptionToCatch} to the CDI event bus. The event payload
  * contains the exception and the qualifier &#064;RestRequest. The qualifier
  * allows handlers that deal specifically with REST requests to be selected.
  * </p>
@@ -50,11 +50,11 @@ public class CatchExceptionMapper implements ExceptionMapper<Throwable>
    private Instance<Response> responseProvider;
 
    @Inject
-   private Event<ExceptionToCatchEvent> bridgeEvent;
+   private Event<ExceptionToCatch> bridgeEvent;
 
    public Response toResponse(Throwable exception)
    {
-      bridgeEvent.fire(new ExceptionToCatchEvent(exception, RestRequestLiteral.INSTANCE));
+      bridgeEvent.fire(new ExceptionToCatch(exception, RestRequestLiteral.INSTANCE));
       return responseProvider.get();
    }
 }

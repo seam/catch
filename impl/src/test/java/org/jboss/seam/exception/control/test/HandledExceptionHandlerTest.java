@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.ExceptionToCatchEvent;
+import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.handler.ExceptionHandledHandler;
 import org.jboss.shrinkwrap.api.Archive;
@@ -55,18 +55,18 @@ public class HandledExceptionHandlerTest
    @Test
    public void assertNoHandlersAfterHandledAreCalled()
    {
-      final ExceptionToCatchEvent catchEntryEvent = new ExceptionToCatchEvent(new Exception(
+      final ExceptionToCatch catchEntry = new ExceptionToCatch(new Exception(
          new NullPointerException()));
-      bm.fireEvent(catchEntryEvent);
+      bm.fireEvent(catchEntry);
       assertTrue(ExceptionHandledHandler.NPE_DESC_CALLED);
       assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);
-      assertTrue(catchEntryEvent.isHandled());
+      assertTrue(catchEntry.isHandled());
    }
 
    @Test
    public void assertNoHandlersAfterHandledAreCalledDesc()
    {
-      final ExceptionToCatchEvent event = new ExceptionToCatchEvent(new Exception(new IllegalArgumentException()));
+      final ExceptionToCatch event = new ExceptionToCatch(new Exception(new IllegalArgumentException()));
       bm.fireEvent(event);
       assertTrue(ExceptionHandledHandler.IAE_ASC_CALLED);
       assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);

@@ -30,7 +30,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 
 /**
- * Observer of {@link org.jboss.seam.exception.control.ExceptionToCatchEvent} events and handler dispatcher.
+ * Observer of {@link ExceptionToCatch} events and handler dispatcher.
  * All handlers are invoked from this class.  This class is immutable.
  */
 public class ExceptionHandlerDispatch
@@ -45,7 +45,7 @@ public class ExceptionHandlerDispatch
     * @throws Throwable If a handler requests the exception to be re-thrown.
     */
    @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes ExceptionToCatchEvent eventException, final BeanManager bm,
+   public void executeHandlers(@Observes ExceptionToCatch eventException, final BeanManager bm,
                                CatchExtension extension) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
