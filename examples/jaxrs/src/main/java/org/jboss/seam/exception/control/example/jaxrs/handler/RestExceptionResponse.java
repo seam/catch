@@ -16,24 +16,24 @@
  */
 package org.jboss.seam.exception.control.example.jaxrs.handler;
 
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-
 import org.jboss.seam.exception.control.ExceptionResponse;
 
-@ApplicationScoped
-public class ExceptionResponseMappings
+public class RestExceptionResponse extends ExceptionResponse
 {
-   private List<ExceptionResponse> mappings;
+   private int statusCode;
 
-   public List<ExceptionResponse> getMappings()
+   public RestExceptionResponse()
    {
-      return mappings;
    }
 
-   public void setMappings(List<ExceptionResponse> mappings)
+   public RestExceptionResponse(Class<? extends Throwable> forType, String message, int statusCode)
    {
-      this.mappings = mappings;
+      super(forType, message);
+      this.statusCode = statusCode;
+   }
+
+   public int getStatusCode()
+   {
+      return statusCode;
    }
 }

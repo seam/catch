@@ -14,26 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.seam.exception.control.example.jaxrs.handler;
+package org.jboss.seam.exception.control;
 
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-
-import org.jboss.seam.exception.control.ExceptionResponse;
-
-@ApplicationScoped
-public class ExceptionResponseMappings
+public class ExceptionResponse
 {
-   private List<ExceptionResponse> mappings;
+   private Class<? extends Throwable> forType;
+   private String message;
 
-   public List<ExceptionResponse> getMappings()
+   public ExceptionResponse()
    {
-      return mappings;
    }
 
-   public void setMappings(List<ExceptionResponse> mappings)
+   public ExceptionResponse(Class<? extends Throwable> forType, String message)
    {
-      this.mappings = mappings;
+      this.forType = forType;
+      this.message = message;
+   }
+
+   public Class<? extends Throwable> getForType()
+   {
+      return forType;
+   }
+
+   public String getMessage()
+   {
+      return message;
    }
 }

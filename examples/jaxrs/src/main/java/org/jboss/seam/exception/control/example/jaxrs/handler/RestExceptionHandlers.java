@@ -51,11 +51,11 @@ public class RestExceptionHandlers
    public void configurableExceptionHandler(
       @Handles(precedence = -100) @RestRequest final CaughtException<Throwable> event,
       @CatchResource final ResponseBuilder responseBuilder,
-      @RestRequest final List<ExceptionResponse> exceptionResponses)
+      @RestRequest final List<RestExceptionResponse> exceptionResponses)
    {
       final Class<?> exceptionClass = event.getException().getClass();
 
-      for (ExceptionResponse response : exceptionResponses)
+      for (RestExceptionResponse response : exceptionResponses)
       {
          if (exceptionClass.equals(response.getForType()))
          {
