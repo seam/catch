@@ -13,12 +13,12 @@ import org.jboss.seam.exception.control.example.jaxrs.handler.RestRequest;
 @ExceptionResponseService
 public interface DeclarativeRestExceptionHandlers
 {
-   @SendHttpResponse(status = 404, message = "Requested resource does not exist :(")
-   void onNoResult(@Handles @RestRequest CaughtException<NoResultException> e);
+//   @SendHttpResponse(status = 404, message = "Requested resource does not exist")
+//   void onNoResult(@Handles @RestRequest CaughtException<NoResultException> e);
    
-   @SendHttpResponse(status = 403, message = "Access to resource denied :0")
+   @SendHttpResponse(status = 403, message = "Access to resource denied (Annotation-configured response)")
    void onNoAccess(@Handles @RestRequest CaughtException<AccessControlException> e);
    
-   @SendHttpResponse(status = 400, message = "Invalid identifier")
+   @SendHttpResponse(status = 400, message = "Invalid identifier (Annotation-configured response)")
    void onInvalidIdentifier(@Handles @RestRequest CaughtException<IllegalArgumentException> e);
 }

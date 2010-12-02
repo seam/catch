@@ -79,8 +79,8 @@ public class RestExceptionHandlers
 //   public List<ExceptionResponse> getExceptionResponseMappings()
 //   {
 //      return Arrays.asList(
-//         new ExceptionResponse(NoResultException.class, 404, "Request resource does not exist"),
-//         new ExceptionResponse(IllegalArgumentException.class, 400, "Illegal value")
+//         new ExceptionResponse(NoResultException.class, 404, "Request resource does not exist (Java-configured response)"),
+//         new ExceptionResponse(IllegalArgumentException.class, 400, "Illegal value (Java-configured response)")
 //      );
 //   }
 }

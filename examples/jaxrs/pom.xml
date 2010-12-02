@@ -33,6 +33,8 @@
    <name>Seam Catch JAX-RS example</name>
 
    <properties>
+      <jboss.home>${env.JBOSS_HOME}</jboss.home>
+      <jboss.domain>default</jboss.domain>
       <resteasy.version>2.0.1.GA</resteasy.version>
       <seam.rest.version>3.0.0.Alpha1</seam.rest.version>
       <seam.persistence.version>3.0.0.Alpha1</seam.persistence.version>
@@ -258,7 +260,6 @@
       </plugins>
    </build>
 
-
    <profiles>
       <profile>
          <id>jboss-public-repository</id>
@@ -302,9 +303,13 @@
             </pluginRepository>
          </pluginRepositories>
       </profile>
+
       <profile>
-         <id>jboss-as</id>
-         <!-- Excluded dependencies -->
+         <id>jbossas</id>
+         <activation>
+            <activeByDefault>true</activeByDefault>
+         </activation>
+         <!-- Mark dependencies provided by JBoss AS -->
          <dependencies>
             <dependency>
                <groupId>org.jboss.logging</groupId>
@@ -321,27 +326,55 @@
                <artifactId>slf4j-simple</artifactId>
                <scope>provided</scope>
             </dependency>
-
          </dependencies>
 
          <build>
             <plugins>
+               <!-- JBoss AS deployer plugin will deploy your war to a local JBoss AS container if you've declared $JBOSS_HOME in your OS -->
+               <!-- To use, set the JBOSS_HOME environment variable (or jboss.home in $HOME/.m2/settings.xml) and run 'mvn package jboss:hard-deploy' -->
                <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-war-plugin</artifactId>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>jboss-maven-plugin</artifactId>
+                  <version>1.4.1</version>
                   <configuration>
-                     <webResources>
-                        <resource>
-                           <directory>src/main/jboss</directory>
-                        </resource>
-                     </webResources>
+                     <jbossHome>${jboss.home}</jbossHome>
+                     <serverName>${jboss.domain}</serverName>
+                     <fileNames>
+                        <!-- JNDI DataSource that connects to in-memory HSQLDB to demonstrate JPA -->
+                        <!--
+                        <fileName>src/main/resources-jbossas/default-ds.xml</fileName>
+                        -->
+                        <!-- DataSource needs to go before the application -->
+                        <fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
+                     </fileNames>
                   </configuration>
                </plugin>
             </plugins>
+            <resources>
+               <resource>
+                  <directory>src/main/resources</directory>
+               </resource>
+               <resource>
+                  <directory>src/main/resources-jbossas</directory>
+               </resource>
+            </resources>
+         </build>
+      </profile>
+
+      <profile>
+         <id>glassfish</id>
+         <build>
+            <resources>
+               <resource>
+                  <directory>src/main/resources</directory>
+               </resource>
+               <resource>
+                  <directory>src/main/resources-glassfish</directory>
+               </resource>
+            </resources>
          </build>
       </profile>
 
    </profiles>
 
 </project>
-
