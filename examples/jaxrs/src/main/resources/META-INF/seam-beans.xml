@@ -29,10 +29,13 @@
             <e:RestExceptionResponse forType="javax.persistence.NoResultException"
                statusCode="404" message="The resource requested does not exist (XML-configured response)"/>
          </value>
+         <!--
+           Due to JAX-RS multiple handlers that modify the response builder, the last one wins, so you wouldn't see this anyway
          <value>
             <e:RestExceptionResponse forType="java.lang.IllegalArgumentException"
                statusCode="400" message="Illegal value (XML-configured response)"/>
          </value>
+         -->
       </e:mappings>
    </e:ExceptionResponseMappings>
 

@@ -36,8 +36,18 @@ public class ExceptionResponse
       return forType;
    }
 
+   public void setForType(Class<? extends Throwable> forType)
+   {
+      this.forType = forType;
+   }
+
    public String getMessage()
    {
       return message;
+   }
+
+   public void setMessage(String message)
+   {
+      this.message = message;
    }
 }

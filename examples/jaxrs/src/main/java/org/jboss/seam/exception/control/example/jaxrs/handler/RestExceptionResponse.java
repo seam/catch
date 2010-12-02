@@ -32,6 +32,11 @@ public class RestExceptionResponse extends ExceptionResponse
       this.statusCode = statusCode;
    }
 
+   public void setStatusCode(int statusCode)
+   {
+      this.statusCode = statusCode;
+   }
+
    public int getStatusCode()
    {
       return statusCode;
