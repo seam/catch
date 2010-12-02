@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.jboss.seam.exception.control.CatchResource;
 import org.jboss.seam.exception.control.CaughtException;
+import org.jboss.seam.exception.control.ExceptionResponse;
 import org.jboss.seam.exception.control.ExceptionStack;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
@@ -51,15 +52,15 @@ public class RestExceptionHandlers
    public void configurableExceptionHandler(
       @Handles(precedence = -100) @RestRequest final CaughtException<Throwable> event,
       @CatchResource final ResponseBuilder responseBuilder,
-      @RestRequest final List<RestExceptionResponse> exceptionResponses)
+      @RestRequest final List<ExceptionResponse> exceptionResponses)
    {
       final Class<?> exceptionClass = event.getException().getClass();
 
-      for (RestExceptionResponse response : exceptionResponses)
+      for (ExceptionResponse response : exceptionResponses)
       {
          if (exceptionClass.equals(response.getForType()))
          {
-            responseBuilder.status(response.getStatusCode());
+            responseBuilder.status(((RestExceptionResponse) response).getStatusCode());
 
             if (response.getMessage() != null)
             {
@@ -79,8 +80,8 @@ public class RestExceptionHandlers
 //   public List<ExceptionResponse> getExceptionResponseMappings()
 //   {
 //      return Arrays.asList(
-//         new ExceptionResponse(NoResultException.class, 404, "Request resource does not exist"),
-//         new ExceptionResponse(IllegalArgumentException.class, 400, "Illegal value")
+//         new ExceptionResponse(NoResultException.class, 404, "Request resource does not exist (Java-configured response)"),
+//         new ExceptionResponse(IllegalArgumentException.class, 400, "Illegal value (Java-configured response)")
 //      );
 //   }
 }

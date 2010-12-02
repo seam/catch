@@ -27,15 +27,14 @@
          <e:RestRequest/>
          <value>
             <e:RestExceptionResponse forType="javax.persistence.NoResultException"
-                                     statusCode="404" message="The resource requested does not exist"/>
+               statusCode="404" message="The resource requested does not exist (XML-configured response)"/>
          </value>
          <value>
             <e:RestExceptionResponse forType="java.lang.IllegalArgumentException"
-                                     statusCode="400" message="Illegal value"/>
+               statusCode="400" message="Illegal value (XML-configured response)"/>
          </value>
       </e:mappings>
    </e:ExceptionResponseMappings>
-   <!-- -->
 
    <!-- uses the types from the REST module
    <rest:ExceptionMappingConfiguration>

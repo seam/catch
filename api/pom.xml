@@ -30,6 +30,18 @@
    <packaging>jar</packaging>
    <name>Seam Catch Module API</name>
 
+   <build>
+      <plugins>
+         <!-- No tests in the api, skip phase -->
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <skipTests>true</skipTests>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
    <profiles>
       <profile>
          <id>code-coverage</id>

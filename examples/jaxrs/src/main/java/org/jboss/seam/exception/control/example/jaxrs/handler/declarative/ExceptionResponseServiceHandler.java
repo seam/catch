@@ -56,13 +56,10 @@ public class ExceptionResponseServiceHandler
             {
                builder.entity(new ErrorMessageWrapper(message));
             }
-
-            c.handled();
          }
          else
          {
             builder.entity(new ErrorMessageWrapper("Unknown error"));
-            c.handled();
          }
       }
       return Void.TYPE;
