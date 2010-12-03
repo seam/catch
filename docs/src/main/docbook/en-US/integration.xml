@@ -17,34 +17,27 @@
   -->
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="exception.handling.framework_integration">
+<chapter id="integration">
    <title>Framework Integration</title>
 
    <para>
-      Integration of Seam Catch with other frameworks consists of one main step, and one other optional (but highly
+      Integration of Seam Catch with other frameworks consists of one main step, and two other optional (but highly
       encouraged) step:
    </para>
 
    <itemizedlist>
-      <listitem>creating and firing an
-         <literal>ExceptionToCatchEvent</literal>
-      </listitem>
+      <listitem>creating and firing an <literal>ExceptionToCatchEvent</literal> </listitem>
       <listitem>adding any default handlers and qualifiers with annotation literals (optional)</listitem>
+      <listitem>supporting ServiceHandlers for creating exception handlers</listitem>
    </itemizedlist>
 
-   <section id="exception.handling.framework_integration.exceptiontocatchevent">
+   <section id="integration.exceptiontocatchevent">
       <title>Creating and Firing an ExceptionToCatchEvent</title>
 
       <para>
-         An
-         <literal>ExceptionToCatchEvent</literal>
-         is constructed by passing a
-         <literal>Throwable</literal>
-         and
+         An <literal>ExceptionToCatchEvent</literal> is constructed by passing a <literal>Throwable</literal> and
          optionally qualifiers for handlers. Firing the event is done via CDI events (either straight from the
-         <literal>BeanManager</literal>
-         or injecting a
-         <literal>Event&lt;ExceptionToCatchEvent&gt;</literal>
+         <literal>BeanManager</literal> or injecting a <literal>Event&lt;ExceptionToCatchEvent&gt;</literal>
          and calling fire).
       </para>
 
@@ -53,16 +46,14 @@
          mechanism of the integrating framework, if any exist. By tying into the framework's exception handling,
          any uncaught exceptions should be routed through the Seam Catch system and allow handlers to be invoked.
          This is the typical way of using the Seam Catch framework. Of course, it doesn't stop the application
-         developer from firing their own
-         <literal>ExceptionToCatchEvent</literal>
-         within a catch block.
+         developer from firing their own <literal>ExceptionToCatchEvent</literal> within a catch block.
       </para>
    </section>
 
-   <section id="exception.handling.framework_integration.built-in">
+   <section id="integration.built-in">
       <title>Default Handlers and Qualifiers</title>
 
-      <section id="exception.handling.framework_integration.built-in.default_handlers">
+      <section id="integration.default_handlers">
          <title>Default Handlers</title>
 
          <para>
@@ -80,18 +71,56 @@
          </note>
       </section>
 
-      <section id="exception.handling.framework_integration.built-in.qualifiers">
+      <section id="integration.qualifiers">
          <title>Qualifiers</title>
 
          <para>
             Catch supports qualifiers for the<literal>CaughtException</literal>. To add a qualifier to be used when
-            firing handlers they must be add to the
-            <literal>ExceptionToCatchEvent</literal>
-            via the constructor (please
+            firing handlers they must be add to the <literal>ExceptionToCatchEvent</literal> via the constructor (please
             see API docs for more info). Qualifiers for integrations should be used to avoid collisions in the
             application error handling both when defining handlers and when firing events from the integration.
          </para>
       </section>
+
+   </section>
+
+   <section id="integration.servicehandlers">
+      <title>Supporting ServiceHandlers</title>
+
+      <para> 
+         <ulink url="http://docs.jboss.org/weld/extensions/reference/latest/en-US/html_single/#servicehandler">
+            ServiceHandlers</ulink> make for a very easy and concise way to define exception handlers take
+        the following example comes from the jaxrs example in the distribution: 
+      </para>
+
+      <programlisting role="JAVA"><![CDATA[@HandlesExceptions
+@ExceptionResponseService
+public interface DeclarativeRestExceptionHandlers
+{
+               
+   @SendHttpResponse(status = 403, message = "Access to resource denied (Annotation-configured response)")
+   void onNoAccess(@Handles @RestRequest CaughtException<AccessControlException> e);
+
+   @SendHttpResponse(status = 400, message = "Invalid identifier (Annotation-configured response)")
+   void onInvalidIdentifier(@Handles @RestRequest CaughtException<IllegalArgumentException> e);
+}]]>
+      </programlisting>
+
+      <para>
+         All the vital information that would normally be done in the handler method is actually contained in the
+         <literal>@SendHttpResponse</literal> annotation. The only thing left is some boiler plate code to setup
+         the <literal>Response</literal>. In a jax-rs application (or even in any web application) this approach helps
+         developers cut down on the amount of boiler plate code they have to write in their own handlers and should
+         be implemented in any Catch integration, however, there may be situtations where ServiceHandlers simply do not
+         make sense.
+      </para>
+
+      <note>
+         If ServiceHandlers are implemented make sure to document if any of the methods are called from 
+         <literal>CaughtException</literal>, specifically <literal>abort()</literal>, <literal>handled()</literal>
+         or <literal>rethrow()</literal>. These methods affect invocation of other handlers (or rethrowing the
+         exception in the case of <literal>rethrow()</literal>).
+      </note> 
 
    </section>
    <!--

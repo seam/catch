@@ -17,7 +17,7 @@
   -->
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="exception.handling.installation">
+<chapter id="installation">
    <title>Installation</title>
    <para>
       The Seam Catch API is the only compile time dependency a project needs, and an implementation must also be
