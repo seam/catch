@@ -15,31 +15,26 @@
  * limitations under the License.
  */
 
+/**
+ *
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
+ */
 package org.jboss.seam.exception.control;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * Marker annotation for a method to be considered an Exception Handler.
- * Handlers are typically in the form of <code>public void ... (@Handles ... CaughtException<...> ...)</code> methods.
- * If a method has a return type, it is ignored.
+ * List of possible precedence values.
+ *
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-@Documented
-public @interface Handles
+public class Precedence
 {
-   /**
-    * Direction of the cause chain traversal to listen.
-    */
-   public abstract TraversalPath during() default TraversalPath.ASCENDING;
+   public static final int BUILT_IN = -100;
 
-   /**
-    * Precedence relative to handlers for the same type
-    */
-   public abstract int precedence() default Precedence.DEFAULT;
+   public static final int FRAMEWORK = -50;
+
+   public static final int DEFAULT = 0;
+
+   public static final int LOW = 50;
+
+   public static final int HIGH = 100;
 }

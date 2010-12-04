@@ -17,7 +17,6 @@
 package org.jboss.seam.exception.control;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -121,8 +120,6 @@ public class ExceptionHandlerDispatch
             List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
                extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm,
                                                      eventException.getQualifiers()));
-
-            Collections.reverse(handlerMethods);
 
             for (HandlerMethod handler : handlerMethods)
             {

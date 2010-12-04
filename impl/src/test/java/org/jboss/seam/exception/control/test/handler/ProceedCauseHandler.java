@@ -20,6 +20,7 @@ package org.jboss.seam.exception.control.test.handler;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.Precedence;
 import org.jboss.seam.exception.control.TraversalPath;
 
 @HandlesExceptions
@@ -39,7 +40,7 @@ public class ProceedCauseHandler
    }
 
    public void npeLowerPrecedenceInboundHandler(
-      @Handles(precedence = -1, during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
+      @Handles(precedence = Precedence.FRAMEWORK, during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
       event.proceed();
@@ -51,7 +52,7 @@ public class ProceedCauseHandler
       event.proceedToCause();
    }
 
-   public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = 1) CaughtException<NullPointerException> event)
+   public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = Precedence.LOW) CaughtException<NullPointerException> event)
    {
       OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED++;
       event.proceed();

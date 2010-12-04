@@ -43,13 +43,14 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
          return 0;
       }
 
-      if (lhs.getExceptionType().equals(rhs.getExceptionType()))
+      if (lhs.getTraversalPath() == rhs.getTraversalPath())
       {
          // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
          // inbound, the other is outbound
-         if (lhs.getTraversalPath() == rhs.getTraversalPath())
+         if (lhs.getExceptionType().equals(rhs.getExceptionType()))
          {
-            final int returnValue = this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence());
+            final int returnValue = this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence(),
+                                                           lhs.getTraversalPath() == TraversalPath.ASCENDING);
             // Compare number of qualifiers if they exist so handlers that handle the same type
             // are both are returned and not thrown out (order doesn't really matter)
             if (returnValue == 0 && !lhs.getQualifiers().isEmpty())
@@ -61,16 +62,19 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
             // If it's 0 this is essentially the same handler for our purposes
             return returnValue;
          }
-         else if (lhs.getTraversalPath() == TraversalPath.DESCENDING)
-         {
-            return -1; // DuringDescTraversal first
-         }
          else
          {
-            return 1;
+            return compareHierarchies(lhs.getExceptionType(), rhs.getExceptionType());
          }
       }
-      return compareHierarchies(lhs.getExceptionType(), rhs.getExceptionType());
+      else if (lhs.getTraversalPath() == TraversalPath.DESCENDING)
+      {
+         return -1; // Descending first
+      }
+      else
+      {
+         return 1;
+      }
    }
 
    private int compareHierarchies(Type lhsExceptionType, Type rhsExceptionType)
@@ -80,16 +84,26 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
 
       if (lhsTypeclosure.contains(rhsExceptionType))
       {
-         final int indoxOfLhsType = new ArrayList(lhsTypeclosure).indexOf(lhsExceptionType);
-         final int indoxOfRhsType = new ArrayList(lhsTypeclosure).indexOf(rhsExceptionType);
+         final int indexOfLhsType = new ArrayList(lhsTypeclosure).indexOf(lhsExceptionType);
+         final int indexOfRhsType = new ArrayList(lhsTypeclosure).indexOf(rhsExceptionType);
 
-         return indoxOfLhsType - indoxOfRhsType;
+         if (indexOfLhsType > indexOfRhsType)
+         {
+            return -1;
+         }
       }
-      return -1;
+      return 1;
    }
 
-   private int comparePrecedence(final int lhs, final int rhs)
+   private int comparePrecedence(final int lhs, final int rhs, final boolean isAsc)
    {
-      return (lhs - rhs) * -1;
+      if (isAsc)
+      {
+         return (lhs - rhs);
+      }
+      else
+      {
+         return (lhs - rhs) * -1;
+      }
    }
 }

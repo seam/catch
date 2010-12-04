@@ -61,10 +61,11 @@ public class HandlerComparatorTest
       List<HandlerMethod> handlers = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
          IllegalArgumentException.class, bm, Collections.<Annotation>emptySet()));
 
-      assertEquals("catchThrowableP20", handlers.get(0).getJavaMethod().getName());
-      assertEquals("catchThrowable", handlers.get(1).getJavaMethod().getName());
-      assertEquals("catchException", handlers.get(2).getJavaMethod().getName());
+      assertEquals("catchDescException", handlers.get(0).getJavaMethod().getName());
+      assertEquals("catchFrameworkDescException", handlers.get(1).getJavaMethod().getName());
+      assertEquals("catchIAE", handlers.get(2).getJavaMethod().getName());
       assertEquals("catchRuntime", handlers.get(3).getJavaMethod().getName());
-      assertEquals("catchIAE", handlers.get(4).getJavaMethod().getName());
+      assertEquals("catchThrowable", handlers.get(4).getJavaMethod().getName());
+      assertEquals("catchThrowableP20", handlers.get(5).getJavaMethod().getName());
    }
 }

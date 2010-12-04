@@ -20,6 +20,7 @@ package org.jboss.seam.exception.control.test.handler;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.Precedence;
 import org.jboss.seam.exception.control.TraversalPath;
 import org.jboss.seam.exception.control.test.qualifier.Arquillian;
 import org.jboss.seam.exception.control.test.qualifier.CatchQualifier;
@@ -27,9 +28,14 @@ import org.jboss.seam.exception.control.test.qualifier.CatchQualifier;
 @HandlesExceptions
 public class ExtensionExceptionHandler
 {
-   public void catchException(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
+   public void catchDescException(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       // Nothing to do currently
+   }
+
+   public void catchFrameworkDescException(@Handles(during = TraversalPath.DESCENDING, precedence = Precedence.FRAMEWORK) CaughtException<Exception> event)
+   {
+      // Nothing to do here
    }
 
    public void catchRuntime(@Handles(during = TraversalPath.ASCENDING) CaughtException<RuntimeException> event)

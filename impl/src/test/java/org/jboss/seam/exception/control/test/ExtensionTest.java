@@ -66,7 +66,7 @@ public class ExtensionTest
    @Test
    public void assertFiveHandlersAreFound()
    {
-      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+      assertEquals(6, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
                                                             Collections.<Annotation>emptySet()).size());
    }
 
