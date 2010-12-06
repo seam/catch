@@ -22,22 +22,22 @@
 
    <para>
       Integration of Seam Catch with other frameworks consists of one main step, and two other optional (but highly
-      encouraged) step:
+      encouraged) steps:
    </para>
 
    <itemizedlist>
-      <listitem>creating and firing an <literal>ExceptionToCatchEvent</literal> </listitem>
+      <listitem>creating and firing an <literal>ExceptionToCatch</literal> </listitem>
       <listitem>adding any default handlers and qualifiers with annotation literals (optional)</listitem>
       <listitem>supporting ServiceHandlers for creating exception handlers</listitem>
    </itemizedlist>
 
    <section id="integration.exceptiontocatchevent">
-      <title>Creating and Firing an ExceptionToCatchEvent</title>
+      <title>Creating and Firing an ExceptionToCatch event</title>
 
       <para>
-         An <literal>ExceptionToCatchEvent</literal> is constructed by passing a <literal>Throwable</literal> and
+         An <literal>ExceptionToCatch</literal> is constructed by passing a <literal>Throwable</literal> and
          optionally qualifiers for handlers. Firing the event is done via CDI events (either straight from the
-         <literal>BeanManager</literal> or injecting a <literal>Event&lt;ExceptionToCatchEvent&gt;</literal>
+         <literal>BeanManager</literal> or injecting a <literal>Event&lt;ExceptionToCatch&gt;</literal>
          and calling fire).
       </para>
 
@@ -46,7 +46,7 @@
          mechanism of the integrating framework, if any exist. By tying into the framework's exception handling,
          any uncaught exceptions should be routed through the Seam Catch system and allow handlers to be invoked.
          This is the typical way of using the Seam Catch framework. Of course, it doesn't stop the application
-         developer from firing their own <literal>ExceptionToCatchEvent</literal> within a catch block.
+         developer from firing their own <literal>ExceptionToCatch</literal> within a catch block.
       </para>
    </section>
 
@@ -76,7 +76,7 @@
 
          <para>
             Catch supports qualifiers for the<literal>CaughtException</literal>. To add a qualifier to be used when
-            firing handlers they must be add to the <literal>ExceptionToCatchEvent</literal> via the constructor (please
+            firing handlers they must be add to the <literal>ExceptionToCatch</literal> via the constructor (please
             see API docs for more info). Qualifiers for integrations should be used to avoid collisions in the
             application error handling both when defining handlers and when firing events from the integration.
          </para>
