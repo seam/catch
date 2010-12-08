@@ -39,7 +39,7 @@ public class RestExceptionHandlers
    public void logException(
       @Handles(during = TraversalPath.DESCENDING) @RestRequest final CaughtException<Throwable> event)
    {
-      ExceptionStack c = event.getCauseContainer();
+      ExceptionStack c = event.getExceptionStack();
       System.out.println(
          "Caught exception (" + (c.getIndex() + 1) + " in stack of " + c.getCauseElements().size() + ") => " +
          event.getException().getClass().getSimpleName() + "(\"" + event.getException().getMessage() + "\") ");
@@ -67,7 +67,7 @@ public class RestExceptionHandlers
                responseBuilder.entity(new ErrorMessageWrapper(response.getMessage()));
             }
 
-            //event.proceed(); ??
+            //event.markHandled(); ??
             break;
          }
       }

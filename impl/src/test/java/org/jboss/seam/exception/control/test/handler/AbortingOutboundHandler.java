@@ -37,6 +37,6 @@ public class AbortingOutboundHandler
    public void proceedHandler(@Handles CaughtException<Throwable> event)
    {
       proceedCalled = true;
-      event.proceed();
+      event.markHandled();
    }
 }

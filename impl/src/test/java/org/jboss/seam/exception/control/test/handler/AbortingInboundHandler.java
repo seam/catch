@@ -38,6 +38,6 @@ public class AbortingInboundHandler
    public void proceedHandler(@Handles CaughtException<NullPointerException> event)
    {
       proceedCalled = true;
-      event.proceed();
+      event.markHandled();
    }
 }

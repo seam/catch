@@ -36,25 +36,25 @@ public class ProceedCauseHandler
       @Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_CALLED++;
-      event.proceedToCause();
+      event.dropCause();
    }
 
    public void npeLowerPrecedenceInboundHandler(
       @Handles(precedence = Precedence.FRAMEWORK, during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
-      event.proceed();
+      event.markHandled();
    }
 
    public void npeOutboundHandler(@Handles CaughtException<NullPointerException> event)
    {
       OUTBOUND_NPE_CALLED++;
-      event.proceedToCause();
+      event.dropCause();
    }
 
    public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = Precedence.LOW) CaughtException<NullPointerException> event)
    {
       OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED++;
-      event.proceed();
+      event.markHandled();
    }
 }

@@ -42,7 +42,7 @@ public class CalledExceptionHandler
    public void basicInboundHandler(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
    {
       INBOUND_HANDLER_TIMES_CALLED++;
-      event.proceed();
+      event.markHandled();
    }
 
    public void extraInjections(@Handles CaughtException<IllegalArgumentException> event, BeanManager bm)

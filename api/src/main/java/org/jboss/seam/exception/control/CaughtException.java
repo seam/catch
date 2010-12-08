@@ -27,13 +27,13 @@ package org.jboss.seam.exception.control;
 public class CaughtException<T extends Throwable>
 {
    /**
-    * Flow control enum.  Used in the dispatcher to determine how to proceed.
+    * Flow control enum.  Used in the dispatcher to determine how to markHandled.
     */
    protected enum ExceptionHandlingFlow
    {
       HANDLED,
-      PROCEED,
-      PROCEED_TO_CAUSE,
+      MARK_HANDLED,
+      DROP_CAUSE,
       ABORT,
       RETHROW
    }
@@ -67,7 +67,7 @@ public class CaughtException<T extends Throwable>
       this.descendingTraversal = descendingTraversal;
       this.ascendingTraversal = !descendingTraversal;
       this.markedHandled = handled;
-      this.flow = ExceptionHandlingFlow.PROCEED;
+      this.flow = ExceptionHandlingFlow.MARK_HANDLED;
    }
 
    public T getException()
@@ -102,19 +102,19 @@ public class CaughtException<T extends Throwable>
    /**
     * Default instruction to dispatcher, continues handler processing.
     */
-   public void proceed()
+   public void markHandled()
    {
-      this.flow = ExceptionHandlingFlow.PROCEED;
+      this.flow = ExceptionHandlingFlow.MARK_HANDLED;
    }
 
    /**
-    * Similar to {@link CaughtException#proceed()}, but instructs the dispatcher
-    * to proceed to the next element in the cause chain without processing additional handlers for this cause
+    * Similar to {@link CaughtException#markHandled()}, but instructs the dispatcher
+    * to markHandled to the next element in the cause chain without processing additional handlers for this cause
     * chain element.
     */
-   public void proceedToCause()
+   public void dropCause()
    {
-      this.flow = ExceptionHandlingFlow.PROCEED_TO_CAUSE;
+      this.flow = ExceptionHandlingFlow.DROP_CAUSE;
    }
 
    /**

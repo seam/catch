@@ -33,7 +33,7 @@ public class StackInfoHandler
 {
    public void outerInfoInspector(@Handles CaughtException<Exception> event)
    {
-      ExceptionStack info = event.getCauseContainer();
+      ExceptionStack info = event.getExceptionStack();
 
       assertTrue(info.isLast());
       assertFalse(info.isRoot());
@@ -46,7 +46,7 @@ public class StackInfoHandler
 
    public void rootInfoInspector(@Handles CaughtException<NullPointerException> event)
    {
-      ExceptionStack info = event.getCauseContainer();
+      ExceptionStack info = event.getExceptionStack();
 
       assertFalse(info.isLast());
       assertTrue(info.isRoot());
@@ -57,6 +57,6 @@ public class StackInfoHandler
       assertEquals(1, info.getRemaining().size());
       assertEquals(event.getException(), info.getCurrent());
 
-      event.proceedToCause();
+      event.dropCause();
    }
 }

@@ -93,12 +93,12 @@ public class ExceptionHandlerDispatch
                      case HANDLED:
                         eventException.setHandled(true);
                         return;
-                     case PROCEED:
+                     case MARK_HANDLED:
                         eventException.setHandled(true);
                         break;
                      case ABORT:
                         return;
-                     case PROCEED_TO_CAUSE:
+                     case DROP_CAUSE:
                         eventException.setHandled(true);
                         exceptionIndex--;
                         continue inbound_cause;
@@ -140,12 +140,12 @@ public class ExceptionHandlerDispatch
                      case HANDLED:
                         eventException.setHandled(true);
                         return;
-                     case PROCEED:
+                     case MARK_HANDLED:
                         eventException.setHandled(true);
                         break;
                      case ABORT:
                         return;
-                     case PROCEED_TO_CAUSE:
+                     case DROP_CAUSE:
                         eventException.setHandled(true);
                         exceptionIndex--;
                         continue outbound_cause;
