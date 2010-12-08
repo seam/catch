@@ -38,22 +38,24 @@ public class CaughtException<T extends Throwable>
       RETHROW
    }
 
-   private ExceptionStack exceptionStack;
-   private T exception;
+   private final ExceptionStack exceptionStack;
+   private final T exception;
    private boolean unmute;
    private ExceptionHandlingFlow flow;
-   private boolean descendingTraversal;
-   private boolean ascendingTraversal;
+   private final boolean descendingTraversal;
+   private final boolean ascendingTraversal;
+   private final boolean markedHandled;
 
    /**
     * Initial state constructor.
     *
     * @param exceptionStack      Information about the current exception and cause chain.
     * @param descendingTraversal flag indicating the direction of the cause chain traversal
+    * @param handled flag indicating the exception has already been handled by a previous handler
     *
     * @throws IllegalArgumentException if exceptionStack is null
     */
-   public CaughtException(final ExceptionStack exceptionStack, final boolean descendingTraversal)
+   public CaughtException(final ExceptionStack exceptionStack, final boolean descendingTraversal, final boolean handled)
    {
       if (exceptionStack == null)
       {
@@ -64,6 +66,7 @@ public class CaughtException<T extends Throwable>
       this.exceptionStack = exceptionStack;
       this.descendingTraversal = descendingTraversal;
       this.ascendingTraversal = !descendingTraversal;
+      this.markedHandled = handled;
       this.flow = ExceptionHandlingFlow.PROCEED;
    }
 
@@ -137,7 +140,7 @@ public class CaughtException<T extends Throwable>
       return this.unmute;
    }
 
-   public ExceptionStack getCauseContainer()
+   public ExceptionStack getExceptionStack()
    {
       return this.exceptionStack;
    }
@@ -145,5 +148,10 @@ public class CaughtException<T extends Throwable>
    protected ExceptionHandlingFlow getFlow()
    {
       return this.flow;
+   }
+
+   public boolean isMarkedHandled()
+   {
+      return this.markedHandled;
    }
 }

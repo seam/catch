@@ -79,8 +79,8 @@ public class ExceptionHandlerDispatch
             {
                if (handler.getTraversalPath() == TraversalPath.DESCENDING && !processedHandlers.contains(handler))
                {
-                  final CaughtException event = new CaughtException(new ExceptionStack(unwrappedExceptions,
-                                                                                       exceptionIndex), true);
+                  final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
+                  final CaughtException event = new CaughtException(stack, true, eventException.isHandled());
                   handler.notify(event, bm);
 
                   if (!event.isUnmute())
@@ -126,8 +126,8 @@ public class ExceptionHandlerDispatch
                // Defining DuringAscTraversal as the absence of DuringDescTraversal
                if (handler.getTraversalPath() == TraversalPath.ASCENDING && !processedHandlers.contains(handler))
                {
-                  final CaughtException event = new CaughtException(new ExceptionStack(unwrappedExceptions,
-                                                                                       exceptionIndex), false);
+                  final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
+                  final CaughtException event = new CaughtException(stack, false, eventException.isHandled());
                   handler.notify(event, bm);
 
                   if (!event.isUnmute())
