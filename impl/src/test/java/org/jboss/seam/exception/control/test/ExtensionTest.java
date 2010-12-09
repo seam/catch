@@ -17,6 +17,9 @@
 
 package org.jboss.seam.exception.control.test;
 
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,18 +31,18 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.handler.DecoratorAsHandler;
 import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
+import org.jboss.seam.exception.control.test.handler.InterceptorAsHandler;
+import org.jboss.seam.exception.control.test.handler.PretendInterceptorBinding;
 import org.jboss.seam.exception.control.test.qualifier.ArquillianLiteral;
 import org.jboss.seam.exception.control.test.qualifier.CatchQualifierLiteral;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 @RunWith(Arquillian.class)
 public class ExtensionTest
@@ -48,8 +51,13 @@ public class ExtensionTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
-         .addManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+         .addClasses(CatchExtension.class, ExtensionExceptionHandler.class,
+               InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class)
+         .addManifestResource(new StringAsset(
+               "<beans>" +
+         		"   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
+         		"   <decorators><class>" + DecoratorAsHandler.class.getName() + "</class></decorators>" +
+               "</beans>"), "beans.xml")
          .addServiceProvider(Extension.class, CatchExtension.class);
    }
 
@@ -57,14 +65,22 @@ public class ExtensionTest
    @Inject BeanManager bm;
 
    @Test
-   public void assertHandlersAreFound()
+   public void assertAnyHandlersAreFound()
    {
       assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
                                                         Collections.<Annotation>emptySet()).isEmpty());
    }
 
+   /**
+    * Verifies that the expected number of handlers are found. If the extension where to scan
+    * interceptors and decorators for handlers, this assertion would fail.
+    * 
+    * @see ExtensionExceptionHandler
+    * @see InterceptorAsHandler
+    * @see DecoratorAsHandler
+    */
    @Test
-   public void assertFiveHandlersAreFound()
+   public void assertNumberOfHandlersFoundMatchesExpected()
    {
       assertEquals(6, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
                                                             Collections.<Annotation>emptySet()).size());
