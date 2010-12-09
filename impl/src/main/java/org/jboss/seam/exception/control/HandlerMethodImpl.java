@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
@@ -31,6 +32,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.weld.extensions.bean.Beans;
+import org.jboss.weld.extensions.literal.AnyLiteral;
 import org.jboss.weld.extensions.reflection.annotated.InjectableMethod;
 
 /**
@@ -59,6 +61,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     */
    public HandlerMethodImpl(final AnnotatedMethod method, final BeanManager bm)
    {
+      final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
       if (method == null || method.getParameters() == null || method.getParameters().size() == 0)
       {
          throw new IllegalArgumentException("Method must not be null and must have at least one parameter");
@@ -81,7 +84,14 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 
       this.traversalPath = handlesParam.getAnnotation(Handles.class).during();
       this.precedence = handlesParam.getAnnotation(Handles.class).precedence();
-      this.qualifiers = Beans.getQualifiers(bm, handlesParam.getAnnotations());
+      tmpQualifiers.addAll(Beans.getQualifiers(bm, handlesParam.getAnnotations()));
+
+      if (tmpQualifiers.isEmpty())
+      {
+         tmpQualifiers.add(AnyLiteral.INSTANCE);
+      }
+
+      this.qualifiers = tmpQualifiers;
       this.beanClass = method.getJavaMember().getDeclaringClass();
       this.exceptionType = ((ParameterizedType) handlesParam.getBaseType()).getActualTypeArguments()[0];
    }

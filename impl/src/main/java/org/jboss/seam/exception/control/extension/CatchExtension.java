@@ -34,7 +34,9 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.Decorator;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.Interceptor;
 import javax.enterprise.inject.spi.ProcessBean;
 
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
@@ -42,6 +44,7 @@ import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.weld.extensions.literal.AnyLiteral;
 import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
 
 /**
@@ -74,7 +77,8 @@ public class CatchExtension implements Extension
    public void findHandlers(@Observes final ProcessBean pmb, final BeanManager bm)
    {
       // TODO also ignore decorators and interceptors
-      if (!(pmb.getAnnotated() instanceof AnnotatedType))
+      if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
+          pmb.getBean() instanceof Decorator)
       {
          return;
       }
@@ -135,14 +139,13 @@ public class CatchExtension implements Extension
          {
             for (HandlerMethod handler : this.allHandlers.get(hierarchyType))
             {
-               if (handler.getQualifiers().isEmpty() && handlerQualifiers.isEmpty())
+               if (handler.getQualifiers().contains(AnyLiteral.INSTANCE))
                {
                   returningHandlers.add(handler);
                }
                else
                {
-                  if (!handlerQualifiers.isEmpty() && handler.getQualifiers().containsAll(handlerQualifiers)
-                      && handler.getQualifiers().size() == handlerQualifiers.size())
+                  if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers))
                   {
                      returningHandlers.add(handler);
                   }
@@ -152,5 +155,18 @@ public class CatchExtension implements Extension
       }
 
       return Collections.unmodifiableCollection(returningHandlers);
+   }
+
+   private boolean containsAny(final Collection<? extends Annotation> haystack,
+                               final Collection<? extends Annotation> needles)
+   {
+      for (Annotation a : needles)
+      {
+         if (haystack.contains(a))
+         {
+            return true;
+         }
+      }
+      return false;
    }
 }
