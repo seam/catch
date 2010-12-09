@@ -51,6 +51,7 @@ public class ExceptionHandlerDispatch
       CreationalContext<Object> ctx = null;
 
       Throwable exception = eventException.getException();
+      Throwable throwException = null;
 
       do
       {
@@ -63,7 +64,6 @@ public class ExceptionHandlerDispatch
          ctx = bm.createCreationalContext(null);
 
          final Set<HandlerMethod> processedHandlers = new HashSet<HandlerMethod>();
-         boolean rethrow = false;
 
          // DuringDescTraversal handlers
          int exceptionIndex = unwrappedExceptions.size() - 1;
@@ -103,7 +103,10 @@ public class ExceptionHandlerDispatch
                         exceptionIndex--;
                         continue inbound_cause;
                      case RETHROW:
-                        rethrow = true;
+                        throwException = eventException.getException();
+                        break;
+                     case THROW:
+                        throwException = event.getThrowNewException();
                   }
                }
             }
@@ -150,16 +153,19 @@ public class ExceptionHandlerDispatch
                         exceptionIndex--;
                         continue outbound_cause;
                      case RETHROW:
-                        rethrow = true;
+                        throwException = eventException.getException();
+                        break;
+                     case THROW:
+                        throwException = event.getThrowNewException();
                   }
                }
             }
             exceptionIndex--;
          }
 
-         if (rethrow)
+         if (throwException != null)
          {
-            throw eventException.getException();
+            throw throwException;
          }
       }
       finally

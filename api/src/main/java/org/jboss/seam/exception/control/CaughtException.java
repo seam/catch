@@ -35,13 +35,15 @@ public class CaughtException<T extends Throwable>
       MARK_HANDLED,
       DROP_CAUSE,
       ABORT,
-      RETHROW
+      RETHROW,
+      THROW
    }
 
    private final ExceptionStack exceptionStack;
    private final T exception;
    private boolean unmute;
    private ExceptionHandlingFlow flow;
+   private Throwable throwNewException;
    private final boolean descendingTraversal;
    private final boolean ascendingTraversal;
    private final boolean markedHandled;
@@ -51,7 +53,7 @@ public class CaughtException<T extends Throwable>
     *
     * @param exceptionStack      Information about the current exception and cause chain.
     * @param descendingTraversal flag indicating the direction of the cause chain traversal
-    * @param handled flag indicating the exception has already been handled by a previous handler
+    * @param handled             flag indicating the exception has already been handled by a previous handler
     *
     * @throws IllegalArgumentException if exceptionStack is null
     */
@@ -153,5 +155,21 @@ public class CaughtException<T extends Throwable>
    public boolean isMarkedHandled()
    {
       return this.markedHandled;
+   }
+
+   /**
+    * Rethrow the exception, but use the given exception instead of the original.
+    *
+    * @param t Exception to be thrown in place of the original.
+    */
+   public void rethrow(Throwable t)
+   {
+      this.throwNewException = t;
+      this.flow = ExceptionHandlingFlow.THROW;
+   }
+
+   protected Throwable getThrowNewException()
+   {
+      return throwNewException;
    }
 }
