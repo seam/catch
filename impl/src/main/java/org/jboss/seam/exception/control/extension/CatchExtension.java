@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -76,7 +77,6 @@ public class CatchExtension implements Extension
     */
    public void findHandlers(@Observes final ProcessBean pmb, final BeanManager bm)
    {
-      // TODO also ignore decorators and interceptors
       if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
           pmb.getBean() instanceof Decorator)
       {
@@ -85,7 +85,7 @@ public class CatchExtension implements Extension
 
       final AnnotatedType type = (AnnotatedType) pmb.getAnnotated();
 
-      if (type.isAnnotationPresent(HandlesExceptions.class))
+      if (this.isAnnotationPresent(type, HandlesExceptions.class, bm))
       {
          final Set<AnnotatedMethod> methods = type.getMethods();
 
@@ -165,6 +165,30 @@ public class CatchExtension implements Extension
          if (haystack.contains(a))
          {
             return true;
+         }
+      }
+      return false;
+   }
+
+   private static <A extends Annotation> boolean isAnnotationPresent(Annotated annotated, final Class<A> annotationType,
+                                                                     BeanManager beanManager)
+   {
+      if (annotated.isAnnotationPresent(annotationType))
+      {
+         return true;
+      }
+
+      for (Annotation candidate : annotated.getAnnotations())
+      {
+         if (beanManager.isStereotype(candidate.annotationType()))
+         {
+            for (Annotation stereotyped : beanManager.getStereotypeDefinition(candidate.annotationType()))
+            {
+               if (stereotyped.annotationType().equals(annotationType))
+               {
+                  return true;
+               }
+            }
          }
       }
       return false;
