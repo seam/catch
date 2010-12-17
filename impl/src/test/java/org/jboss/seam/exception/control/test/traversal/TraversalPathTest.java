@@ -69,10 +69,11 @@ public class TraversalPathTest
     * 1) Exception1 handler in the descending traversal path
     * 2) Exception2 handler in the descending traversal path
     * 3) Exception3 handler in the descending traversal path
-    * 4) Exception3 handler in the ascending traversal path
-    * 5) SuperException handler in the ascending traversal path
-    * 6) Exception2 handler in the ascending traversal path
-    * 7) Exception1 handler in the ascending traversal path
+    * 4) SuperOfException3 handler in the descending traversal path
+    * 5) Exception3 handler in the ascending traversal path
+    * 6) SuperOfException3 handler in the ascending traversal path
+    * 7) Exception2 handler in the ascending traversal path
+    * 8) Exception1 handler in the ascending traversal path
     * 
     **/ 
    @Test
