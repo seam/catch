@@ -27,7 +27,7 @@ import java.util.List;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.test.traversal.Exceptions.SuperException;
+import org.jboss.seam.exception.control.test.traversal.Exceptions.SuperOfException3;
 
 import static org.jboss.seam.exception.control.test.traversal.Exceptions.Exception1;
 import static org.jboss.seam.exception.control.test.traversal.Exceptions.Exception2;
@@ -55,24 +55,29 @@ public class ExceptionHandler
       executionOrder.add(3);
    }
    
-   public void handleException3Asc(@Handles(during = ASCENDING) CaughtException<Exception3> event)
+   public void handleException3SuperclassDesc(@Handles(during = DESCENDING) CaughtException<SuperOfException3> event)
    {
       executionOrder.add(4);
    }
    
-   public void handleException3SuperclassAsc(@Handles(during = ASCENDING) CaughtException<SuperException> event)
+   public void handleException3Asc(@Handles(during = ASCENDING) CaughtException<Exception3> event)
    {
       executionOrder.add(5);
    }
-
-   public void handleException2Asc(@Handles(during = ASCENDING) CaughtException<Exception2> event)
+   
+   public void handleException3SuperclassAsc(@Handles(during = ASCENDING) CaughtException<SuperOfException3> event)
    {
       executionOrder.add(6);
    }
 
-   public void handleException1Asc(@Handles(during = ASCENDING) CaughtException<Exception1> event)
+   public void handleException2Asc(@Handles(during = ASCENDING) CaughtException<Exception2> event)
    {
       executionOrder.add(7);
+   }
+
+   public void handleException1Asc(@Handles(during = ASCENDING) CaughtException<Exception1> event)
+   {
+      executionOrder.add(8);
    }
 
    public static List<Integer> getExecutionorder()

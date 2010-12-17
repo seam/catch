@@ -40,11 +40,11 @@ public class Exceptions
       }
    }
    
-   public static class SuperException extends Exception
+   public static class SuperOfException3 extends Exception
    {
    }
    
-   public static class Exception3 extends SuperException
+   public static class Exception3 extends SuperOfException3
    {
    }
 }

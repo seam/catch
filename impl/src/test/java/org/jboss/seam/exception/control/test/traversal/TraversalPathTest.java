@@ -32,7 +32,7 @@ import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.traversal.Exceptions.Exception1;
 import org.jboss.seam.exception.control.test.traversal.Exceptions.Exception2;
 import org.jboss.seam.exception.control.test.traversal.Exceptions.Exception3;
-import org.jboss.seam.exception.control.test.traversal.Exceptions.SuperException;
+import org.jboss.seam.exception.control.test.traversal.Exceptions.SuperOfException3;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -63,7 +63,7 @@ public class TraversalPathTest
     * 
     * The following exception chain is thrown: Exception1 -> Exception2 -> Exception3 
     * (where "X -> Y" means X is caused by Y).
-    * Besides, the {@link SuperException} is a superclass of Exception3.
+    * Besides, the {@link SuperOfException3} is a superclass of Exception3.
     * 
     * The expected order of execution is as follows:
     * 1) Exception1 handler in the descending traversal path
@@ -83,7 +83,7 @@ public class TraversalPathTest
       
       manager.fireEvent(new ExceptionToCatch(exception));
       
-      Object[] expectedOrder = {1,2,3,4,5,6,7};
+      Object[] expectedOrder = {1,2,3,4,5,6,7,8};
       assertArrayEquals(expectedOrder, ExceptionHandler.getExecutionorder().toArray());
    }
 }
