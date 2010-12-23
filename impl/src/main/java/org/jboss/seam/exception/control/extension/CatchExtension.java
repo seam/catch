@@ -45,8 +45,8 @@ import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.weld.extensions.literal.AnyLiteral;
-import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
+import org.jboss.seam.solder.literal.AnyLiteral;
+import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 
 /**
  * CDI extension to find handlers at startup.
