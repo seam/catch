@@ -423,6 +423,19 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
             the default precedence (0).
          </para>
 
+         <para>
+            To make specifying precendence values more convenience, Catch provides several built-in constants, available
+            on the <literal>Precedence</literal> interface:
+         </para>
+
+         <itemizedlist>
+            <listitem>BUILT_IN = -100</listitem>
+            <listitem>FRAMEWORK = -50</listitem>
+            <listitem>DEFAULT = 0</listitem>
+            <listitem>LOW = 50</listitem>
+            <listitem>HIGH = 100</listitem>
+         </itemizedlist>
+
       </section>
 
       <para>
