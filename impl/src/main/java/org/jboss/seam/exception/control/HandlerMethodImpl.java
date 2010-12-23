@@ -31,9 +31,9 @@ import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
-import org.jboss.weld.extensions.bean.Beans;
-import org.jboss.weld.extensions.literal.AnyLiteral;
-import org.jboss.weld.extensions.reflection.annotated.InjectableMethod;
+import org.jboss.seam.solder.bean.Beans;
+import org.jboss.seam.solder.literal.AnyLiteral;
+import org.jboss.seam.solder.reflection.annotated.InjectableMethod;
 
 /**
  * Implementation of {@link org.jboss.seam.exception.control.HandlerMethod}.

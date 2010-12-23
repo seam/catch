@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   JBoss, Home of Professional Open Source
   Copyright [2010], Red Hat, Inc., and individual contributors
@@ -28,39 +28,25 @@
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-example-jaxrs</artifactId>
    <packaging>war</packaging>
-   <version>3.0.0-SNAPSHOT</version>
    <name>Seam Catch JAX-RS example</name>
+   <!-- url required for JAR Manifest -->
+   <url>${project.parent.url}</url>
 
    <properties>
       <jboss.home>${env.JBOSS_HOME}</jboss.home>
       <jboss.domain>default</jboss.domain>
-      <resteasy.version>2.0.1.GA</resteasy.version>
-      <seam.rest.version>3.0.0.Alpha1</seam.rest.version>
-      <seam.persistence.version>3.0.0.Alpha1</seam.persistence.version>
-      <seam.xml.version>3.0.0.Alpha3</seam.xml.version>
-      <javax.ejb.version>1.0.0.Beta2</javax.ejb.version>
-      <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
-      <javax.persistence.version>1.0.0.Final</javax.persistence.version>
-      <javax.servlet.version>1.0.0.Final</javax.servlet.version>
-      <jboss.logging.version>3.0.0.Beta4</jboss.logging.version>
+      <seam.rest.version>3.0.0.Alpha2</seam.rest.version>
+      <seam.config.version>3.0.0.Beta2</seam.config.version>
+      <seam.servlet.version>3.0.0.Alpha3</seam.servlet.version>
+      <seam.solder.version>3.0.0.Beta1</seam.solder.version>
    </properties>
 
    <dependencyManagement>
       <dependencies>
          <dependency>
-            <groupId>org.jboss.seam.xml</groupId>
-            <artifactId>seam-xml-config</artifactId>
-            <version>${seam.xml.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <version>${jboss.logging.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>org.jboss.seam.config</groupId>
+            <artifactId>seam-config-xml</artifactId>
+            <version>${seam.config.version}</version>
          </dependency>
          <dependency>
             <groupId>org.jboss.seam.rest</groupId>
@@ -69,165 +55,66 @@
          </dependency>
          <dependency>
             <groupId>org.jboss.seam.rest</groupId>
-            <artifactId>seam-rest</artifactId>
+            <artifactId>seam-rest-impl</artifactId>
             <version>${seam.rest.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>${resteasy.version}</version>
-            <exclusions>
-               <exclusion>
-                  <groupId>javax.activation</groupId>
-                  <artifactId>activation</artifactId>
-               </exclusion>
-               <exclusion>
-                  <groupId>commons-httpclient</groupId>
-                  <artifactId>commons-httpclient</artifactId>
-               </exclusion>
-               <exclusion>
-                  <groupId>org.apache.httpcomponents</groupId>
-                  <artifactId>httpclient</artifactId>
-               </exclusion>
-               <exclusion>
-                  <groupId>commons-codec</groupId>
-                  <artifactId>commons-codec</artifactId>
-               </exclusion>
-            </exclusions>
+            <groupId>org.jboss.seam.servlet</groupId>
+            <artifactId>seam-servlet-api</artifactId>
+            <version>${seam.servlet.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-cdi</artifactId>
-            <version>${resteasy.version}</version>
+            <groupId>org.jboss.seam.servlet</groupId>
+            <artifactId>seam-servlet-impl</artifactId>
+            <version>${seam.servlet.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.jboss.seam.catch</groupId>
-            <artifactId>seam-catch-api</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder-api</artifactId>
+            <version>${seam.solder.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.jboss.seam.catch</groupId>
-            <artifactId>seam-catch-impl</artifactId>
-            <version>${project.parent.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>${javax.persistence.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.spec.javax.ejb</groupId>
-            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-            <version>${javax.ejb.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.spec.javax.servlet</groupId>
-            <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-            <version>${javax.servlet.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.seam.persistence</groupId>
-            <artifactId>seam-persistence-api</artifactId>
-            <version>${seam.persistence.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.seam.persistence</groupId>
-            <artifactId>seam-persistence-impl</artifactId>
-            <version>${seam.persistence.version}</version>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder-impl</artifactId>
+            <version>${seam.solder.version}</version>
          </dependency>
       </dependencies>
    </dependencyManagement>
 
    <dependencies>
       <dependency>
-         <groupId>org.jboss.spec.javax.ejb</groupId>
-         <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+         <groupId>org.jboss.spec</groupId>
+         <artifactId>jboss-javaee-6.0</artifactId>
          <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.logging</groupId>
-         <artifactId>jboss-logging</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.validation</groupId>
-         <artifactId>validation-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.spec.javax.servlet</groupId>
-         <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.hibernate.javax.persistence</groupId>
-         <artifactId>hibernate-jpa-2.0-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.enterprise</groupId>
-         <artifactId>cdi-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.spec.javax.interceptor</groupId>
-         <artifactId>jboss-interceptors-api_1.1_spec</artifactId>
-         <scope>provided</scope>
+         <type>pom</type>
       </dependency>
       <dependency>
          <groupId>org.jboss.seam.rest</groupId>
          <artifactId>seam-rest-api</artifactId>
-         <scope>compile</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.ws.rs</groupId>
-         <artifactId>jsr311-api</artifactId>
-         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-api</artifactId>
-         <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-impl</artifactId>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
-         <groupId>org.jboss.seam.xml</groupId>
-         <artifactId>seam-xml-config</artifactId>
-         <scope>runtime</scope>
+         <groupId>org.jboss.seam.config</groupId>
+         <artifactId>seam-config-xml</artifactId>
       </dependency>
       <dependency>
          <groupId>org.jboss.seam.rest</groupId>
-         <artifactId>seam-rest</artifactId>
-         <scope>compile</scope>
-      </dependency>
-      <!--      <dependency>-->
-      <!--         <groupId>org.jboss.seam.persistence</groupId>-->
-      <!--         <artifactId>seam-persistence-api</artifactId>-->
-      <!--         <scope>compile</scope>-->
-      <!--      </dependency>-->
-      <!--      <dependency>-->
-      <!--         <groupId>org.jboss.seam.persistence</groupId>-->
-      <!--         <artifactId>seam-persistence-impl</artifactId>-->
-      <!--         <scope>runtime</scope>-->
-      <!--      </dependency>-->
-      <dependency>
-         <groupId>org.jboss.weld</groupId>
-         <artifactId>weld-extensions</artifactId>
-      </dependency>
-      <!-- WELDX depends on this -->
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-api</artifactId>
-         <scope>runtime</scope>
+         <artifactId>seam-rest-impl</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-simple</artifactId>
-         <scope>runtime</scope>
+         <groupId>org.jboss.seam.solder</groupId>
+         <artifactId>seam-solder-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.seam.solder</groupId>
+         <artifactId>seam-solder-impl</artifactId>
       </dependency>
    </dependencies>
 
@@ -261,49 +148,6 @@
 
    <profiles>
       <profile>
-         <id>jboss-public-repository</id>
-         <!-- Repository is active unless explicitly disabled e.g. -P!jboss-public-repository -->
-         <activation>
-            <property>
-               <name>jboss-public-repository</name>
-               <value>!false</value>
-            </property>
-         </activation>
-         <repositories>
-            <repository>
-               <id>jboss-public-repository-group</id>
-               <name>JBoss Public Maven Repository Group</name>
-               <url>http://repository.jboss.org/nexus/content/groups/public</url>
-               <layout>default</layout>
-               <releases>
-                  <enabled>true</enabled>
-                  <updatePolicy>never</updatePolicy>
-               </releases>
-               <snapshots>
-                  <enabled>false</enabled>
-                  <updatePolicy>never</updatePolicy>
-               </snapshots>
-            </repository>
-         </repositories>
-         <pluginRepositories>
-            <pluginRepository>
-               <id>jboss-public-repository-group</id>
-               <name>JBoss Public Maven Repository Group</name>
-               <url>http://repository.jboss.org/nexus/content/groups/public</url>
-               <layout>default</layout>
-               <releases>
-                  <enabled>true</enabled>
-                  <updatePolicy>never</updatePolicy>
-               </releases>
-               <snapshots>
-                  <enabled>true</enabled>
-                  <updatePolicy>never</updatePolicy>
-               </snapshots>
-            </pluginRepository>
-         </pluginRepositories>
-      </profile>
-
-      <profile>
          <id>jbossas</id>
          <activation>
             <activeByDefault>true</activeByDefault>
@@ -313,16 +157,6 @@
             <dependency>
                <groupId>org.jboss.logging</groupId>
                <artifactId>jboss-logging</artifactId>
-               <scope>provided</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.slf4j</groupId>
-               <artifactId>slf4j-api</artifactId>
-               <scope>provided</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.slf4j</groupId>
-               <artifactId>slf4j-simple</artifactId>
                <scope>provided</scope>
             </dependency>
          </dependencies>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   JBoss, Home of Professional Open Source
   Copyright [2010], Red Hat, Inc., and individual contributors
@@ -25,9 +26,11 @@
    </parent>
 
    <artifactId>seam-catch-api</artifactId>
-   <version>3.0.0-SNAPSHOT</version>
    <packaging>jar</packaging>
-   <name>Seam Catch Module API</name>
+
+   <name>Seam Catch API</name>
+   <!-- url required for JAR Manifest -->
+   <url>${project.parent.url}</url>
 
    <build>
       <plugins>

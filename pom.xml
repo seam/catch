@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   JBoss, Home of Professional Open Source
   Copyright [2010], Red Hat, Inc., and individual contributors
@@ -20,20 +21,17 @@
    <parent>
       <artifactId>seam-parent</artifactId>
       <groupId>org.jboss.seam</groupId>
-      <version>4</version>
+      <version>5</version>
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-parent</artifactId>
    <packaging>pom</packaging>
    <version>3.0.0-SNAPSHOT</version>
-   <name>Seam Catch Parent</name>
+   <name>Seam Catch Module</name>
 
    <properties>
-      <seam.version>3.0.0.b03</seam.version>
-      <joda-time.version>1.6</joda-time.version>
-      <jboss.javaee.version>1.0.0.Beta4</jboss.javaee.version>
-      <jboss.logging.version>3.0.0.Beta4</jboss.logging.version>
+      <seam.version>3.0.0.b04</seam.version>
    </properties>
 
    <prerequisites>
@@ -54,24 +52,20 @@
             <type>pom</type>
             <scope>import</scope>
          </dependency>
+
+         <!-- Override submodule versions from org.jboss.seam:seam-bom -->
          <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda-time.version}</version>
-            <type>jar</type>
+            <groupId>org.jboss.seam.catch</groupId>
+            <artifactId>seam-catch-api</artifactId>
+            <version>${project.version}</version>
          </dependency>
+
          <dependency>
-            <groupId>org.jboss.spec</groupId>
-            <artifactId>jboss-javaee-6.0</artifactId>
-            <version>${jboss.javaee.version}</version>
-            <type>pom</type>
+            <groupId>org.jboss.seam.catch</groupId>
+            <artifactId>seam-catch-impl</artifactId>
+            <version>${project.version}</version>
          </dependency>
-         <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <version>${jboss.logging.version}</version>
-            <scope>test</scope>
-         </dependency>
+
       </dependencies>
    </dependencyManagement>
 

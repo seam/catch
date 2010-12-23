@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 
-import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
+import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 
 /**
  * Comparator to sort exception handlers according qualifier

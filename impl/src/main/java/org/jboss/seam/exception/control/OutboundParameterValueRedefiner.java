@@ -21,7 +21,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
-import org.jboss.weld.extensions.reflection.annotated.ParameterValueRedefiner;
+import org.jboss.seam.solder.reflection.annotated.ParameterValueRedefiner;
 
 /**
  * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter.

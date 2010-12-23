@@ -88,7 +88,7 @@
       <title>Supporting ServiceHandlers</title>
 
       <para> 
-         <ulink url="http://docs.jboss.org/weld/extensions/reference/latest/en-US/html_single/#servicehandler">
+         <ulink url="http://docs.jboss.org/seam/3/solder/latest/reference/en-US/html_single/#servicehandler">
             ServiceHandlers</ulink> make for a very easy and concise way to define exception handlers take
         the following example comes from the jaxrs example in the distribution: 
       </para>

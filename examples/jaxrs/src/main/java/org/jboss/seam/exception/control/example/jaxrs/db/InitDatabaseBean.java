@@ -20,11 +20,15 @@ package org.jboss.seam.exception.control.example.jaxrs.db;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.enterprise.event.Observes;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.ServletContext;
 
 import org.jboss.seam.exception.control.example.jaxrs.entity.Author;
 import org.jboss.seam.exception.control.example.jaxrs.entity.Book;
+import org.jboss.seam.servlet.event.Destroyed;
+import org.jboss.seam.servlet.event.Initialized;
 
 @Stateless
 public class InitDatabaseBean
@@ -33,7 +37,7 @@ public class InitDatabaseBean
    private EntityManager em;
 
    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-   public void seedDatabase()
+   public void seedDatabase(@Observes @Initialized ServletContext sc)
    {
       Author hal_fulton = createAuthor("Hal Fulton");
       Author max_katz = createAuthor("Max Katz");
@@ -71,7 +75,7 @@ public class InitDatabaseBean
    }
 
    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-   public void clear()
+   public void clear(@Observes @Destroyed ServletContext sc)
    {
       this.em.createQuery("delete from Book").executeUpdate();
       this.em.createQuery("delete from Author").executeUpdate();
