@@ -32,6 +32,7 @@
 
    <properties>
       <seam.version>3.0.0.b04</seam.version>
+      <jboss.spec.version>1.0.0.CR1</jboss.spec.version>
    </properties>
 
    <prerequisites>
@@ -71,6 +72,13 @@
             <groupId>org.jboss.seam.catch</groupId>
             <artifactId>seam-catch</artifactId>
             <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-6.0</artifactId>
+            <version>${jboss.spec.version}</version>
+            <type>pom</type>
          </dependency>
 
       </dependencies>
