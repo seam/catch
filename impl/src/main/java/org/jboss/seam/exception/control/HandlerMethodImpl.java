@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -46,7 +46,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    private Bean<?> bean;
    private final Set<Annotation> qualifiers;
    private final Type exceptionType;
-   private final AnnotatedMethod handler;
+   private final AnnotatedMethod<?> handler;
    private final TraversalPath traversalPath;
    private final int precedence;
    private final Method javaMethod;
@@ -56,10 +56,10 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     *
     * @param method found handler
     * @param bm     active BeanManager
-    *
-    * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with {@link Handles}
+    * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with {@link
+    *                                  Handles}
     */
-   public HandlerMethodImpl(final AnnotatedMethod method, final BeanManager bm)
+   public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm)
    {
       final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
       if (method == null || method.getParameters() == null || method.getParameters().size() == 0)
@@ -75,7 +75,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       {
          this.javaMethod.setAccessible(true);
       }
-      final AnnotatedParameter handlesParam = (AnnotatedParameter) method.getParameters().get(0);
+      final AnnotatedParameter<?> handlesParam = method.getParameters().get(0);
 
       if (!handlesParam.isAnnotationPresent(Handles.class))
       {
@@ -135,7 +135,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    /**
     * {@inheritDoc}
     */
-   @SuppressWarnings({"unchecked"})
+   @SuppressWarnings( { "unchecked" })
    public void notify(final CaughtException<T> event, final BeanManager bm)
    {
       CreationalContext ctx = null;
@@ -191,7 +191,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
          return false;
       }
 
-      HandlerMethodImpl that = (HandlerMethodImpl) o;
+      HandlerMethodImpl<?> that = (HandlerMethodImpl<?>) o;
 
       if (precedence != that.precedence)
       {
@@ -217,12 +217,8 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       {
          return false;
       }
-      if (traversalPath != that.traversalPath)
-      {
-         return false;
-      }
+      return traversalPath == that.traversalPath;
 
-      return true;
    }
 
    @Override
@@ -238,9 +234,10 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       return result;
    }
 
-   @Override public String toString()
+   @Override
+   public String toString()
    {
       return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ").append(
-         this.handler.toString()).toString();
+            this.handler.toString()).toString();
    }
 }

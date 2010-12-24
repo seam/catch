@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -24,12 +24,12 @@ import javax.enterprise.inject.spi.BeanManager;
 import org.jboss.seam.solder.reflection.annotated.ParameterValueRedefiner;
 
 /**
- * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter.
- * This class is immutable.
+ * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter. This
+ * class is immutable.
  */
 public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 {
-   final private CaughtException event;
+   final private CaughtException<?> event;
    final private BeanManager bm;
    final private Bean<?> declaringBean;
 
@@ -40,7 +40,7 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
     * @param manager       active BeanManager
     * @param declaringBean Class containing the handler method
     */
-   public OutboundParameterValueRedefiner(CaughtException event, final BeanManager manager, Bean<?> declaringBean)
+   public OutboundParameterValueRedefiner(CaughtException<?> event, final BeanManager manager, Bean<?> declaringBean)
    {
       this.event = event;
       this.bm = manager;
