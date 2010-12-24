@@ -48,7 +48,7 @@
             <include>org.jboss.seam.catch:seam-catch-impl</include>
          </includes>
          <excludes>
-            <exclude>org.jboss.seam.catch:seam-catch-*:jar:javadoc</exclude>
+            <exclude>org.jboss.seam.catch:seam-catch-impl:jar:javadoc</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
@@ -59,6 +59,7 @@
          <useTransitiveDependencies>true</useTransitiveDependencies>
          <excludes>
             <exclude>org.jboss.seam.catch:*</exclude>
+            <exclude>org.jboss.seam.solder:seam-solder-*</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
