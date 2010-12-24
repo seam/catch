@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -24,13 +24,14 @@ import java.util.Stack;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Any;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.seam.exception.control.extension.CatchExtension;
 
 /**
- * Observer of {@link ExceptionToCatch} events and handler dispatcher.
- * All handlers are invoked from this class.  This class is immutable.
+ * Observer of {@link ExceptionToCatch} events and handler dispatcher. All handlers are invoked from this class.  This
+ * class is immutable.
  */
 public class ExceptionHandlerDispatch
 {
@@ -40,11 +41,10 @@ public class ExceptionHandlerDispatch
     * @param eventException exception to be invoked
     * @param bm             active bean manager
     * @param extension      catch extension instance to obtain handlers
-    *
     * @throws Throwable If a handler requests the exception to be re-thrown.
     */
-   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes ExceptionToCatch eventException, final BeanManager bm,
+   @SuppressWarnings( { "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
+   public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm,
                                CatchExtension extension) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
@@ -72,8 +72,8 @@ public class ExceptionHandlerDispatch
          {
 
             List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(),
-                                                     bm, eventException.getQualifiers()));
+                  extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(),
+                        bm, eventException.getQualifiers()));
 
             for (HandlerMethod handler : handlerMethods)
             {
@@ -121,8 +121,8 @@ public class ExceptionHandlerDispatch
          {
 
             List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm,
-                                                     eventException.getQualifiers()));
+                  extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm,
+                        eventException.getQualifiers()));
 
             for (HandlerMethod handler : handlerMethods)
             {
