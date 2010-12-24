@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.jboss.seam.catch</groupId>
+      <artifactId>seam-catch-parent</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <artifactId>seam-catch</artifactId>
+
+   <packaging>jar</packaging>
+   <name>Seam Catch</name>
+   <!-- url required for JAR Manifest -->
+   <url>${project.parent.url}</url>
+
+   <build>
+      <plugins>
+         <!-- skip test phase -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <skip>true</skip>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                     <createSourcesJar>true</createSourcesJar>
+                     <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                     <artifactSet>
+                        <includes>
+                           <include>org.jboss.seam.catch:*</include>
+                        </includes>
+                     </artifactSet>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-api</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-impl</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.jboss.seam.solder</groupId>
+               <artifactId>seam-solder-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.jboss.seam.solder</groupId>
+               <artifactId>seam-solder-impl</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.solder</groupId>
+         <artifactId>seam-solder</artifactId>
+         <scope>compile</scope>
+      </dependency>
+
+   </dependencies>
+
+</project>
+

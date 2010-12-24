@@ -41,6 +41,7 @@
    <modules>
       <module>api</module>
       <module>impl</module>
+      <module>combined</module>
    </modules>
 
    <dependencyManagement>

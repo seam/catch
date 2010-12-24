@@ -39,37 +39,25 @@
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-api</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
-         <optional>false</optional>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-impl</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
-         <optional>false</optional>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-api</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
-         <classifier>sources</classifier>
-         <optional>true</optional>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-api</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
-         <classifier>javadoc</classifier>
          <optional>true</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-impl</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-api</artifactId>
+         <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
       </dependency>
@@ -77,15 +65,22 @@
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-impl</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
-         <classifier>javadoc</classifier>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
          <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch-api</artifactId>
+         <version>${project.version}</version>
+         <classifier>javadoc</classifier>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-reference-guide</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>${project.version}</version>
          <type>war</type>
          <optional>true</optional>
       </dependency>
@@ -93,7 +88,7 @@
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-example-jaxrs</artifactId>
-         <version>3.0.0-SNAPSHOT</version>
+         <version>${project.version}</version>
          <type>war</type>
          <optional>true</optional>
       </dependency>
