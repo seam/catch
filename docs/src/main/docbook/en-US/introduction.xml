@@ -22,7 +22,7 @@
    <para>
       Exceptions are a fact of life. As developers, we need to be prepared to deal with them in the most graceful manner
       possible. Seam Catch provides a simple, yet robust foundation for modules and/or applications to establish a
-      customized exception handling process. By employing a delegation model, Catch allow exceptions to be addressed in
+      customized exception handling process. By employing a delegation model, Catchs allow exceptions to be addressed in
       a centralized, extensible and uniform manner. 
    </para>
   
