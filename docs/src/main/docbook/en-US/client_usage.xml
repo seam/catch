@@ -242,7 +242,9 @@ public class MyHandlers
          </para>
          
          <para>
-            Handlers must not throw checked exceptions, and should avoid throwing unchecked exceptions.
+            Handlers must not throw checked exceptions, and should avoid throwing unchecked exceptions. Should a handler
+            throw an unchecked exception it will propegate up the stack and all handling done via Catch will cease. Any
+            exception that was being handled will be lost.
          </para>
       </section>
 
