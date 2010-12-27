@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,11 +15,7 @@
  * limitations under the License.
  */
 
-/**
- *
- * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
- */
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.flow;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -29,7 +25,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.seam.exception.control.test.handler.ThrowingNewHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,30 +33,30 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(Arquillian.class)
-public class ThrowingNewExceptionTest
+public class DepthAbortControlTest
 {
    @Deployment
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addPackage(CaughtException.class.getPackage())
-         .addClasses(ThrowingNewHandler.class, CatchExtension.class)
-         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+            .addPackage(CaughtException.class.getPackage())
+            .addClasses(AbortingDepthHandler.class, CatchExtension.class)
+            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Inject private BeanManager bm;
+   @Inject
+   private BeanManager bm;
 
-   @Test(expected = UnsupportedOperationException.class)
-   public void assertOutboundRethrow()
+   @Test
+   public void assertNoOtherHandlersCalledAfterAbort()
    {
       bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
-   }
-
-   @Test(expected = UnsupportedOperationException.class)
-   public void assertInboundRethrow()
-   {
-      bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+      assertTrue(AbortingDepthHandler.abortCalled);
+      assertFalse(AbortingDepthHandler.proceedCalled);
    }
 }

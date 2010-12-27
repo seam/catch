@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,18 +15,14 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control.test;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionStack;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @HandlesExceptions
 public class StackInfoHandler

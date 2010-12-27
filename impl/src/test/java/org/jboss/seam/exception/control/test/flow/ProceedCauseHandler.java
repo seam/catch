@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control.test.flow;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
@@ -26,35 +26,35 @@ import org.jboss.seam.exception.control.TraversalMode;
 @HandlesExceptions
 public class ProceedCauseHandler
 {
-   public static int INBOUND_NPE_CALLED = 0;
-   public static int INBOUND_NPE_LOWER_PRECEDENCE_CALLED = 0;
+   public static int BREADTH_FIRST_NPE_CALLED = 0;
+   public static int BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED = 0;
 
-   public static int OUTBOUND_NPE_CALLED = 0;
-   public static int OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED = 0;
+   public static int DEPTH_FIRST_NPE_CALLED = 0;
+   public static int DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED = 0;
 
    public void npeInboundHandler(
          @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
-      INBOUND_NPE_CALLED++;
+      BREADTH_FIRST_NPE_CALLED++;
       event.dropCause();
    }
 
    public void npeLowerPrecedenceInboundHandler(
          @Handles(precedence = Precedence.FRAMEWORK, during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
-      INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
+      BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED++;
       event.markHandled();
    }
 
    public void npeOutboundHandler(@Handles CaughtException<NullPointerException> event)
    {
-      OUTBOUND_NPE_CALLED++;
+      DEPTH_FIRST_NPE_CALLED++;
       event.dropCause();
    }
 
    public void npeHigherPrecedenceOutboundHandler(@Handles(precedence = Precedence.LOW) CaughtException<NullPointerException> event)
    {
-      OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED++;
+      DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED++;
       event.markHandled();
    }
 }

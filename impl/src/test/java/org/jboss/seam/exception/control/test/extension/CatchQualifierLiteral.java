@@ -15,24 +15,12 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control.test.extension;
 
-import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalMode;
+import javax.enterprise.util.AnnotationLiteral;
 
-@HandlesExceptions
-public class RethrowHandler
+public class CatchQualifierLiteral extends AnnotationLiteral<CatchQualifier> implements CatchQualifier
 {
-   public void rethrow(@Handles CaughtException<NullPointerException> event)
-   {
-      event.rethrow();
-   }
-
-   public void rethrowInbound(
-         @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event)
-   {
-      event.rethrow();
-   }
+   private static final long serialVersionUID = 6052715391406598552L;
+   public static final CatchQualifier INSTANCE = new CatchQualifierLiteral();
 }

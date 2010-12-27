@@ -15,29 +15,28 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+/**
+ *
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
+ */
+package org.jboss.seam.exception.control.test.flow;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
-@SuppressWarnings( { "AssignmentToStaticFieldFromInstanceMethod" })
 @HandlesExceptions
-public class AbortingInboundHandler
+public class ThrowingNewHandler
 {
-   public static boolean abortCalled = false;
-   public static boolean proceedCalled = false;
-
-   public void abortHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
+   public void rethrow(@Handles CaughtException<NullPointerException> event)
    {
-      abortCalled = true;
-      event.abort();
+      event.rethrow(new UnsupportedOperationException());
    }
 
-   public void proceedHandler(@Handles CaughtException<NullPointerException> event)
+   public void rethrowInbound(
+         @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event)
    {
-      proceedCalled = true;
-      event.markHandled();
+      event.rethrow(new UnsupportedOperationException());
    }
 }

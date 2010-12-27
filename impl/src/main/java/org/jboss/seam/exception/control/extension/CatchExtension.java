@@ -45,6 +45,7 @@ import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.solder.literal.AnyLiteral;
 import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 
@@ -121,10 +122,12 @@ public class CatchExtension implements Extension
     * @param exceptionClass    Type of exception to narrow handler list
     * @param bm                active BeanManager
     * @param handlerQualifiers additional handlerQualifiers to limit handlers
+    * @param traversalMode     traversal limiter
     * @return An order collection of handlers for the given type.
     */
    public Collection<HandlerMethod> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
-                                                                Set<Annotation> handlerQualifiers)
+                                                                Set<Annotation> handlerQualifiers,
+                                                                TraversalMode traversalMode)
    {
       final Set<HandlerMethod> returningHandlers = new TreeSet<HandlerMethod>(new ExceptionHandlerComparator());
       final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
@@ -136,15 +139,18 @@ public class CatchExtension implements Extension
          {
             for (HandlerMethod handler : this.allHandlers.get(hierarchyType))
             {
-               if (handler.getQualifiers().contains(AnyLiteral.INSTANCE))
+               if (handler.getTraversalMode() == traversalMode)
                {
-                  returningHandlers.add(handler);
-               }
-               else
-               {
-                  if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers))
+                  if (handler.getQualifiers().contains(AnyLiteral.INSTANCE))
                   {
                      returningHandlers.add(handler);
+                  }
+                  else
+                  {
+                     if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers))
+                     {
+                        returningHandlers.add(handler);
+                     }
                   }
                }
             }

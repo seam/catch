@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.flow;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -25,7 +25,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.seam.exception.control.test.handler.ProceedCauseHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -34,31 +33,43 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class ProceedCauseHandlerTest
+public class HandledExceptionHandlerTest
 {
    @Deployment
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addPackage(CaughtException.class.getPackage())
-         .addClasses(ProceedCauseHandler.class, CatchExtension.class)
-         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+            .addPackage(CaughtException.class.getPackage())
+            .addClasses(ExceptionHandledHandler.class, CatchExtension.class)
+            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
-   @Inject private BeanManager bm;
+   @Inject
+   private BeanManager bm;
 
    @Test
-   public void assertCorrectNumberOfHandlerCallsForProceedCause()
+   public void assertNoHandlersAfterHandledAreCalled()
    {
-      bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
-      assertEquals(0, ProceedCauseHandler.INBOUND_NPE_LOWER_PRECEDENCE_CALLED);
-      assertEquals(1, ProceedCauseHandler.INBOUND_NPE_CALLED);
+      final ExceptionToCatch catchEntry = new ExceptionToCatch(new Exception(
+            new NullPointerException()));
+      bm.fireEvent(catchEntry);
+      assertTrue(ExceptionHandledHandler.NPE_DESC_CALLED);
+      assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);
+      assertTrue(catchEntry.isHandled());
+   }
 
-      assertEquals(0, ProceedCauseHandler.OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED);
-      assertEquals(1, ProceedCauseHandler.OUTBOUND_NPE_CALLED);
+   @Test
+   public void assertNoHandlersAfterHandledAreCalledDesc()
+   {
+      final ExceptionToCatch event = new ExceptionToCatch(new Exception(new IllegalArgumentException()));
+      bm.fireEvent(event);
+      assertTrue(ExceptionHandledHandler.IAE_ASC_CALLED);
+      assertFalse(ExceptionHandledHandler.EX_ASC_CALLED);
+      assertTrue(event.isHandled());
    }
 }

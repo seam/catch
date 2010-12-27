@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control.test.flow;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+@SuppressWarnings( { "AssignmentToStaticFieldFromInstanceMethod" })
 @HandlesExceptions
-public class AbortingOutboundHandler
+public class AbortingDepthHandler
 {
    public static boolean abortCalled = false;
    public static boolean proceedCalled = false;

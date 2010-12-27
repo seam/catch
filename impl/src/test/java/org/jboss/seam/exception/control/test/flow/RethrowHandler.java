@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,13 +15,24 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.qualifier;
+package org.jboss.seam.exception.control.test.flow;
 
-import javax.enterprise.util.AnnotationLiteral;
+import org.jboss.seam.exception.control.CaughtException;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
+import org.jboss.seam.exception.control.TraversalMode;
 
-public class ArquillianLiteral extends AnnotationLiteral<Arquillian> implements Arquillian
+@HandlesExceptions
+public class RethrowHandler
 {
-   private static final long serialVersionUID = -3525383414748064487L;
+   public void rethrow(@Handles CaughtException<NullPointerException> event)
+   {
+      event.rethrow();
+   }
 
-   public static final Arquillian INSTANCE = new ArquillianLiteral();
+   public void rethrowInbound(
+         @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event)
+   {
+      event.rethrow();
+   }
 }

@@ -22,8 +22,8 @@ import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.Precedence;
 import org.jboss.seam.exception.control.TraversalMode;
-import org.jboss.seam.exception.control.test.qualifier.Arquillian;
-import org.jboss.seam.exception.control.test.qualifier.CatchQualifier;
+import org.jboss.seam.exception.control.test.extension.Arquillian;
+import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 
 @HandlesExceptions
 public class ExtensionExceptionHandler

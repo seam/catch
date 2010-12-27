@@ -14,29 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jboss.seam.exception.control.test.extension;
 
-/**
- *
- * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
- */
-package org.jboss.seam.exception.control.test.handler;
+import javax.decorator.Decorator;
+import javax.decorator.Delegate;
+import javax.el.ELResolver;
+import javax.enterprise.inject.Any;
+import javax.inject.Inject;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalMode;
 
+/**
+ * A decorator which declares itself as an exception handler, which is not allowed.
+ */
+@Decorator
 @HandlesExceptions
-public class ThrowingNewHandler
+public abstract class DecoratorAsHandler extends ELResolver
 {
-   public void rethrow(@Handles CaughtException<NullPointerException> event)
-   {
-      event.rethrow(new UnsupportedOperationException());
-   }
+   @Inject
+   @Delegate
+   @Any
+   private ELResolver delegate;
 
-   public void rethrowInbound(
-         @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event)
+   public void handlesAll(@Handles CaughtException<Throwable> caught)
    {
-      event.rethrow(new UnsupportedOperationException());
    }
 }

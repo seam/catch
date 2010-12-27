@@ -17,6 +17,7 @@
 package org.jboss.seam.exception.control;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,24 +72,24 @@ public class ExceptionHandlerDispatch
          while (exceptionIndex >= 0)
          {
 
-            List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
+            final List<HandlerMethod> breadthFirstHandlerMethods = new ArrayList<HandlerMethod>(
                   extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(),
-                        bm, eventException.getQualifiers()));
+                        bm, eventException.getQualifiers(), TraversalMode.BREADTH_FIRST));
 
-            for (HandlerMethod handler : handlerMethods)
+            for (HandlerMethod handler : breadthFirstHandlerMethods)
             {
-               if (handler.getTraversalMode() == TraversalMode.BREADTH_FIRST && !processedHandlers.contains(handler))
+               if (!processedHandlers.contains(handler))
                {
                   final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
-                  final CaughtException event = new CaughtException(stack, true, eventException.isHandled());
-                  handler.notify(event, bm);
+                  final CaughtException breadthFirstEvent = new CaughtException(stack, true, eventException.isHandled());
+                  handler.notify(breadthFirstEvent, bm);
 
-                  if (!event.isUnmute())
+                  if (!breadthFirstEvent.isUnmute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  switch (event.getFlow())
+                  switch (breadthFirstEvent.getFlow())
                   {
                      case HANDLED:
                         eventException.setHandled(true);
@@ -106,39 +107,32 @@ public class ExceptionHandlerDispatch
                         throwException = eventException.getException();
                         break;
                      case THROW:
-                        throwException = event.getThrowNewException();
+                        throwException = breadthFirstEvent.getThrowNewException();
                   }
                }
             }
 
-            exceptionIndex--;
-         }
+            final List<HandlerMethod> depthFirstHandlerMethods = new ArrayList<HandlerMethod>(
+                  extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(),
+                        bm, eventException.getQualifiers(), TraversalMode.DEPTH_FIRST));
 
-         // Run outbound handlers, same list, just reversed
-         exceptionIndex = unwrappedExceptions.size() - 1;
-         outbound_cause:
-         while (exceptionIndex >= 0)
-         {
+            // Reverse these so category handlers are last
+            Collections.reverse(depthFirstHandlerMethods);
 
-            List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-                  extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm,
-                        eventException.getQualifiers()));
-
-            for (HandlerMethod handler : handlerMethods)
+            for (HandlerMethod handler : depthFirstHandlerMethods)
             {
-               // Defining DuringAscTraversal as the absence of DuringDescTraversal
-               if (handler.getTraversalMode() == TraversalMode.DEPTH_FIRST && !processedHandlers.contains(handler))
+               if (!processedHandlers.contains(handler))
                {
                   final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
-                  final CaughtException event = new CaughtException(stack, false, eventException.isHandled());
-                  handler.notify(event, bm);
+                  final CaughtException depthFirstEvent = new CaughtException(stack, false, eventException.isHandled());
+                  handler.notify(depthFirstEvent, bm);
 
-                  if (!event.isUnmute())
+                  if (!depthFirstEvent.isUnmute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  switch (event.getFlow())
+                  switch (depthFirstEvent.getFlow())
                   {
                      case HANDLED:
                         eventException.setHandled(true);
@@ -151,15 +145,16 @@ public class ExceptionHandlerDispatch
                      case DROP_CAUSE:
                         eventException.setHandled(true);
                         exceptionIndex--;
-                        continue outbound_cause;
+                        continue inbound_cause;
                      case RETHROW:
                         throwException = eventException.getException();
                         break;
                      case THROW:
-                        throwException = event.getThrowNewException();
+                        throwException = depthFirstEvent.getThrowNewException();
                   }
                }
             }
+
             exceptionIndex--;
          }
 

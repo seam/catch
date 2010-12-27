@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,28 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.seam.exception.control.test.handler;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+package org.jboss.seam.exception.control.test.extension;
 
-import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.Handles;
-import org.jboss.seam.exception.control.HandlesExceptions;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@HandlesExceptions
-@PretendInterceptorBinding
-@Interceptor
-public class InterceptorAsHandler
+import javax.inject.Qualifier;
+
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+public @interface Arquillian
 {
-   @AroundInvoke
-   public Object intercept(InvocationContext ctx) throws Exception
-   {
-      return ctx.proceed();
-   }
-
-   public void handlesAll(@Handles CaughtException<Throwable> caught)
-   {
-   }
 }

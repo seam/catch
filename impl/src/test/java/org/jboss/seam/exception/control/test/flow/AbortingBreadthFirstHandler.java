@@ -15,34 +15,29 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.handler;
+package org.jboss.seam.exception.control.test.flow;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
+@SuppressWarnings( { "AssignmentToStaticFieldFromInstanceMethod" })
 @HandlesExceptions
-public class ExceptionHandledHandler
+public class AbortingBreadthFirstHandler
 {
-   public static boolean EX_ASC_CALLED = false;
-   public static boolean IAE_ASC_CALLED = false;
-   public static boolean NPE_DESC_CALLED = false;
+   public static boolean abortCalled = false;
+   public static boolean proceedCalled = false;
 
-   public void exHandler(@Handles CaughtException<Exception> event)
+   public void abortHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
    {
-      EX_ASC_CALLED = true;
+      abortCalled = true;
+      event.abort();
    }
 
-   public void npeHandler(@Handles CaughtException<IllegalArgumentException> event)
+   public void proceedHandler(@Handles CaughtException<NullPointerException> event)
    {
-      IAE_ASC_CALLED = true;
-      event.handled();
-   }
-
-   public void npeDescHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
-   {
-      NPE_DESC_CALLED = true;
-      event.handled();
+      proceedCalled = true;
+      event.markHandled();
    }
 }

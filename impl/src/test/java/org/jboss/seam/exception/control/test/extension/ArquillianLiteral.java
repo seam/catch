@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.qualifier;
+package org.jboss.seam.exception.control.test.extension;
 
 import javax.enterprise.util.AnnotationLiteral;
 
-public class CatchQualifierLiteral extends AnnotationLiteral<CatchQualifier> implements CatchQualifier
+public class ArquillianLiteral extends AnnotationLiteral<Arquillian> implements Arquillian
 {
-   private static final long serialVersionUID = 6052715391406598552L;
-   public static final CatchQualifier INSTANCE = new CatchQualifierLiteral();
+   private static final long serialVersionUID = -3525383414748064487L;
+
+   public static final Arquillian INSTANCE = new ArquillianLiteral();
 }

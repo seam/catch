@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.handler;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -25,7 +25,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
-import org.jboss.seam.exception.control.test.handler.UnMuteHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -43,10 +42,10 @@ public class UnMuteHandlerTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addPackage(CaughtException.class.getPackage())
-         .addClasses(UnMuteHandler.class, CatchExtension.class)
-         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+            .addPackage(CaughtException.class.getPackage())
+            .addClasses(UnMuteHandler.class, CatchExtension.class)
+            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Inject

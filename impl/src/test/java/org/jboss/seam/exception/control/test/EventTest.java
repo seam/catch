@@ -64,14 +64,14 @@ public class EventTest
 
    public void verifyDescEvent(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
-      assertTrue(event.isDescendingTraversal());
-      assertFalse(event.isAscendingTraversal());
+      assertTrue(event.isBreadthFirstTraversal());
+      assertFalse(event.isDepthFirstTraversal());
    }
 
    public void verifyAscEvent(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<NullPointerException> event)
    {
-      assertFalse(event.isDescendingTraversal());
-      assertTrue(event.isAscendingTraversal());
+      assertFalse(event.isBreadthFirstTraversal());
+      assertTrue(event.isDepthFirstTraversal());
    }
 
 }

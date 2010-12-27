@@ -88,10 +88,10 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
 
          if (indexOfLhsType > indexOfRhsType)
          {
-            return -1;
+            return 1;
          }
       }
-      return 1;
+      return -1;
    }
 
    private int comparePrecedence(final int lhs, final int rhs, final boolean isAsc)
