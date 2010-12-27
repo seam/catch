@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -20,16 +20,16 @@ package org.jboss.seam.exception.control.test.handler;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.TraversalMode;
 
-@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+@SuppressWarnings( { "AssignmentToStaticFieldFromInstanceMethod" })
 @HandlesExceptions
 public class AbortingInboundHandler
 {
    public static boolean abortCalled = false;
    public static boolean proceedCalled = false;
 
-   public void abortHandler(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
+   public void abortHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
    {
       abortCalled = true;
       event.abort();

@@ -47,7 +47,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    private final Set<Annotation> qualifiers;
    private final Type exceptionType;
    private final AnnotatedMethod<?> handler;
-   private final TraversalPath traversalPath;
+   private final TraversalMode traversalMode;
    private final int precedence;
    private final Method javaMethod;
 
@@ -82,7 +82,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
          throw new IllegalArgumentException("Method is not annotated with @Handles");
       }
 
-      this.traversalPath = handlesParam.getAnnotation(Handles.class).during();
+      this.traversalMode = handlesParam.getAnnotation(Handles.class).during();
       this.precedence = handlesParam.getAnnotation(Handles.class).precedence();
       tmpQualifiers.addAll(Beans.getQualifiers(bm, handlesParam.getAnnotations()));
 
@@ -158,9 +158,9 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    /**
     * {@inheritDoc}
     */
-   public TraversalPath getTraversalPath()
+   public TraversalMode getTraversalMode()
    {
-      return this.traversalPath;
+      return this.traversalMode;
    }
 
    /**
@@ -217,7 +217,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       {
          return false;
       }
-      return traversalPath == that.traversalPath;
+      return traversalMode == that.traversalMode;
 
    }
 
@@ -228,7 +228,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       result = 5 * result + qualifiers.hashCode();
       result = 5 * result + exceptionType.hashCode();
       result = 5 * result + handler.hashCode();
-      result = 5 * result + traversalPath.hashCode();
+      result = 5 * result + traversalMode.hashCode();
       result = 5 * result + precedence;
       result = 5 * result + javaMethod.hashCode();
       return result;

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,7 +21,7 @@ import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.Precedence;
-import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.TraversalMode;
 
 @HandlesExceptions
 public class ProceedCauseHandler
@@ -33,14 +33,14 @@ public class ProceedCauseHandler
    public static int OUTBOUND_NPE_HIGHER_PRECEDENCE_CALLED = 0;
 
    public void npeInboundHandler(
-      @Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
+         @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_CALLED++;
       event.dropCause();
    }
 
    public void npeLowerPrecedenceInboundHandler(
-      @Handles(precedence = Precedence.FRAMEWORK, during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
+         @Handles(precedence = Precedence.FRAMEWORK, during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
       INBOUND_NPE_LOWER_PRECEDENCE_CALLED++;
       event.markHandled();

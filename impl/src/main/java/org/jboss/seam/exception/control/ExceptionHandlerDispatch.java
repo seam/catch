@@ -77,7 +77,7 @@ public class ExceptionHandlerDispatch
 
             for (HandlerMethod handler : handlerMethods)
             {
-               if (handler.getTraversalPath() == TraversalPath.DESCENDING && !processedHandlers.contains(handler))
+               if (handler.getTraversalMode() == TraversalMode.BREADTH_FIRST && !processedHandlers.contains(handler))
                {
                   final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
                   final CaughtException event = new CaughtException(stack, true, eventException.isHandled());
@@ -127,7 +127,7 @@ public class ExceptionHandlerDispatch
             for (HandlerMethod handler : handlerMethods)
             {
                // Defining DuringAscTraversal as the absence of DuringDescTraversal
-               if (handler.getTraversalPath() == TraversalPath.ASCENDING && !processedHandlers.contains(handler))
+               if (handler.getTraversalMode() == TraversalMode.DEPTH_FIRST && !processedHandlers.contains(handler))
                {
                   final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
                   final CaughtException event = new CaughtException(stack, false, eventException.isHandled());
