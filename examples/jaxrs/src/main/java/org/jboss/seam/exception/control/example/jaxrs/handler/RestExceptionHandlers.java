@@ -27,7 +27,7 @@ import org.jboss.seam.exception.control.ExceptionResponse;
 import org.jboss.seam.exception.control.ExceptionStack;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.rest.exceptions.ErrorMessageWrapper;
 
 @HandlesExceptions
@@ -37,7 +37,7 @@ public class RestExceptionHandlers
     * An example that demonstrates logging all exceptions to stdout that are caught during a REST resource request
     */
    public void logException(
-      @Handles(during = TraversalPath.DESCENDING) @RestRequest final CaughtException<Throwable> event)
+      @Handles(during = TraversalMode.BREADTH_FIRST) @RestRequest final CaughtException<Throwable> event)
    {
       ExceptionStack c = event.getExceptionStack();
       System.out.println(
