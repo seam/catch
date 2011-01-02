@@ -35,6 +35,27 @@ public class ExceptionStack
    private Throwable current;
 
    /**
+    * Builds the stack from the given exception.
+    *
+    * @param exception Caught exception
+    */
+   public ExceptionStack(final Throwable exception)
+   {
+      Throwable e = exception;
+      this.elements = new ArrayList<Throwable>();
+
+      do
+      {
+         this.elements.add(e);
+         // TODO: allow for SQLException traversal
+      }
+      while ((e = e.getCause()) != null);
+
+      this.index = elements.size() - 1;
+      this.init();
+   }
+
+   /**
     * Basic constructor.
     *
     * @param causeChainElements  collection of all causing elements for an exception from top to bottom (not
@@ -55,15 +76,21 @@ public class ExceptionStack
 
    private void init()
    {
-      this.last = this.index == 0;
-
       this.root = this.index == this.elements.size() - 1;
-
       this.next = this.index - 1 >= 0 ? (Throwable) this.elements.toArray()[this.index - 1] : null;
 
-      this.remaining = new ArrayList<Throwable>(this.elements).subList(0, this.index);
+      if (this.index >= 0)
+      {
+         this.remaining = new ArrayList<Throwable>(this.elements).subList(0, this.index);
+         this.current = (Throwable) this.elements.toArray()[this.index];
+      }
+      else
+      {
+         this.remaining = Collections.emptyList();
+         this.current = null;
+      }
 
-      this.current = (Throwable) this.elements.toArray()[this.index];
+      this.last = this.remaining.isEmpty();
    }
 
    public Collection<Throwable> getCauseElements()
@@ -109,11 +136,19 @@ public class ExceptionStack
 
    public void setIndex(int index)
    {
-      if (index >= this.elements.size() || index < 0)
+      if (index >= this.elements.size())
       {
-         throw new IllegalArgumentException("Index out of range");
+         throw new IllegalArgumentException("Index greater than elements.size()");
       }
       this.index = index;
       this.init();
+   }
+
+   /**
+    * Move to the next causing exception.
+    */
+   protected void advanceToNextCause()
+   {
+      this.setIndex(this.index - 1);
    }
 }
