@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -56,7 +56,7 @@ public class UnMuteHandlerTest
    {
       bm.fireEvent(new ExceptionToCatch(new Exception(new NullPointerException())));
 
-      assertEquals(2, UnMuteHandler.ASC_NUMBER_CALLED);
-      assertEquals(2, UnMuteHandler.DESC_NUMBER_CALLED);
+      assertEquals(2, UnMuteHandler.DEPTH_FIRST_NUMBER_CALLED);
+      assertEquals(2, UnMuteHandler.BREADTH_FIRST_NUMBER_CALLED);
    }
 }

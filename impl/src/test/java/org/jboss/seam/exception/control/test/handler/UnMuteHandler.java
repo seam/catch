@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -25,18 +25,18 @@ import org.jboss.seam.exception.control.TraversalMode;
 @HandlesExceptions
 public class UnMuteHandler
 {
-   public static int ASC_NUMBER_CALLED = 0;
-   public static int DESC_NUMBER_CALLED = 0;
+   public static int DEPTH_FIRST_NUMBER_CALLED = 0;
+   public static int BREADTH_FIRST_NUMBER_CALLED = 0;
 
    public void unMuteHandlerAsc(@Handles CaughtException<Exception> event)
    {
-      ASC_NUMBER_CALLED++;
+      DEPTH_FIRST_NUMBER_CALLED++;
       event.unmute();
    }
 
    public void unMuteHandlerDesc(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
    {
-      DESC_NUMBER_CALLED++;
+      BREADTH_FIRST_NUMBER_CALLED++;
       event.unmute();
    }
 }
