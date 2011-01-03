@@ -17,6 +17,7 @@
 
 package org.jboss.seam.exception.control;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +48,15 @@ public class ExceptionStack
       do
       {
          this.elements.add(e);
-         // TODO: allow for SQLException traversal
+         if (e instanceof SQLException)
+         {
+            SQLException sqlException = (SQLException) e;
+            while (sqlException.getNextException() != null)
+            {
+               sqlException = sqlException.getNextException();
+               this.elements.add(sqlException);
+            }
+         }
       }
       while ((e = e.getCause()) != null);
 
@@ -126,6 +135,11 @@ public class ExceptionStack
    public Throwable getCurrent()
    {
       return current;
+   }
+
+   public Collection<Throwable> getElements()
+   {
+      return Collections.unmodifiableCollection(elements);
    }
 
    public void setElements(Collection<Throwable> elements)
