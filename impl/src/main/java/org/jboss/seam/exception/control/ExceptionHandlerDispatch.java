@@ -65,6 +65,7 @@ public class ExceptionHandlerDispatch
 
          stackEvent.fire(stack); // Allow for modifying the exception stack
 
+         // TODO: Clean this up so there's only the while and one for loop
          inbound_cause:
          while (stack.getCurrent() != null)
          {

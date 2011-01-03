@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -237,7 +237,10 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    @Override
    public String toString()
    {
-      return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ").append(
-            this.handler.toString()).toString();
+      return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ")
+            .append("TraversalMode: ").append(this.traversalMode).append(" ")
+            .append("Handles Type: ").append(this.exceptionType.getClass()).append(" ")
+            .append("Precedence: ").append(this.precedence).append(" ")
+            .append(this.handler.toString()).toString();
    }
 }
