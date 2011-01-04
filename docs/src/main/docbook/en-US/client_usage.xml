@@ -56,11 +56,9 @@
 
       <para>
          Exception handlers are contained within exception handler beans, which are CDI beans annotated with
-         <literal>@HandlesExceptions</literal>. Exception handlers are methods whose first parameter is an instance of
-         <literal>CaughtException&lt;T extends Throwable&gt;</literal>
-         annotated with the
-         <literal>@Handles</literal>
-         annotation.
+         <literal>@HandlesExceptions</literal>. Exception handlers are methods which have a parameter which is an 
+         instance of <literal>CaughtException&lt;T extends Throwable&gt;</literal> annotated with the
+         <literal>@Handles</literal> annotation.
       </para>
 
       <section id="client_usage.handles_exceptions">
@@ -106,9 +104,7 @@ public class MyHandlers {}]]>
 
          <para>
             Let's look at an example. The following method is invoked for every exception that Catch processes and
-            prints the exception message to stout. (
-            <literal>Throwable</literal>
-            is the base exception type in Java and
+            prints the exception message to stout. (<literal>Throwable</literal> is the base exception type in Java and
             thus represents all exceptions).
          </para>
 
@@ -133,28 +129,23 @@ public class MyHandlers
             <calloutlist>
                <callout arearefs="handles-exceptions">
                   <para>
-                     The
-                     <literal>@HandlesExceptions</literal>
-                     annotation signals that this bean contains exception
+                     The <literal>@HandlesExceptions</literal> annotation signals that this bean contains exception
                      handler methods.
                   </para>
                </callout>
                <callout arearefs="handles">
                   <para>
-                     The
-                     <literal>@Handles</literal>
-                     annotation on the first parameter designates this method as an
-                     exception handler. This parameter must be of type<literal>CaughtException&lt;T extends
-                     Throwable&gt;</literal>, otherwise it's detected as a definition error. The type parameter
-                     designates which exception the method should handle. This method is notified of all exceptions
-                     (requested by the base exception type<literal>Throwable</literal>).
+                     The <literal>@Handles</literal> annotation on the first parameter designates this method as an
+                     exception handler (though it is not required to be the first parameter). This parameter must be 
+                     of type<literal>CaughtException&lt;T extends Throwable&gt;</literal>, otherwise it's detected as 
+                     a definition error. The type parameter designates which exception the method should handle. This 
+                     method is notified of all exceptions (requested by the base exception type 
+                     <literal>Throwable</literal>).
                   </para>
                </callout>
                <callout arearefs="caught-exception-usage">
                   <para>
-                     The
-                     <literal>CaughtException</literal>
-                     instance provides access to information about the exception
+                     The <literal>CaughtException</literal> instance provides access to information about the exception
                      and can be used to control exception handling flow. In this case, it's used to read the current
                      exception being handled in the exception stack trace, as returned by
                      <literal>getException()</literal>.
@@ -162,24 +153,21 @@ public class MyHandlers
                </callout>
                <callout arearefs="proceed">
                   This handler does not modify the invocation of subsequent handlers, as designated by invoking
-                  <literal>proceed()</literal>
-                  on<literal>CaughtException</literal>. As this is the default behavior,
+                  <literal>proceed()</literal> on <literal>CaughtException</literal>. As this is the default behavior,
                   this line could be omitted.
                </callout>
             </calloutlist>
          </programlistingco>
 
          <para>
-            The
-            <literal>@Handles</literal>
-            annotation must be placed on the first parameter of the method, which must
+            The <literal>@Handles</literal> annotation must be placed on a parameter of the method, which must
             be of type<literal>CaughtException&lt;T extends Throwable&gt;</literal>. Handler methods are similar to CDI
             observers and, as such, follow the same principals and guidelines as observers (such as invocation,
             injection of parameters, qualifiers, etc) with the following exceptions:
          </para>
 
          <itemizedlist>
-            <listitem>the first parameter of a handler method must be a
+            <listitem>a parameter of a handler method must be a
                <literal>CaughtException</literal>
             </listitem>
             <listitem>handlers are ordered before they are invoked (invocation order of observers is
@@ -189,11 +177,9 @@ public class MyHandlers
          </itemizedlist>
 
          <para>
-            In addition to designating a method as exception handler, the
-            <literal>@Handles</literal>
-            annotation
-            specifies two pieces of information about when the method should be invoked relative to other handler
-            methods:
+            In addition to designating a method as exception handler, the <literal>@Handles</literal>
+            annotation specifies two pieces of information about when the method should be invoked relative to other 
+            handler methods:
          </para>
 
          <itemizedlist>
