@@ -137,12 +137,7 @@ public class ExceptionStack
       return current;
    }
 
-   public Collection<Throwable> getElements()
-   {
-      return Collections.unmodifiableCollection(elements);
-   }
-
-   public void setElements(Collection<Throwable> elements)
+   public void setCauseElements(Collection<Throwable> elements)
    {
       this.elements = Collections.unmodifiableCollection(elements);
       this.init();
