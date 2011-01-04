@@ -73,6 +73,18 @@
             <artifactId>seam-catch</artifactId>
             <version>${project.version}</version>
          </dependency>
+          
+         <dependency>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder-api</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder-impl</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.jboss.spec</groupId>
