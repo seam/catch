@@ -50,6 +50,49 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    private final TraversalMode traversalMode;
    private final int precedence;
    private final Method javaMethod;
+   private final AnnotatedParameter<?> handlerParameter;
+
+   /**
+    * Determines if the given method is a handler by looking for the {@link Handles} annotation on a parameter.
+    *
+    * @param method method to search
+    * @return true if {@link Handles} is found, false otherwise
+    */
+   public static boolean isHandler(final AnnotatedMethod<?> method)
+   {
+      if (method == null)
+      {
+         throw new IllegalArgumentException("Method must not be null");
+      }
+
+      for (AnnotatedParameter<?> param : method.getParameters())
+      {
+         if (param.isAnnotationPresent(Handles.class))
+         {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   public static AnnotatedParameter<?> findHandlerParameter(final AnnotatedMethod<?> method)
+   {
+      if (!isHandler(method))
+      {
+         throw new IllegalArgumentException("Method is not a valid handler");
+      }
+
+      for (AnnotatedParameter<?> param : method.getParameters())
+      {
+         if (param.isAnnotationPresent(Handles.class))
+         {
+            return param;
+         }
+      }
+
+      return null;
+   }
 
    /**
     * Sole Constructor.
@@ -70,16 +113,16 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       this.handler = method;
       this.javaMethod = method.getJavaMember();
 
-      final AnnotatedParameter<?> handlesParam = method.getParameters().get(0);
+      this.handlerParameter = findHandlerParameter(method);
 
-      if (!handlesParam.isAnnotationPresent(Handles.class))
+      if (!this.handlerParameter.isAnnotationPresent(Handles.class))
       {
          throw new IllegalArgumentException("Method is not annotated with @Handles");
       }
 
-      this.traversalMode = handlesParam.getAnnotation(Handles.class).during();
-      this.precedence = handlesParam.getAnnotation(Handles.class).precedence();
-      tmpQualifiers.addAll(Beans.getQualifiers(bm, handlesParam.getAnnotations()));
+      this.traversalMode = this.handlerParameter.getAnnotation(Handles.class).during();
+      this.precedence = this.handlerParameter.getAnnotation(Handles.class).precedence();
+      tmpQualifiers.addAll(Beans.getQualifiers(bm, this.handlerParameter.getAnnotations()));
 
       if (tmpQualifiers.isEmpty())
       {
@@ -88,7 +131,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 
       this.qualifiers = tmpQualifiers;
       this.beanClass = method.getJavaMember().getDeclaringClass();
-      this.exceptionType = ((ParameterizedType) handlesParam.getBaseType()).getActualTypeArguments()[0];
+      this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
    }
 
    /**
@@ -139,7 +182,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
          ctx = bm.createCreationalContext(null);
          Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
          InjectableMethod im = new InjectableMethod(this.handler, getBean(bm), bm);
-         im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, getBean(bm)));
+         im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this));
       }
       finally
       {
@@ -172,6 +215,11 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    public Method getJavaMethod()
    {
       return this.javaMethod;
+   }
+
+   public AnnotatedParameter<?> getHandlerParameter()
+   {
+      return this.handlerParameter;
    }
 
    @Override
@@ -208,6 +256,10 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       {
          return false;
       }
+      if (!handlerParameter.equals(that.handlerParameter))
+      {
+         return false;
+      }
       if (!qualifiers.equals(that.qualifiers))
       {
          return false;
@@ -226,6 +278,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       result = 5 * result + traversalMode.hashCode();
       result = 5 * result + precedence;
       result = 5 * result + javaMethod.hashCode();
+      result = 5 * result + handlerParameter.hashCode();
       return result;
    }
 
@@ -234,7 +287,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    {
       return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ")
             .append("TraversalMode: ").append(this.traversalMode).append(" ")
-            .append("Handles Type: ").append(this.exceptionType.getClass()).append(" ")
+            .append("Handles Type: ").append(this.exceptionType).append(" ")
             .append("Precedence: ").append(this.precedence).append(" ")
             .append(this.handler.toString()).toString();
    }

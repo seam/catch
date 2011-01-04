@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -32,19 +32,22 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
    final private CaughtException<?> event;
    final private BeanManager bm;
    final private Bean<?> declaringBean;
+   final private HandlerMethod handlerMethod;
 
    /**
     * Sole constructor.
     *
-    * @param event         instance of CaughtException to inject.
-    * @param manager       active BeanManager
-    * @param declaringBean Class containing the handler method
+    * @param event   instance of CaughtException to inject.
+    * @param manager active BeanManager
+    * @param handler Handler method this redefiner is for
     */
-   public OutboundParameterValueRedefiner(CaughtException<?> event, final BeanManager manager, Bean<?> declaringBean)
+   public OutboundParameterValueRedefiner(final CaughtException<?> event, final BeanManager manager,
+                                          final HandlerMethod<?> handler)
    {
       this.event = event;
       this.bm = manager;
-      this.declaringBean = declaringBean;
+      this.declaringBean = handler.getBean(bm);
+      this.handlerMethod = handler;
    }
 
    /**
@@ -56,12 +59,9 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
 
       try
       {
-         switch (value.getPosition())
+         if (value.getPosition() == this.handlerMethod.getHandlerParameter().getPosition())
          {
-            case 0:
-            {
-               return event;
-            }
+            return event;
          }
          return value.getDefaultValue(ctx);
       }

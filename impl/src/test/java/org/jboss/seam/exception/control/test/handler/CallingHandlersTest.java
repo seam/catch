@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,6 +16,8 @@
  */
 
 package org.jboss.seam.exception.control.test.handler;
+
+import java.sql.SQLException;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -81,6 +83,13 @@ public class CallingHandlersTest
    {
       bm.fireEvent(new ExceptionToCatch(new RuntimeException(new IllegalArgumentException())));
       assertTrue(CalledExceptionHandler.BEANMANAGER_INJECTED);
+   }
+
+   @Test
+   public void assertAdditionalParamsAreInjectedWithDifferentHandlerLocation()
+   {
+      bm.fireEvent(new ExceptionToCatch(new SQLException()));
+      assertTrue(CalledExceptionHandler.LOCATION_DIFFER_BEANMANAGER_INJECTED);
    }
 
    @Test

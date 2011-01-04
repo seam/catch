@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -18,8 +18,12 @@
 package org.jboss.seam.exception.control.test.extension;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
@@ -27,8 +31,11 @@ import javax.inject.Inject;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.extension.literal.ArquillianLiteral;
+import org.jboss.seam.exception.control.test.extension.literal.CatchQualifierLiteral;
 import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,7 +45,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
 public class ExtensionTest
@@ -89,6 +99,15 @@ public class ExtensionTest
    {
       assertEquals(2, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
             Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST).size());
+   }
+
+   @Test
+   public void assertSQLHandlerFound()
+   {
+      final List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
+            SQLException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
+      assertThat(handlerMethods.size(), is(4));
+      assertThat(handlerMethods.get(3).getExceptionType(), equalTo((Type) SQLException.class));
    }
 
    @Test

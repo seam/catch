@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,16 +15,15 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control;
+package org.jboss.seam.exception.control.test.extension.literal;
 
 import javax.enterprise.util.AnnotationLiteral;
 
-/**
- * Annotation literal for {@link HandlesExceptions}.
- */
-public class HandlesExceptionsLiteral extends AnnotationLiteral<HandlesExceptions> implements HandlesExceptions
-{
-   private static final long serialVersionUID = -6775381615228078023L;
+import org.jboss.seam.exception.control.test.extension.Arquillian;
 
-   public static final HandlesExceptions INSTANCE = new HandlesExceptionsLiteral();
+public class ArquillianLiteral extends AnnotationLiteral<Arquillian> implements Arquillian
+{
+   private static final long serialVersionUID = -3525383414748064487L;
+
+   public static final Arquillian INSTANCE = new ArquillianLiteral();
 }

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -42,7 +42,6 @@ import javax.enterprise.inject.spi.ProcessBean;
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
-import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.solder.literal.AnyLiteral;
@@ -74,7 +73,7 @@ public class CatchExtension implements Extension
     *                                 instantiated for any reason when trying to obtain the actual type arguments from a
     *                                 {@link ParameterizedType}
     */
-   public void findHandlers(@Observes final ProcessBean pmb, final BeanManager bm)
+   public void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm)
    {
       if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
             pmb.getBean() instanceof Decorator)
@@ -90,16 +89,15 @@ public class CatchExtension implements Extension
 
          for (AnnotatedMethod method : methods)
          {
-            if (method.getParameters().size() > 0
-                  && ((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
+            if (HandlerMethodImpl.isHandler(method))
             {
+               final AnnotatedParameter<?> param = HandlerMethodImpl.findHandlerParameter(method);
                if (method.getJavaMember().getExceptionTypes().length != 0)
                {
                   pmb.addDefinitionError(new IllegalArgumentException(
                         String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
                }
-               final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
-               final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
+               final Class exceptionType = (Class) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
 
                if (this.allHandlers.containsKey(exceptionType))
                {

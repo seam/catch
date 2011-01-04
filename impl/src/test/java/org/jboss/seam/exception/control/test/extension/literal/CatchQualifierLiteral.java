@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.extension;
+package org.jboss.seam.exception.control.test.extension.literal;
 
 import javax.enterprise.util.AnnotationLiteral;
+
+import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 
 public class CatchQualifierLiteral extends AnnotationLiteral<CatchQualifier> implements CatchQualifier
 {
