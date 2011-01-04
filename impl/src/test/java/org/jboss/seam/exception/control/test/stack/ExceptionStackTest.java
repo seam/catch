@@ -46,7 +46,7 @@ public class ExceptionStackTest
 
       ExceptionStack es = new ExceptionStack(e);
 
-      assertThat(es.getElements().size(), is(4));
-      assertThat(es.getElements(), hasItems(e, transactionRollbackException, recoverableException, syntaxErrorException));
+      assertThat(es.getCauseElements().size(), is(4));
+      assertThat(es.getCauseElements(), hasItems(e, transactionRollbackException, recoverableException, syntaxErrorException));
    }
 }
