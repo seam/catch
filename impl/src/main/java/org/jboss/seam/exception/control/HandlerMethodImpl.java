@@ -70,11 +70,6 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       this.handler = method;
       this.javaMethod = method.getJavaMember();
 
-      // TODO: Make this use a security manager block or when Solder does it we should be fine
-      if (!this.javaMethod.isAccessible())
-      {
-         this.javaMethod.setAccessible(true);
-      }
       final AnnotatedParameter<?> handlesParam = method.getParameters().get(0);
 
       if (!handlesParam.isAnnotationPresent(Handles.class))
