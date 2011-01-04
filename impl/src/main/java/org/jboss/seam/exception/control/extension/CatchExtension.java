@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -47,6 +46,7 @@ import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.solder.literal.AnyLiteral;
+import org.jboss.seam.solder.reflection.AnnotationInspector;
 import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 
 /**
@@ -84,7 +84,7 @@ public class CatchExtension implements Extension
 
       final AnnotatedType type = (AnnotatedType) pmb.getAnnotated();
 
-      if (isAnnotationPresent(type, HandlesExceptions.class, bm))
+      if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm))
       {
          final Set<AnnotatedMethod> methods = type.getMethods();
 
@@ -168,30 +168,6 @@ public class CatchExtension implements Extension
          if (haystack.contains(a))
          {
             return true;
-         }
-      }
-      return false;
-   }
-
-   private static <A extends Annotation> boolean isAnnotationPresent(Annotated annotated, final Class<A> annotationType,
-                                                                     BeanManager beanManager)
-   {
-      if (annotated.isAnnotationPresent(annotationType))
-      {
-         return true;
-      }
-
-      for (Annotation candidate : annotated.getAnnotations())
-      {
-         if (beanManager.isStereotype(candidate.annotationType()))
-         {
-            for (Annotation stereotyped : beanManager.getStereotypeDefinition(candidate.annotationType()))
-            {
-               if (stereotyped.annotationType().equals(annotationType))
-               {
-                  return true;
-               }
-            }
          }
       }
       return false;

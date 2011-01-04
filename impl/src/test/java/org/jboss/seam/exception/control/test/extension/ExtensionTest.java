@@ -47,7 +47,7 @@ public class ExtensionTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-            .addClasses(CatchExtension.class, ExtensionExceptionHandler.class,
+            .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
                   InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class)
             .addManifestResource(new StringAsset(
                   "<beans>" +
@@ -80,7 +80,7 @@ public class ExtensionTest
    @Test
    public void assertNumberOfHandlersFoundMatchesExpectedDepthFirst()
    {
-      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
             Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).size());
    }
 
@@ -96,7 +96,7 @@ public class ExtensionTest
    {
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
       qualifiers.add(CatchQualifierLiteral.INSTANCE);
-      assertEquals(6, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+      assertEquals(7, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
             TraversalMode.DEPTH_FIRST).size());
    }
 
@@ -106,7 +106,7 @@ public class ExtensionTest
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
       qualifiers.add(CatchQualifierLiteral.INSTANCE);
       qualifiers.add(ArquillianLiteral.INSTANCE);
-      assertEquals(7, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+      assertEquals(8, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
             TraversalMode.DEPTH_FIRST).size());
    }
 
