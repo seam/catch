@@ -28,14 +28,14 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
  * Comparator to sort exception handlers according qualifier ({@link TraversalMode#DEPTH_FIRST} first), precedence
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
-@SuppressWarnings( { "MethodWithMoreThanThreeNegations", "unchecked" })
-public final class ExceptionHandlerComparator implements Comparator<HandlerMethod>
+@SuppressWarnings( { "MethodWithMoreThanThreeNegations"})
+public final class ExceptionHandlerComparator implements Comparator<HandlerMethod<?>>
 {
 
    /**
     * {@inheritDoc}
     */
-   public int compare(HandlerMethod lhs, HandlerMethod rhs)
+   public int compare(HandlerMethod<?> lhs, HandlerMethod<?> rhs)
    {
       if (lhs.equals(rhs))
       {
@@ -83,8 +83,8 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
 
       if (lhsTypeclosure.contains(rhsExceptionType))
       {
-         final int indexOfLhsType = new ArrayList(lhsTypeclosure).indexOf(lhsExceptionType);
-         final int indexOfRhsType = new ArrayList(lhsTypeclosure).indexOf(rhsExceptionType);
+         final int indexOfLhsType = new ArrayList<Type>(lhsTypeclosure).indexOf(lhsExceptionType);
+         final int indexOfRhsType = new ArrayList<Type>(lhsTypeclosure).indexOf(rhsExceptionType);
 
          if (indexOfLhsType > indexOfRhsType)
          {
