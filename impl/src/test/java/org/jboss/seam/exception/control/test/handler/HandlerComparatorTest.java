@@ -60,7 +60,7 @@ public class HandlerComparatorTest
    @Test
    public void assertOrderIsCorrect()
    {
-      List<HandlerMethod> handlers = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
+      List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
             IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
 
       assertEquals("catchThrowable", handlers.get(0).getJavaMethod().getName());

@@ -33,6 +33,7 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 @HandlesExceptions
 public abstract class DecoratorAsHandler extends ELResolver
 {
+   @SuppressWarnings("unused")
    @Inject
    @Delegate
    @Any
