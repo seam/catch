@@ -16,4 +16,4 @@ To package and deploy to JBoss AS, run the following command:
  mvn clean package jboss:hard-deploy -Pjbossas 
 
 At the moment, Seam 3 is not working on GlassFish due to an incompatibility
-with several extension points used by Weld Extensions.
+with several extension points used by Seam Solder.

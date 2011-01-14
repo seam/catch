@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -17,20 +17,23 @@
 package org.jboss.seam.exception.control;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
 import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Any;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.seam.exception.control.extension.CatchExtension;
 
 /**
- * Observer of {@link ExceptionToCatch} events and handler dispatcher.
- * All handlers are invoked from this class.  This class is immutable.
+ * Observer of {@link ExceptionToCatch} events and handler dispatcher. All handlers are invoked from this class.  This
+ * class is immutable.
  */
 public class ExceptionHandlerDispatch
 {
@@ -40,24 +43,17 @@ public class ExceptionHandlerDispatch
     * @param eventException exception to be invoked
     * @param bm             active bean manager
     * @param extension      catch extension instance to obtain handlers
-    *
+    * @param stackEvent     Event for modifying the exception stack
     * @throws Throwable If a handler requests the exception to be re-thrown.
     */
-   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
-   public void executeHandlers(@Observes ExceptionToCatch eventException, final BeanManager bm,
-                               CatchExtension extension) throws Throwable
+   @SuppressWarnings( { "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
+   public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm,
+                               CatchExtension extension, Event<ExceptionStack> stackEvent) throws Throwable
    {
       final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
       CreationalContext<Object> ctx = null;
 
-      Throwable exception = eventException.getException();
       Throwable throwException = null;
-
-      do
-      {
-         unwrappedExceptions.push(exception);
-      }
-      while ((exception = exception.getCause()) != null);
 
       try
       {
@@ -65,30 +61,32 @@ public class ExceptionHandlerDispatch
 
          final Set<HandlerMethod> processedHandlers = new HashSet<HandlerMethod>();
 
-         // DuringDescTraversal handlers
-         int exceptionIndex = unwrappedExceptions.size() - 1;
+         final ExceptionStack stack = new ExceptionStack(eventException.getException());
+
+         stackEvent.fire(stack); // Allow for modifying the exception stack
+
+         // TODO: Clean this up so there's only the while and one for loop
          inbound_cause:
-         while (exceptionIndex >= 0)
+         while (stack.getCurrent() != null)
          {
 
-            List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(),
-                                                     bm, eventException.getQualifiers()));
+            final List<HandlerMethod> breadthFirstHandlerMethods = new ArrayList<HandlerMethod>(
+                  extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
+                        bm, eventException.getQualifiers(), TraversalMode.BREADTH_FIRST));
 
-            for (HandlerMethod handler : handlerMethods)
+            for (HandlerMethod handler : breadthFirstHandlerMethods)
             {
-               if (handler.getTraversalPath() == TraversalPath.DESCENDING && !processedHandlers.contains(handler))
+               if (!processedHandlers.contains(handler))
                {
-                  final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
-                  final CaughtException event = new CaughtException(stack, true, eventException.isHandled());
-                  handler.notify(event, bm);
+                  final CaughtException breadthFirstEvent = new CaughtException(stack, true, eventException.isHandled());
+                  handler.notify(breadthFirstEvent, bm);
 
-                  if (!event.isUnmute())
+                  if (!breadthFirstEvent.isUnmute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  switch (event.getFlow())
+                  switch (breadthFirstEvent.getFlow())
                   {
                      case HANDLED:
                         eventException.setHandled(true);
@@ -100,45 +98,37 @@ public class ExceptionHandlerDispatch
                         return;
                      case DROP_CAUSE:
                         eventException.setHandled(true);
-                        exceptionIndex--;
+                        stack.advanceToNextCause();
                         continue inbound_cause;
                      case RETHROW:
                         throwException = eventException.getException();
                         break;
                      case THROW:
-                        throwException = event.getThrowNewException();
+                        throwException = breadthFirstEvent.getThrowNewException();
                   }
                }
             }
 
-            exceptionIndex--;
-         }
+            final List<HandlerMethod> depthFirstHandlerMethods = new ArrayList<HandlerMethod>(
+                  extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
+                        bm, eventException.getQualifiers(), TraversalMode.DEPTH_FIRST));
 
-         // Run outbound handlers, same list, just reversed
-         exceptionIndex = unwrappedExceptions.size() - 1;
-         outbound_cause:
-         while (exceptionIndex >= 0)
-         {
+            // Reverse these so category handlers are last
+            Collections.reverse(depthFirstHandlerMethods);
 
-            List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(
-               extension.getHandlersForExceptionType(unwrappedExceptions.get(exceptionIndex).getClass(), bm,
-                                                     eventException.getQualifiers()));
-
-            for (HandlerMethod handler : handlerMethods)
+            for (HandlerMethod handler : depthFirstHandlerMethods)
             {
-               // Defining DuringAscTraversal as the absence of DuringDescTraversal
-               if (handler.getTraversalPath() == TraversalPath.ASCENDING && !processedHandlers.contains(handler))
+               if (!processedHandlers.contains(handler))
                {
-                  final ExceptionStack stack = new ExceptionStack(unwrappedExceptions, exceptionIndex);
-                  final CaughtException event = new CaughtException(stack, false, eventException.isHandled());
-                  handler.notify(event, bm);
+                  final CaughtException depthFirstEvent = new CaughtException(stack, false, eventException.isHandled());
+                  handler.notify(depthFirstEvent, bm);
 
-                  if (!event.isUnmute())
+                  if (!depthFirstEvent.isUnmute())
                   {
                      processedHandlers.add(handler);
                   }
 
-                  switch (event.getFlow())
+                  switch (depthFirstEvent.getFlow())
                   {
                      case HANDLED:
                         eventException.setHandled(true);
@@ -150,17 +140,18 @@ public class ExceptionHandlerDispatch
                         return;
                      case DROP_CAUSE:
                         eventException.setHandled(true);
-                        exceptionIndex--;
-                        continue outbound_cause;
+                        stack.advanceToNextCause();
+                        continue inbound_cause;
                      case RETHROW:
                         throwException = eventException.getException();
                         break;
                      case THROW:
-                        throwException = event.getThrowNewException();
+                        throwException = depthFirstEvent.getThrowNewException();
                   }
                }
             }
-            exceptionIndex--;
+
+            stack.advanceToNextCause();
          }
 
          if (throwException != null)

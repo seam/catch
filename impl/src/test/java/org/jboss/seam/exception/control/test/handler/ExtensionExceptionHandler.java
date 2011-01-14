@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -17,40 +17,44 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
+import java.sql.SQLException;
+
+import javax.enterprise.inject.spi.BeanManager;
+
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.Precedence;
-import org.jboss.seam.exception.control.TraversalPath;
-import org.jboss.seam.exception.control.test.qualifier.Arquillian;
-import org.jboss.seam.exception.control.test.qualifier.CatchQualifier;
+import org.jboss.seam.exception.control.TraversalMode;
+import org.jboss.seam.exception.control.test.extension.Arquillian;
+import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 
 @HandlesExceptions
 public class ExtensionExceptionHandler
 {
-   public void catchDescException(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
+   public void catchDescException(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
    {
       // Nothing to do currently
    }
 
-   public void catchFrameworkDescException(@Handles(during = TraversalPath.DESCENDING, precedence = Precedence.FRAMEWORK) CaughtException<Exception> event)
+   public void catchFrameworkDescException(@Handles(during = TraversalMode.BREADTH_FIRST, precedence = Precedence.FRAMEWORK) CaughtException<Exception> event)
    {
       // Nothing to do here
    }
 
-   public void catchRuntime(@Handles(during = TraversalPath.ASCENDING) CaughtException<RuntimeException> event)
+   public void catchRuntime(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<RuntimeException> event)
    {
       // Nothing to do currently
    }
 
    public void catchThrowable(
-      @Handles(precedence = 10, during = TraversalPath.ASCENDING) CaughtException<Throwable> event)
+         @Handles(precedence = 10, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event)
    {
       // Nothing to do currently
    }
 
    public void catchThrowableP20(
-      @Handles(precedence = 20, during = TraversalPath.ASCENDING) CaughtException<Throwable> event)
+         @Handles(precedence = 20, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event)
    {
       // Nothing to do currently
    }
@@ -73,6 +77,12 @@ public class ExtensionExceptionHandler
    public void arqTestingHandler(@Handles @Arquillian @CatchQualifier CaughtException<Throwable> event)
    {
       // Method to verify the qualifiers are working correctly for handlers
+   }
+
+   public void differentParamHandlerLocationHandler(int number, BeanManager bm,
+                                                    @Handles CaughtException<SQLException> event)
+   {
+      // Nothing here, just need to make sure this handler is picked up
    }
 
    public void doNothingMethod()

@@ -17,13 +17,31 @@
   -->
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="introduction">
-   <title>Seam Catch Introduction</title>
+   <title>Introduction</title>
 
    <para>
-      The Seam Catch module creates a simple, yet robust base for other modules and users
-      to create a custom and complete exception handling process. Exception handling is done using
-      CDI events, keeping exception handling noninvasive and also helping the program or module to stay
-      minimally coupled to the exception handling framework.
+      Exceptions are a fact of life. As developers, we need to be prepared to deal with them in the most graceful manner
+      possible. Seam Catch provides a simple, yet robust foundation for modules and/or applications to establish a
+      customized exception handling process. By employing a delegation model, Catchs allow exceptions to be addressed in
+      a centralized, extensible and uniform manner. 
+   </para>
+  
+   <para>
+      Catch is first notified of an exception to be handled via a CDI event. This event is fired either by the
+      application or a Catch integration. Catch then hands the exception off to a chain of registered handlers, which
+      deal with the exception appropriately. The use of CDI events to connect exceptions to handlers makes this strategy
+      of exception handling non-invasive and minimally coupled to Catch's infrastructure. 
+   </para>
+      
+   <para>
+      The exception handling process remains mostly transparent to the developer. In some cases, you register an
+      exception handler simply by annotating a handler method. Alternatively, you can handle an exception
+      programmatically, just as you would observe an event in CDI.
+   </para>
+   
+   <para>
+      In this guide, we'll explore the various options you have for handling exceptions using Catch, as well as how
+      framework authors can offer Catch integration.
    </para>
 
    <!--

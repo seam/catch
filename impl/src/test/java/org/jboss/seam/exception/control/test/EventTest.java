@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -26,7 +26,7 @@ import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -47,10 +47,10 @@ public class EventTest
    public static Archive<?> createTestArchive()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addPackage(CaughtException.class.getPackage())
-         .addClasses(EventTest.class, CatchExtension.class)
-         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+            .addPackage(CaughtException.class.getPackage())
+            .addClasses(EventTest.class, CatchExtension.class)
+            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
    @Inject
@@ -62,16 +62,16 @@ public class EventTest
       bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
    }
 
-   public void verifyDescEvent(@Handles(during = TraversalPath.DESCENDING) CaughtException<NullPointerException> event)
+   public void verifyDescEvent(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
-      assertTrue(event.isDescendingTraversal());
-      assertFalse(event.isAscendingTraversal());
+      assertTrue(event.isBreadthFirstTraversal());
+      assertFalse(event.isDepthFirstTraversal());
    }
 
-   public void verifyAscEvent(@Handles(during = TraversalPath.ASCENDING) CaughtException<NullPointerException> event)
+   public void verifyAscEvent(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<NullPointerException> event)
    {
-      assertFalse(event.isDescendingTraversal());
-      assertTrue(event.isAscendingTraversal());
+      assertFalse(event.isBreadthFirstTraversal());
+      assertTrue(event.isDepthFirstTraversal());
    }
 
 }

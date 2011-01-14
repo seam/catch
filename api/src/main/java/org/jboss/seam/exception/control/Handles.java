@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -24,9 +24,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marker annotation for a method to be considered an Exception Handler.
- * Handlers are typically in the form of <code>public void ... (@Handles ... CaughtException<...> ...)</code> methods.
- * If a method has a return type, it is ignored.
+ * Marker annotation for a method to be considered an Exception Handler. Handlers are typically in the form of
+ * <code>public void ... (@Handles ... CaughtException<...> ...)</code> methods. If a method has a return type, it is
+ * ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
@@ -36,7 +36,7 @@ public @interface Handles
    /**
     * Direction of the cause chain traversal to listen.
     */
-   public abstract TraversalPath during() default TraversalPath.ASCENDING;
+   public abstract TraversalMode during() default TraversalMode.DEPTH_FIRST;
 
    /**
     * Precedence relative to handlers for the same type

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -17,12 +17,14 @@
 
 package org.jboss.seam.exception.control.test.handler;
 
+import java.sql.SQLException;
+
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.TraversalPath;
+import org.jboss.seam.exception.control.TraversalMode;
 
 @HandlesExceptions
 public class CalledExceptionHandler
@@ -32,6 +34,7 @@ public class CalledExceptionHandler
    public static boolean PROTECTED_HANDLER_CALLED = false;
    public static int INBOUND_HANDLER_TIMES_CALLED = 0;
    public static boolean BEANMANAGER_INJECTED = false;
+   public static boolean LOCATION_DIFFER_BEANMANAGER_INJECTED = false;
 
    public void basicHandler(@Handles CaughtException<Exception> event)
    {
@@ -39,7 +42,7 @@ public class CalledExceptionHandler
       OUTBOUND_HANDLER_TIMES_CALLED++;
    }
 
-   public void basicInboundHandler(@Handles(during = TraversalPath.DESCENDING) CaughtException<Exception> event)
+   public void basicInboundHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
    {
       INBOUND_HANDLER_TIMES_CALLED++;
       event.markHandled();
@@ -52,9 +55,17 @@ public class CalledExceptionHandler
          BEANMANAGER_INJECTED = true;
       }
    }
-   
+
    void protectedHandler(@Handles CaughtException<IllegalStateException> event)
    {
       PROTECTED_HANDLER_CALLED = true;
+   }
+
+   private void handlerLocationInjections(BeanManager bm, @Handles CaughtException<SQLException> event)
+   {
+      if (bm != null)
+      {
+         LOCATION_DIFFER_BEANMANAGER_INJECTED = true;
+      }
    }
 }

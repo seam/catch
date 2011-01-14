@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   JBoss, Home of Professional Open Source
   Copyright [2010], Red Hat, Inc., and individual contributors
@@ -19,8 +19,8 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <artifactId>seam-catch-parent</artifactId>
       <groupId>org.jboss.seam.catch</groupId>
+      <artifactId>seam-catch-parent</artifactId>
       <version>3.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
@@ -28,37 +28,30 @@
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-impl</artifactId>
    <packaging>jar</packaging>
-   <name>Seam Catch Module Implementation</name>
+
+   <name>Seam Catch Implementation</name>
+   <!-- url required for JAR Manifest -->
+   <url>${project.parent.url}</url>
 
    <dependencies>
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-api</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-api</artifactId>
-         <scope>provided</scope>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.arquillian</groupId>
          <artifactId>arquillian-junit</artifactId>
-         <scope>test</scope>
       </dependency>
 
       <dependency>
-         <groupId>org.jboss.arquillian.container</groupId>
+         <groupId>org.jboss.weld.arquillian.container</groupId>
          <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-         <scope>test</scope>
       </dependency>
 
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -68,19 +61,18 @@
       </dependency>
 
       <dependency>
-         <groupId>org.jboss.weld</groupId>
-         <artifactId>weld-extensions</artifactId>
+         <groupId>org.jboss.seam.solder</groupId>
+         <artifactId>seam-solder-api</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.jboss.seam.solder</groupId>
+         <artifactId>seam-solder-impl</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.glassfish.web</groupId>
          <artifactId>el-impl</artifactId>
-         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-simple</artifactId>
          <scope>test</scope>
       </dependency>
 
@@ -94,6 +86,12 @@
       <dependency>
          <groupId>org.jboss.logging</groupId>
          <artifactId>jboss-logging</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-simple</artifactId>
          <scope>test</scope>
       </dependency>
 

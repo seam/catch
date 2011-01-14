@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2010, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -18,12 +18,12 @@
 package org.jboss.seam.exception.control;
 
 /**
- * Payload for an exception to be handled.  This object is not immutable as small pieces of the state
- * may be set by the handler.
+ * Payload for an exception to be handled.  This object is not immutable as small pieces of the state may be set by the
+ * handler.
  *
  * @param <T> Exception type this event represents
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings( { "unchecked" })
 public class CaughtException<T extends Throwable>
 {
    /**
@@ -44,20 +44,19 @@ public class CaughtException<T extends Throwable>
    private boolean unmute;
    private ExceptionHandlingFlow flow;
    private Throwable throwNewException;
-   private final boolean descendingTraversal;
-   private final boolean ascendingTraversal;
+   private final boolean breadthFirstTraversal;
+   private final boolean depthFirstTraversal;
    private final boolean markedHandled;
 
    /**
     * Initial state constructor.
     *
-    * @param exceptionStack      Information about the current exception and cause chain.
-    * @param descendingTraversal flag indicating the direction of the cause chain traversal
-    * @param handled             flag indicating the exception has already been handled by a previous handler
-    *
+    * @param exceptionStack        Information about the current exception and cause chain.
+    * @param breadthFirstTraversal flag indicating the direction of the cause chain traversal
+    * @param handled               flag indicating the exception has already been handled by a previous handler
     * @throws IllegalArgumentException if exceptionStack is null
     */
-   public CaughtException(final ExceptionStack exceptionStack, final boolean descendingTraversal, final boolean handled)
+   public CaughtException(final ExceptionStack exceptionStack, final boolean breadthFirstTraversal, final boolean handled)
    {
       if (exceptionStack == null)
       {
@@ -66,8 +65,8 @@ public class CaughtException<T extends Throwable>
 
       this.exception = (T) exceptionStack.getCurrent();
       this.exceptionStack = exceptionStack;
-      this.descendingTraversal = descendingTraversal;
-      this.ascendingTraversal = !descendingTraversal;
+      this.breadthFirstTraversal = breadthFirstTraversal;
+      this.depthFirstTraversal = !breadthFirstTraversal;
       this.markedHandled = handled;
       this.flow = ExceptionHandlingFlow.MARK_HANDLED;
    }
@@ -110,9 +109,8 @@ public class CaughtException<T extends Throwable>
    }
 
    /**
-    * Similar to {@link CaughtException#markHandled()}, but instructs the dispatcher
-    * to markHandled to the next element in the cause chain without processing additional handlers for this cause
-    * chain element.
+    * Similar to {@link CaughtException#markHandled()}, but instructs the dispatcher to markHandled to the next element
+    * in the cause chain without processing additional handlers for this cause chain element.
     */
    public void dropCause()
    {
@@ -127,14 +125,14 @@ public class CaughtException<T extends Throwable>
       this.unmute = true;
    }
 
-   public boolean isDescendingTraversal()
+   public boolean isBreadthFirstTraversal()
    {
-      return descendingTraversal;
+      return breadthFirstTraversal;
    }
 
-   public boolean isAscendingTraversal()
+   public boolean isDepthFirstTraversal()
    {
-      return ascendingTraversal;
+      return depthFirstTraversal;
    }
 
    protected boolean isUnmute()

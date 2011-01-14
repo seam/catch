@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -17,29 +17,59 @@
 
 package org.jboss.seam.exception.control;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Information about the current exception and exception cause container.  This object is immutable.
+ * Information about the current exception and exception cause container.  This object is not immutable.
  */
 public class ExceptionStack
 {
-   private final boolean root;
-   private final boolean last;
-   private final int index;
-   private final Throwable next;
-   private final Collection<Throwable> remaining;
-   private final Collection<Throwable> elements;
-   private final Throwable current;
+   private boolean root;
+   private boolean last;
+   private int index;
+   private Throwable next;
+   private Collection<Throwable> remaining;
+   private Collection<Throwable> elements;
+   private Throwable current;
+
+   /**
+    * Builds the stack from the given exception.
+    *
+    * @param exception Caught exception
+    */
+   public ExceptionStack(final Throwable exception)
+   {
+      Throwable e = exception;
+      this.elements = new ArrayList<Throwable>();
+
+      do
+      {
+         this.elements.add(e);
+         if (e instanceof SQLException)
+         {
+            SQLException sqlException = (SQLException) e;
+            while (sqlException.getNextException() != null)
+            {
+               sqlException = sqlException.getNextException();
+               this.elements.add(sqlException);
+            }
+         }
+      }
+      while ((e = e.getCause()) != null);
+
+      this.index = elements.size() - 1;
+      this.init();
+   }
 
    /**
     * Basic constructor.
     *
-    * @param causeChainElements  collection of all causing elements for an exception from top to bottom (not unwrapped).
+    * @param causeChainElements  collection of all causing elements for an exception from top to bottom (not
+    *                            unwrapped).
     * @param currentElementIndex index of current element within the causeChainElements.
-    *
     * @throws IllegalArgumentException if causeChainElements is empty or null.
     */
    public ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex)
@@ -50,16 +80,26 @@ public class ExceptionStack
       }
       this.elements = Collections.unmodifiableCollection(causeChainElements);
       this.index = currentElementIndex;
+      this.init();
+   }
 
-      this.last = this.index == 0;
-
-      this.root = this.index == causeChainElements.size() - 1;
-
+   private void init()
+   {
+      this.root = this.index == this.elements.size() - 1;
       this.next = this.index - 1 >= 0 ? (Throwable) this.elements.toArray()[this.index - 1] : null;
 
-      this.remaining = new ArrayList<Throwable>(this.elements).subList(0, currentElementIndex);
+      if (this.index >= 0)
+      {
+         this.remaining = new ArrayList<Throwable>(this.elements).subList(0, this.index);
+         this.current = (Throwable) this.elements.toArray()[this.index];
+      }
+      else
+      {
+         this.remaining = Collections.emptyList();
+         this.current = null;
+      }
 
-      this.current = (Throwable) this.elements.toArray()[this.index];
+      this.last = this.remaining.isEmpty();
    }
 
    public Collection<Throwable> getCauseElements()
@@ -95,5 +135,29 @@ public class ExceptionStack
    public Throwable getCurrent()
    {
       return current;
+   }
+
+   public void setCauseElements(Collection<Throwable> elements)
+   {
+      this.elements = Collections.unmodifiableCollection(elements);
+      this.init();
+   }
+
+   public void setIndex(int index)
+   {
+      if (index >= this.elements.size())
+      {
+         throw new IllegalArgumentException("Index greater than elements.size()");
+      }
+      this.index = index;
+      this.init();
+   }
+
+   /**
+    * Move to the next causing exception.
+    */
+   protected void advanceToNextCause()
+   {
+      this.setIndex(this.index - 1);
    }
 }

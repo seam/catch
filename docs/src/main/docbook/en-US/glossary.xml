@@ -53,9 +53,9 @@
          <glossentry id="handlermethod">
             <glossterm>Handler Method</glossterm>
             <glossdef>
-               A method within a handler bean which is marked as a handler using the @Handlers on the first argument,
+               A method within a handler bean which is marked as a handler using the @Handlers on an argument,
                which must be an instance of CaughtException. Handler methods typically are public with a void return.
-               Other parameters of the method after the first will be treated as injection points and will be resolved
+               Other parameters of the method will be treated as injection points and will be resolved
                via CDI and injected upon invocation.
             </glossdef>
             <glosseealso otherterm="handlerbean">handler bean</glosseealso>

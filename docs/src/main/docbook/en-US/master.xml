@@ -18,6 +18,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.35//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"  [ ]>
 <book lang="en">
+   <xi:include href="book_info.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
    <toc/>
 
@@ -31,4 +32,7 @@
    <xi:include href="another_chapter.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
    -->
 
+<!--
+ vim:et:ts=3:sw=3:tw=120
+--> 
 </book>

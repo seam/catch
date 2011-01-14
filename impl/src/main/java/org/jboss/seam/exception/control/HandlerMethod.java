@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
@@ -60,7 +61,7 @@ public interface HandlerMethod<T extends Throwable>
    /**
     * Obtains the direction of the traversal path the handler will be listening.
     */
-   TraversalPath getTraversalPath();
+   TraversalMode getTraversalMode();
 
    /**
     * Obtains the precedence of the handler.
@@ -71,4 +72,9 @@ public interface HandlerMethod<T extends Throwable>
     * Obtains the actual method of the handler.
     */
    Method getJavaMethod();
+
+   /**
+    * Obtains the actual parameter defining this as a handler.
+    */
+   AnnotatedParameter<?> getHandlerParameter();
 }

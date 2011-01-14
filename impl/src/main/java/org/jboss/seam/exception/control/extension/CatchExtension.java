@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -43,15 +42,16 @@ import javax.enterprise.inject.spi.ProcessBean;
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
-import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.weld.extensions.literal.AnyLiteral;
-import org.jboss.weld.extensions.reflection.HierarchyDiscovery;
+import org.jboss.seam.exception.control.TraversalMode;
+import org.jboss.seam.solder.literal.AnyLiteral;
+import org.jboss.seam.solder.reflection.AnnotationInspector;
+import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 
 /**
  * CDI extension to find handlers at startup.
  */
-@SuppressWarnings({"unchecked", "WebBeanObservesInspection"})
+@SuppressWarnings( { "unchecked", "WebBeanObservesInspection" })
 public class CatchExtension implements Extension
 {
    private final Map<? super Type, Collection<HandlerMethod>> allHandlers;
@@ -66,41 +66,38 @@ public class CatchExtension implements Extension
     *
     * @param pmb Event from CDI SPI
     * @param bm  Activated Bean Manager
-    *
     * @throws TypeNotPresentException if any of the actual type arguments refers to a non-existent type declaration when
     *                                 trying to obtain the actual type arguments from a {@link ParameterizedType}
     * @throws java.lang.reflect.MalformedParameterizedTypeException
-    *                                 if any of the
-    *                                 actual type parameters refer to a parameterized type that cannot
-    *                                 be instantiated for any reason when trying to obtain the actual type arguments
-    *                                 from a {@link ParameterizedType}
+    *                                 if any of the actual type parameters refer to a parameterized type that cannot be
+    *                                 instantiated for any reason when trying to obtain the actual type arguments from a
+    *                                 {@link ParameterizedType}
     */
-   public void findHandlers(@Observes final ProcessBean pmb, final BeanManager bm)
+   public void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm)
    {
       if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
-          pmb.getBean() instanceof Decorator)
+            pmb.getBean() instanceof Decorator)
       {
          return;
       }
 
       final AnnotatedType type = (AnnotatedType) pmb.getAnnotated();
 
-      if (this.isAnnotationPresent(type, HandlesExceptions.class, bm))
+      if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm))
       {
          final Set<AnnotatedMethod> methods = type.getMethods();
 
          for (AnnotatedMethod method : methods)
          {
-            if (method.getParameters().size() > 0
-                && ((AnnotatedParameter) method.getParameters().get(0)).isAnnotationPresent(Handles.class))
+            if (HandlerMethodImpl.isHandler(method))
             {
+               final AnnotatedParameter<?> param = HandlerMethodImpl.findHandlerParameter(method);
                if (method.getJavaMember().getExceptionTypes().length != 0)
                {
                   pmb.addDefinitionError(new IllegalArgumentException(
-                     String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
+                        String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
                }
-               final AnnotatedParameter p = (AnnotatedParameter) method.getParameters().get(0);
-               final Class exceptionType = (Class) ((ParameterizedType) p.getBaseType()).getActualTypeArguments()[0];
+               final Class exceptionType = (Class) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
 
                if (this.allHandlers.containsKey(exceptionType))
                {
@@ -109,7 +106,7 @@ public class CatchExtension implements Extension
                else
                {
                   this.allHandlers.put(exceptionType, new HashSet<HandlerMethod>(Arrays.asList(new HandlerMethodImpl(
-                     method, bm))));
+                        method, bm))));
                }
             }
          }
@@ -117,17 +114,18 @@ public class CatchExtension implements Extension
    }
 
    /**
-    * Obtains the applicable handlers for the given type or super type of the given type.  Also makes use of
-    * {@link org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
+    * Obtains the applicable handlers for the given type or super type of the given type.  Also makes use of {@link
+    * org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
     *
     * @param exceptionClass    Type of exception to narrow handler list
     * @param bm                active BeanManager
     * @param handlerQualifiers additional handlerQualifiers to limit handlers
-    *
+    * @param traversalMode     traversal limiter
     * @return An order collection of handlers for the given type.
     */
    public Collection<HandlerMethod> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
-                                                                Set<Annotation> handlerQualifiers)
+                                                                Set<Annotation> handlerQualifiers,
+                                                                TraversalMode traversalMode)
    {
       final Set<HandlerMethod> returningHandlers = new TreeSet<HandlerMethod>(new ExceptionHandlerComparator());
       final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
@@ -139,15 +137,18 @@ public class CatchExtension implements Extension
          {
             for (HandlerMethod handler : this.allHandlers.get(hierarchyType))
             {
-               if (handler.getQualifiers().contains(AnyLiteral.INSTANCE))
+               if (handler.getTraversalMode() == traversalMode)
                {
-                  returningHandlers.add(handler);
-               }
-               else
-               {
-                  if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers))
+                  if (handler.getQualifiers().contains(AnyLiteral.INSTANCE))
                   {
                      returningHandlers.add(handler);
+                  }
+                  else
+                  {
+                     if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers))
+                     {
+                        returningHandlers.add(handler);
+                     }
                   }
                }
             }
@@ -165,30 +166,6 @@ public class CatchExtension implements Extension
          if (haystack.contains(a))
          {
             return true;
-         }
-      }
-      return false;
-   }
-
-   private static <A extends Annotation> boolean isAnnotationPresent(Annotated annotated, final Class<A> annotationType,
-                                                                     BeanManager beanManager)
-   {
-      if (annotated.isAnnotationPresent(annotationType))
-      {
-         return true;
-      }
-
-      for (Annotation candidate : annotated.getAnnotations())
-      {
-         if (beanManager.isStereotype(candidate.annotationType()))
-         {
-            for (Annotation stereotyped : beanManager.getStereotypeDefinition(candidate.annotationType()))
-            {
-               if (stereotyped.annotationType().equals(annotationType))
-               {
-                  return true;
-               }
-            }
          }
       }
       return false;
