@@ -78,6 +78,7 @@ public class ExceptionHandlerDispatch
             {
                if (!processedHandlers.contains(handler))
                {
+                  @SuppressWarnings("rawtypes")
                   final CaughtException breadthFirstEvent = new CaughtException(stack, true, eventException.isHandled());
                   handler.notify(breadthFirstEvent, bm);
 
@@ -120,6 +121,7 @@ public class ExceptionHandlerDispatch
             {
                if (!processedHandlers.contains(handler))
                {
+                  @SuppressWarnings("rawtypes")
                   final CaughtException depthFirstEvent = new CaughtException(stack, false, eventException.isHandled());
                   handler.notify(depthFirstEvent, bm);
 

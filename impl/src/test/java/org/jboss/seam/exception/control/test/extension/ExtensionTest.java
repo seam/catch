@@ -104,7 +104,7 @@ public class ExtensionTest
    @Test
    public void assertSQLHandlerFound()
    {
-      final List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
+      final List<HandlerMethod<? extends Throwable>> handlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
             SQLException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
       assertThat(handlerMethods.size(), is(4));
       assertThat(handlerMethods.get(3).getExceptionType(), equalTo((Type) SQLException.class));

@@ -61,6 +61,7 @@ public class CalledExceptionHandler
       PROTECTED_HANDLER_CALLED = true;
    }
 
+   @SuppressWarnings("unused")
    private void handlerLocationInjections(BeanManager bm, @Handles CaughtException<SQLException> event)
    {
       if (bm != null)
