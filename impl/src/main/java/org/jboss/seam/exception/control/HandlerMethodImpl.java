@@ -173,15 +173,14 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
    /**
     * {@inheritDoc}
     */
-   @SuppressWarnings( { "unchecked" })
    public void notify(final CaughtException<T> event, final BeanManager bm)
    {
-      CreationalContext ctx = null;
+      CreationalContext<?> ctx = null;
       try
       {
          ctx = bm.createCreationalContext(null);
          Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
-         InjectableMethod im = new InjectableMethod(this.handler, getBean(bm), bm);
+         InjectableMethod<?> im = createInjectableMethod(this.handler, getBean(bm), bm); 
          im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this));
       }
       finally
@@ -191,6 +190,11 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
             ctx.release();
          }
       }
+   }
+   
+   private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod, Bean<?> bean, BeanManager manager)
+   {
+      return new InjectableMethod<X>(handlerMethod, bean, manager);
    }
 
    /**

@@ -50,7 +50,7 @@ public class ExceptionHandlerDispatch
    public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm,
                                CatchExtension extension, Event<ExceptionStack> stackEvent) throws Throwable
    {
-      final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
+      final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>(); // TODO: this variable is never read
       CreationalContext<Object> ctx = null;
 
       Throwable throwException = null;
@@ -59,7 +59,7 @@ public class ExceptionHandlerDispatch
       {
          ctx = bm.createCreationalContext(null);
 
-         final Set<HandlerMethod> processedHandlers = new HashSet<HandlerMethod>();
+         final Set<HandlerMethod<?>> processedHandlers = new HashSet<HandlerMethod<?>>();
 
          final ExceptionStack stack = new ExceptionStack(eventException.getException());
 
@@ -70,11 +70,11 @@ public class ExceptionHandlerDispatch
          while (stack.getCurrent() != null)
          {
 
-            final List<HandlerMethod> breadthFirstHandlerMethods = new ArrayList<HandlerMethod>(
+            final List<HandlerMethod<?>> breadthFirstHandlerMethods = new ArrayList<HandlerMethod<?>>(
                   extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
                         bm, eventException.getQualifiers(), TraversalMode.BREADTH_FIRST));
 
-            for (HandlerMethod handler : breadthFirstHandlerMethods)
+            for (HandlerMethod<?> handler : breadthFirstHandlerMethods)
             {
                if (!processedHandlers.contains(handler))
                {
@@ -109,14 +109,14 @@ public class ExceptionHandlerDispatch
                }
             }
 
-            final List<HandlerMethod> depthFirstHandlerMethods = new ArrayList<HandlerMethod>(
+            final List<HandlerMethod<? extends Throwable>> depthFirstHandlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(
                   extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
                         bm, eventException.getQualifiers(), TraversalMode.DEPTH_FIRST));
 
             // Reverse these so category handlers are last
             Collections.reverse(depthFirstHandlerMethods);
 
-            for (HandlerMethod handler : depthFirstHandlerMethods)
+            for (HandlerMethod<?> handler : depthFirstHandlerMethods)
             {
                if (!processedHandlers.contains(handler))
                {
