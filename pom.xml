@@ -21,7 +21,7 @@
    <parent>
       <artifactId>seam-parent</artifactId>
       <groupId>org.jboss.seam</groupId>
-      <version>5</version>
+      <version>8</version>
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
@@ -31,7 +31,7 @@
    <name>Seam Catch Module</name>
 
    <properties>
-      <seam.version>3.0.0.b04</seam.version>
+      <seam.version>3.0.0.b07</seam.version>
       <jboss.spec.version>1.0.0.CR1</jboss.spec.version>
    </properties>
 
@@ -74,18 +74,6 @@
             <version>${project.version}</version>
          </dependency>
           
-         <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder-api</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder-impl</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
          <dependency>
             <groupId>org.jboss.spec</groupId>
             <artifactId>jboss-javaee-6.0</artifactId>
