@@ -10,3 +10,4 @@ target
 *.sw?
 .idea
 atlassian-ide-plugin.xml
+*/coverage.ec
