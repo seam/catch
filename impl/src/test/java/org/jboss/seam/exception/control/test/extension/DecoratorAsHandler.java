@@ -18,7 +18,6 @@ package org.jboss.seam.exception.control.test.extension;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
-import javax.el.ELResolver;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
@@ -31,12 +30,12 @@ import org.jboss.seam.exception.control.HandlesExceptions;
  */
 @Decorator
 @HandlesExceptions
-public abstract class DecoratorAsHandler extends ELResolver
+public abstract class DecoratorAsHandler extends Account
 {
    @Inject
    @Delegate
    @Any
-   private ELResolver delegate;
+   private Account account;
 
    public void handlesAll(@Handles CaughtException<Throwable> caught)
    {

@@ -58,7 +58,7 @@ public class ExtensionTest
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
-                  InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class)
+                  InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
             .addManifestResource(new StringAsset(
                   "<beans>" +
                         "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
