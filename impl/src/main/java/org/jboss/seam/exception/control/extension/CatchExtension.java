@@ -51,7 +51,7 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 /**
  * CDI extension to find handlers at startup.
  */
-@SuppressWarnings( { "unchecked", "WebBeanObservesInspection" })
+@SuppressWarnings({"ALL"})
 public class CatchExtension implements Extension
 {
    private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
@@ -127,7 +127,7 @@ public class CatchExtension implements Extension
     * @param traversalMode     traversal limiter
     * @return An order collection of handlers for the given type.
     */
-   public Collection<HandlerMethod<?>> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
+   public Collection<HandlerMethod<? extends Throwable>> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
                                                                 Set<Annotation> handlerQualifiers,
                                                                 TraversalMode traversalMode)
    {
@@ -159,7 +159,7 @@ public class CatchExtension implements Extension
          }
       }
 
-      return Collections.unmodifiableCollection(returningHandlers);
+      return (Collection<HandlerMethod<? extends Throwable>>) Collections.unmodifiableCollection(returningHandlers);
    }
 
    private boolean containsAny(final Collection<? extends Annotation> haystack,
