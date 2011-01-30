@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test;
+package org.jboss.seam.exception.control.test.event;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -28,6 +28,7 @@ import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.event.literal.EventQualifierLiteral;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -36,7 +37,9 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
@@ -48,7 +51,7 @@ public class EventTest
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addPackage(CaughtException.class.getPackage())
-            .addClasses(EventTest.class, CatchExtension.class)
+            .addClasses(EventTest.class, CatchExtension.class, EventQualifier.class, EventQualifierLiteral.class)
             .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
             .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
@@ -56,22 +59,37 @@ public class EventTest
    @Inject
    private BeanManager bm;
 
+   private int qualiferCalledCount = 0;
+
    @Test
    public void assertEventIsCreatedCorrectly()
    {
       bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
    }
 
+   @Test
+   public void assertEventWithQualifiersIsCreatedCorrectly()
+   {
+      this.bm.fireEvent(new ExceptionToCatch(new NullPointerException(), EventQualifierLiteral.INSTANCE));
+   }
+
    public void verifyDescEvent(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
    {
+      this.qualiferCalledCount++;
       assertTrue(event.isBreadthFirstTraversal());
       assertFalse(event.isDepthFirstTraversal());
    }
 
    public void verifyAscEvent(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<NullPointerException> event)
    {
+      this.qualiferCalledCount++;
       assertFalse(event.isBreadthFirstTraversal());
       assertTrue(event.isDepthFirstTraversal());
    }
 
+   public void verifyQualifierEvent(@Handles @EventQualifier CaughtException<NullPointerException> event)
+   {
+      this.qualiferCalledCount++;
+      assertThat(this.qualiferCalledCount, is(1));
+   }
 }

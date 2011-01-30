@@ -21,6 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -83,15 +84,18 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
          throw new IllegalArgumentException("Method is not a valid handler");
       }
 
+      AnnotatedParameter<?> returnParam = null;
+
       for (AnnotatedParameter<?> param : method.getParameters())
       {
          if (param.isAnnotationPresent(Handles.class))
          {
-            return param;
+            returnParam = param;
+            break;
          }
       }
 
-      return null;
+      return returnParam;
    }
 
    /**
@@ -104,11 +108,12 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
     */
    public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm)
    {
-      final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
-      if (method == null || method.getParameters() == null || method.getParameters().size() == 0)
+      if (!HandlerMethodImpl.isHandler(method))
       {
-         throw new IllegalArgumentException("Method must not be null and must have at least one parameter");
+         throw new IllegalArgumentException(MessageFormat.format("{0} is not a valid handler", method));
       }
+
+      final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
 
       this.handler = method;
       this.javaMethod = method.getJavaMember();
@@ -180,7 +185,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       {
          ctx = bm.createCreationalContext(null);
          Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
-         InjectableMethod<?> im = createInjectableMethod(this.handler, getBean(bm), bm); 
+         InjectableMethod<?> im = createInjectableMethod(this.handler, getBean(bm), bm);
          im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this));
       }
       finally
@@ -191,7 +196,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
          }
       }
    }
-   
+
    private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod, Bean<?> bean, BeanManager manager)
    {
       return new InjectableMethod<X>(handlerMethod, bean, manager);
@@ -240,19 +245,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
 
       HandlerMethodImpl<?> that = (HandlerMethodImpl<?>) o;
 
-      if (precedence != that.precedence)
-      {
-         return false;
-      }
       if (!beanClass.equals(that.beanClass))
-      {
-         return false;
-      }
-      if (!exceptionType.equals(that.exceptionType))
-      {
-         return false;
-      }
-      if (!handler.equals(that.handler))
       {
          return false;
       }
@@ -260,11 +253,19 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       {
          return false;
       }
-      if (!handlerParameter.equals(that.handlerParameter))
+      if (!qualifiers.equals(that.qualifiers))
       {
          return false;
       }
-      if (!qualifiers.equals(that.qualifiers))
+      if (!exceptionType.equals(that.exceptionType))
+      {
+         return false;
+      }
+      if (precedence != that.precedence)
+      {
+         return false;
+      }
+      if (!handlerParameter.equals(that.handlerParameter))
       {
          return false;
       }
@@ -278,7 +279,6 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
       int result = beanClass.hashCode();
       result = 5 * result + qualifiers.hashCode();
       result = 5 * result + exceptionType.hashCode();
-      result = 5 * result + handler.hashCode();
       result = 5 * result + traversalMode.hashCode();
       result = 5 * result + precedence;
       result = 5 * result + javaMethod.hashCode();

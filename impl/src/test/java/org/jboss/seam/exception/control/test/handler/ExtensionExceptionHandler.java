@@ -46,6 +46,17 @@ public class ExtensionExceptionHandler
    {
       // Nothing to do currently
    }
+   public void catchThrowableBreadthFirst(
+      @Handles(precedence = 10, during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event)
+   {
+      // Nothing to do currently
+   }
+
+   public void catchThrowableP20BreadthFirst(
+      @Handles(precedence = 20, during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event)
+   {
+      // Nothing to do currently
+   }
 
    public void catchThrowable(
          @Handles(precedence = 10, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event)

@@ -29,4 +29,6 @@ public class HandlesExceptionsLiteral extends AnnotationLiteral<HandlesException
    private static final long serialVersionUID = -6775381615228078023L;
 
    public static final HandlesExceptions INSTANCE = new HandlesExceptionsLiteral();
+
+   private HandlesExceptionsLiteral() {}
 }

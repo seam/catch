@@ -42,6 +42,11 @@ public class ExceptionStack
     */
    public ExceptionStack(final Throwable exception)
    {
+      if (exception == null)
+      {
+         throw new IllegalArgumentException("exception must not be null");
+      }
+      
       Throwable e = exception;
       this.elements = new ArrayList<Throwable>();
 
@@ -77,6 +82,11 @@ public class ExceptionStack
       if (causeChainElements == null || causeChainElements.size() == 0)
       {
          throw new IllegalArgumentException("Null or empty collection of causeChainElements is not valid");
+      }
+
+      if (currentElementIndex >= causeChainElements.size())
+      {
+         throw new IllegalArgumentException("currentElementIndex must be less than or equals to causeChainElements.size()");
       }
       this.elements = Collections.unmodifiableCollection(causeChainElements);
       this.index = currentElementIndex;

@@ -97,7 +97,7 @@ public class ExtensionTest
    @Test
    public void assertNumberOfHandlersFoundMatchesExpectedBreathFirst()
    {
-      assertEquals(2, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
             Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST).size());
    }
 
@@ -135,7 +135,7 @@ public class ExtensionTest
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
       qualifiers.add(CatchQualifierLiteral.INSTANCE);
       qualifiers.add(ArquillianLiteral.INSTANCE);
-      assertEquals(2, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
             TraversalMode.BREADTH_FIRST).size());
    }
 }

@@ -39,6 +39,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
 
 @RunWith(Arquillian.class)
 public class HandlerComparatorTest
@@ -58,7 +60,7 @@ public class HandlerComparatorTest
    BeanManager bm;
 
    @Test
-   public void assertOrderIsCorrect()
+   public void assertOrderIsCorrectDepthFirst()
    {
       List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
             IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
@@ -67,5 +69,14 @@ public class HandlerComparatorTest
       assertEquals("catchThrowableP20", handlers.get(1).getJavaMethod().getName());
       assertEquals("catchRuntime", handlers.get(2).getJavaMethod().getName());
       assertEquals("catchIAE", handlers.get(3).getJavaMethod().getName());
+   }
+
+   @Test
+   public void assertOrderIsCorrectBreadthFirst()
+   {
+      List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
+         Exception.class, bm, Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST));
+
+      assertThat(handlers.size(), is(4));
    }
 }

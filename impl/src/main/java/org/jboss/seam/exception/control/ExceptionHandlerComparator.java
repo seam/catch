@@ -28,7 +28,7 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
  * Comparator to sort exception handlers according qualifier ({@link TraversalMode#DEPTH_FIRST} first), precedence
  * (highest to lowest) and finally hierarchy (least to most specific).
  */
-@SuppressWarnings( { "MethodWithMoreThanThreeNegations"})
+@SuppressWarnings({"MethodWithMoreThanThreeNegations"})
 public final class ExceptionHandlerComparator implements Comparator<HandlerMethod<?>>
 {
 
@@ -42,38 +42,30 @@ public final class ExceptionHandlerComparator implements Comparator<HandlerMetho
          return 0;
       }
 
-      if (lhs.getTraversalMode() == rhs.getTraversalMode())
+      // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
+      // inbound, the other is outbound
+      if (lhs.getExceptionType().equals(rhs.getExceptionType()))
       {
-         // Really this is so all handlers are returned in the TreeSet (even if they're of the same type, but one is
-         // inbound, the other is outbound
-         if (lhs.getExceptionType().equals(rhs.getExceptionType()))
+         final int returnValue = this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence(),
+            lhs.getTraversalMode() == TraversalMode.DEPTH_FIRST);
+         // Compare number of qualifiers if they exist so handlers that handle the same type
+         // are both are returned and not thrown out (order doesn't really matter)
+         if (returnValue == 0 && !lhs.getQualifiers().isEmpty())
          {
-            final int returnValue = this.comparePrecedence(lhs.getPrecedence(), rhs.getPrecedence(),
-                  lhs.getTraversalMode() == TraversalMode.DEPTH_FIRST);
-            // Compare number of qualifiers if they exist so handlers that handle the same type
-            // are both are returned and not thrown out (order doesn't really matter)
-            if (returnValue == 0 && !lhs.getQualifiers().isEmpty())
-            {
-               return -1;
-            }
+            return -1;
+         }
 
-            // Either precedence is non-zero or lhs doesn't have qualifiers so return the precedence compare
-            // If it's 0 this is essentially the same handler for our purposes
-            return returnValue;
-         }
-         else
-         {
-            return compareHierarchies(lhs.getExceptionType(), rhs.getExceptionType());
-         }
-      }
-      else if (lhs.getTraversalMode() == TraversalMode.BREADTH_FIRST)
-      {
-         return -1; // Descending first
+         // Either precedence is non-zero or lhs doesn't have qualifiers so return the precedence compare
+         // If it's 0 this is essentially the same handler for our purposes
+         return returnValue;
       }
       else
       {
-         return 1;
+         return compareHierarchies(lhs.getExceptionType(), rhs.getExceptionType());
       }
+
+      // Currently we're only looking at one type of traversal mode, if this changes, we'll need
+      // to re-add lines to check for this.
    }
 
    private int compareHierarchies(Type lhsExceptionType, Type rhsExceptionType)

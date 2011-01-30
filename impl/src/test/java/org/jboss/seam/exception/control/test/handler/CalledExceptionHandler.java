@@ -59,6 +59,11 @@ public class CalledExceptionHandler
    void protectedHandler(@Handles CaughtException<IllegalStateException> event)
    {
       PROTECTED_HANDLER_CALLED = true;
+
+      if (!event.isMarkedHandled())
+      {
+         event.markHandled();
+      }
    }
 
    @SuppressWarnings("unused")
