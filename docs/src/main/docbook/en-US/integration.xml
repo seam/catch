@@ -75,10 +75,11 @@
          <title>Qualifiers</title>
 
          <para>
-            Catch supports qualifiers for the<literal>CaughtException</literal>. To add a qualifier to be used when
-            firing handlers they must be add to the <literal>ExceptionToCatch</literal> via the constructor (please
-            see API docs for more info). Qualifiers for integrations should be used to avoid collisions in the
-            application error handling both when defining handlers and when firing events from the integration.
+            Catch supports qualifiers for the <literal>CaughtException</literal>. To add qualifiers to be used when
+            notifying handlers, the qualifiers must be add to the <literal>ExceptionToCatch</literal> via the 
+            constructor (please see API docs for more info). Qualifiers for integrations should be used to avoid 
+            collisions in the application error handling both when defining handlers and when firing events from 
+            the integration.
          </para>
       </section>
 
@@ -88,9 +89,9 @@
       <title>Supporting ServiceHandlers</title>
 
       <para> 
-         <ulink url="http://docs.jboss.org/seam/3/solder/latest/reference/en-US/html_single/#servicehandler">
-            ServiceHandlers</ulink> make for a very easy and concise way to define exception handlers take
-        the following example comes from the jaxrs example in the distribution: 
+        <ulink url="http://docs.jboss.org/seam/3/solder/latest/reference/en-US/html_single/#servicehandler">
+          ServiceHandlers</ulink> make for a very easy and concise way to define exception handlers.
+        The following example comes from the jaxrs example in the distribution: 
       </para>
 
       <programlisting role="JAVA"><![CDATA[@HandlesExceptions

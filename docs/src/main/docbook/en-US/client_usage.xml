@@ -47,7 +47,7 @@
          We'll
          begin by covering the two annotations that are used to declare an exception handler,
          <literal>@HandlesExceptions</literal>
-         and<literal>@Handles</literal>.
+         and <literal>@Handles</literal>.
       </para>
    </section>
 
@@ -88,7 +88,7 @@ public class MyHandlers {}]]>
             <note>The
                <literal>@HandlesExceptions</literal>
                annotation may be deprecated in favor of annotation indexing
-               done by<ulink href="http://seamframework.org/Seam3/Solder">Seam Solder</ulink>.
+               done by <ulink href="http://seamframework.org/Seam3/Solder">Seam Solder</ulink>.
             </note>
          </para>
       </section>
@@ -122,7 +122,7 @@ public class MyHandlers
    {
       System.out.println("Something bad happened: " +
             evt.getException().getMessage());
-      evt.proceed();
+      evt.markHandled();
    }
 }]]>
             </programlisting>
@@ -137,7 +137,7 @@ public class MyHandlers
                   <para>
                      The <literal>@Handles</literal> annotation on the first parameter designates this method as an
                      exception handler (though it is not required to be the first parameter). This parameter must be 
-                     of type<literal>CaughtException&lt;T extends Throwable&gt;</literal>, otherwise it's detected as 
+                     of type <literal>CaughtException&lt;T extends Throwable&gt;</literal>, otherwise it's detected as 
                      a definition error. The type parameter designates which exception the method should handle. This 
                      method is notified of all exceptions (requested by the base exception type 
                      <literal>Throwable</literal>).
@@ -151,9 +151,9 @@ public class MyHandlers
                      <literal>getException()</literal>.
                   </para>
                </callout>
-               <callout arearefs="proceed">
+               <callout arearefs="markHandled">
                   This handler does not modify the invocation of subsequent handlers, as designated by invoking
-                  <literal>proceed()</literal> on <literal>CaughtException</literal>. As this is the default behavior,
+                  <literal>markHandled()</literal> on <literal>CaughtException</literal>. As this is the default behavior,
                   this line could be omitted.
                </callout>
             </calloutlist>
@@ -161,8 +161,8 @@ public class MyHandlers
 
          <para>
             The <literal>@Handles</literal> annotation must be placed on a parameter of the method, which must
-            be of type<literal>CaughtException&lt;T extends Throwable&gt;</literal>. Handler methods are similar to CDI
-            observers and, as such, follow the same principals and guidelines as observers (such as invocation,
+            be of type <literal>CaughtException&lt;T extends Throwable&gt;</literal>. Handler methods are similar to CDI
+            observers and, as such, follow the same principles and guidelines as observers (such as invocation,
             injection of parameters, qualifiers, etc) with the following exceptions:
          </para>
 
@@ -190,7 +190,7 @@ public class MyHandlers
             </listitem>
             <listitem>
                the type of the traversal mode (i.e., phase) during which the handler is invoked. The default
-               traversal mode (if not specified) is<literal>TraversalMode.DEPTH_FIRST</literal>.
+               traversal mode (if not specified) is <literal>TraversalMode.DEPTH_FIRST</literal>.
             </listitem>
          </itemizedlist>
 
@@ -230,13 +230,13 @@ public class MyHandlers
                   <para>
                      This handler has a default precedence of 0 (the default value of the precedence attribute on
                      <literal>@Handles</literal>). It's invoked during the breadth first traversal mode. For more
-                     information on traversal, see the section<xref
+                     information on traversal, see the section <xref
                         linkend="client_usage.handler_ordering.hierarchy_traversal"/>.
                   </para>
                </callout>
                <callout arearefs="qualifier">
                   <para>
-                     This handler is qualified with<literal>@WebRequest</literal>. When Catch calculates the handler
+                     This handler is qualified with <literal>@WebRequest</literal>. When Catch calculates the handler
                      chain, it filters handlers based on the exception type and qualifiers. This handler will only be
                      invoked for exceptions passed to Catch that carry the
                      <literal>@WebRequest</literal>
@@ -258,7 +258,7 @@ public class MyHandlers
          <para>
             A handler is guaranteed to only be invoked once per exception (automatically muted), unless it reenables
             itself by invoking the
-            <literal>unMute()</literal>
+            <literal>unmute()</literal>
             method on the
             <literal>CaughtException</literal>
             instance.
@@ -291,8 +291,8 @@ public class MyHandlers
 
       <para>
          The first exception handlers to be invoked by Catch are those that match the type of root cause. Thus, instead
-         of seeing a vague<literal>EJBException</literal>, your handlers will instead see an meaningful exception such
-         as<literal>ConstraintViolationException</literal>.
+         of seeing a vague <literal>EJBException</literal>, your handlers will instead see an meaningful exception such
+         as <literal>ConstraintViolationException</literal>.
          <emphasis>This feature, alone, makes Catch a worthwhile
             tool.
          </emphasis>
@@ -329,10 +329,10 @@ public class MyHandlers
       </orderedlist>
 
       <para>
-         If there's a handler for<literal>PersistenceException</literal>, it will likely prevent the handlers for
+         If there's a handler for <literal>PersistenceException</literal>, it will likely prevent the handlers for
          <literal>EJBException</literal>
          from being invoked, which is a good thing since what useful information can
-         really be obtained from<literal>EJBException</literal>?
+         really be obtained from <literal>EJBException</literal>?
       </para>
 
    </section>
@@ -388,7 +388,7 @@ public class MyHandlers
          </para>
 
          <para>
-            Let's consider an example. Assume that Catch is handling the<literal>SocketException</literal>. It will
+            Let's consider an example. Assume that Catch is handling the <literal>SocketException</literal>. It will
             notify handlers in the following order:
          </para>
 
@@ -485,7 +485,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
          </para>
 
          <para>
-            To make specifying precendence values more convenience, Catch provides several built-in constants, available
+            To make specifying precendence values more convenient, Catch provides several built-in constants, available
             on the
             <literal>Precedence</literal>
             class:
@@ -618,8 +618,8 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
 
             <para>
                Modifying the ExceptionStack may be useful to remove exception types that are effectively meaningless
-               sucsh as<literal>EJBException</literal>, changing the exception type to something more meaningful such
-               as cases like<literal>SQLException</literal>, or wrapping exceptions as custom application exception
+               sucsh as <literal>EJBException</literal>, changing the exception type to something more meaningful such
+               as cases like <literal>SQLException</literal>, or wrapping exceptions as custom application exception
                types.
             </para>
 
