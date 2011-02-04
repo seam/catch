@@ -17,6 +17,7 @@
 
 package org.jboss.seam.exception.control;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,11 +27,17 @@ import java.util.Set;
  * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
  * is the handled flag.
  */
-public class ExceptionToCatch
+public class ExceptionToCatch implements Serializable
 {
-   private final Throwable exception;
+   private static final long serialVersionUID = 2629791852079147814L;
+
+   private Throwable exception;
    private boolean handled;
-   private final Set<Annotation> qualifiers;
+   private transient Set<Annotation> qualifiers;
+
+   public ExceptionToCatch()
+   {
+   } // needed to be a bean
 
    /**
     * Constructor that adds qualifiers for the handler(s) to run.
@@ -62,7 +69,10 @@ public class ExceptionToCatch
       return exception;
    }
 
-   public void setHandled(boolean handled)
+   /**
+    * NOTE: Will be moved to protected in a later release!!
+    */
+   public void setHandled(boolean handled) // TODO: Move to protected
    {
       this.handled = handled;
    }

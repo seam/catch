@@ -15,7 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
@@ -64,7 +65,7 @@
          <groupId>org.jboss.seam.solder</groupId>
          <artifactId>seam-solder</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.glassfish.web</groupId>
          <artifactId>el-impl</artifactId>
@@ -74,7 +75,7 @@
       <dependency>
          <groupId>org.jboss.spec</groupId>
          <artifactId>jboss-javaee-6.0</artifactId>
-         <scope>test</scope>
+         <scope>provided</scope>
          <type>pom</type>
       </dependency>
 
@@ -93,27 +94,27 @@
    </dependencies>
 
    <profiles>
-     <profile>
-       <id>code-coverage</id>
-       <build>
-         <plugins>
-           <plugin>
-             <groupId>org.codehaus.mojo</groupId>
-             <artifactId>emma-maven-plugin</artifactId>
-           </plugin>
-           <plugin>
-             <groupId>org.apache.maven.plugins</groupId>
-             <artifactId>maven-surefire-plugin</artifactId>
-           </plugin>
-           <plugin>
-             <groupId>org.sonatype.maven.plugin</groupId>
-             <artifactId>emma4it-maven-plugin</artifactId>
-           </plugin>
-         </plugins>
-       </build>
-     </profile>
+      <profile>
+         <id>code-coverage</id>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>emma-maven-plugin</artifactId>
+               </plugin>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-plugin</artifactId>
+               </plugin>
+               <plugin>
+                  <groupId>org.sonatype.maven.plugin</groupId>
+                  <artifactId>emma4it-maven-plugin</artifactId>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
    </profiles>
-   
+
 
    <build>
       <plugins>
