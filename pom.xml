@@ -29,6 +29,7 @@
    <packaging>pom</packaging>
    <version>3.0.0.Beta2-SNAPSHOT</version>
    <name>Seam Catch Module</name>
+   <url>http://www.seamframework.org/Seam3/CatchModuleHome</url>
 
    <properties>
       <seam.version>3.0.0.b07</seam.version>
