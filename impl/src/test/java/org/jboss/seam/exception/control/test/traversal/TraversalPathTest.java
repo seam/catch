@@ -60,11 +60,21 @@ public class TraversalPathTest
    @Test
    public void testTraversalPathOrder()
    {
-      // create an exception chain E1 -> E2 -> E3
+      // create an exception stack E1 -> E2 -> E3
       Exception1 exception = new Exception1(new Exception2(new Exception3()));
 
       manager.fireEvent(new ExceptionToCatch(exception));
 
+      /*
+           handleException3SuperclassBF
+           handleException3BF
+           handleException3DF
+           handleException3SuperclassDF
+           handleException2BF
+           handleException2DF
+           handleException1BF
+           handleException1DF
+       */
       Object[] expectedOrder = { 1, 2, 3, 4, 5, 6, 7, 8 };
       assertArrayEquals(expectedOrder, ExceptionHandler.getExecutionorder().toArray());
    }
