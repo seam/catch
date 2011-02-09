@@ -20,6 +20,7 @@ package org.jboss.seam.exception.example.basic.servlet.navigation;
 import java.io.IOException;
 
 import javax.enterprise.event.Observes;
+import javax.servlet.http.HttpServlet;
 
 import org.jboss.seam.servlet.event.Initialized;
 import org.jboss.seam.servlet.event.Path;
@@ -29,10 +30,6 @@ import org.jboss.seam.servlet.http.HttpServletRequestContext;
  * Navigation rules based on Seam Servlet events.
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-public class NavigationObserver
+public class NavigationServlet extends HttpServlet
 {
-   public void initial(@Observes @Path("NullPointer") @Initialized final HttpServletRequestContext ctx)
-   {
-      throw new NullPointerException();
-   }
 }
