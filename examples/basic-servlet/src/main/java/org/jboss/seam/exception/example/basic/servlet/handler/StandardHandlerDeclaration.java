@@ -21,10 +21,9 @@
  */
 package org.jboss.seam.exception.example.basic.servlet.handler;
 
-import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.exception.control.CaughtException;
@@ -38,11 +37,28 @@ import org.jboss.seam.exception.control.TraversalMode;
 @HandlesExceptions
 public class StandardHandlerDeclaration
 {
+   final ResourceBundle messages = ResourceBundle.getBundle("org.jboss.seam.exception.example.basic.servlet.messages");
+
    public void throwableHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event,
-                                HttpServletResponse response, ResourceBundle messages)
+                                HttpServletResponse response)
    {
-      HandlerOutput.printToResponse(messages, event, response);
+      HandlerOutput.printToResponse(this.messages, event.getException(), response, "throwableHandler", "markHandled");
 
       event.markHandled();
+   }
+
+   public void servletExceptionHandler(@Handles CaughtException<ServletException> event,
+                                       HttpServletResponse response)
+   {
+      HandlerOutput.printToResponse(this.messages, event.getException(), response, "servletExceptionHandler", "rethrow");
+
+      event.rethrow();
+   }
+
+   public void nullPointerHandler(@Handles CaughtException<NullPointerException> event, HttpServletResponse response)
+   {
+      HandlerOutput.printToResponse(this.messages, event.getException(), response, "nullPointerHandler", "handled");
+
+      event.handled();
    }
 }

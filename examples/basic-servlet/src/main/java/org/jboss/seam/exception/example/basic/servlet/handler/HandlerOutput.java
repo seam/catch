@@ -10,17 +10,28 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.seam.exception.control.CaughtException;
-
 /**
  * DRY helper to output the message to the response.
  */
-public class HandlerOutput {
-   public static void printToResponse(final ResourceBundle messages, final CaughtException<? extends Throwable> event,
-                                      final HttpServletResponse response) {
-      final String output = MessageFormat.format(messages.getString("handler_output"), event.getException(),
-                                                                                       "throwableHandler",
-                                                                                       "proceed");
+public class HandlerOutput
+{
+   /**
+    * Prints the message out to the response
+    *
+    * @param messages      ResourceBundle to use for messages
+    * @param exception     Exception that was caught
+    * @param response      response object used to write
+    * @param handler       name of handler
+    * @param markException method being called from the handler for flow control
+    */
+   public static void printToResponse(final ResourceBundle messages, final Throwable exception,
+                                      final HttpServletResponse response, final String handler,
+                                      final String markException)
+   {
+      final String output = MessageFormat.format(messages.getString("handler_output"), exception.getClass(),
+            handler,
+            markException,
+            exception.getMessage());
       try
       {
          response.getWriter().println(output);

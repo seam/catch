@@ -17,16 +17,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<fmt:setBundle basename="org.jboss.seam.exception.example.basic.servlet.messages" var="msg"/>
+<fmt:bundle basename="org.jboss.seam.exception.example.basic.servlet.messages">
 <html>
    <head>
       <title><fmt:message key="index_title" /></title>
    </head>
    <body>
-      <h1><fmt:message key="index_welcome" /></h1>
+      <h1></h1>
          <p><fmt:message key="index_links_desc" /></p>
          <ul>
-            <li><a href=""></a></li>
+            <li><a href="Navigation/NullPointerException"><fmt:message key="index_links_nullpointer" /></a></li>
+            <li><a href="Navigation/ServletException"><fmt:message key="index_links_servletexception" /></a></li>
          </ul>
    </body>
 </html>
+</fmt:bundle>
