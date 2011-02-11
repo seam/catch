@@ -18,17 +18,83 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <fmt:bundle basename="org.jboss.seam.exception.example.basic.servlet.messages">
-<html>
+   <html>
    <head>
-      <title><fmt:message key="index_title" /></title>
+      <title><fmt:message key="index_title"/></title>
    </head>
    <body>
-      <h1></h1>
-         <p><fmt:message key="index_links_desc" /></p>
-         <ul>
-            <li><a href="Navigation/NullPointerException"><fmt:message key="index_links_nullpointer" /></a></li>
-            <li><a href="Navigation/ServletException"><fmt:message key="index_links_servletexception" /></a></li>
-         </ul>
+   <h1></h1>
+
+   <p><fmt:message key="index_links_desc"/></p>
+   <ul>
+      <li><a href="Navigation/NullPointerException"><fmt:message key="index_links_nullpointer"/></a></li>
+      <li><a href="Navigation/AssertionError"><fmt:message key="index_links_assertionerror"/></a></li>
+      <li><a href="Navigation/WrappedIllegalArg"><fmt:message key="index_links_wrappedillegalarg"/></a></li>
+      <li><a href="Navigation/IOException"><fmt:message key="index_links_ioexception"/></a></li>
+   </ul>
+   <h3><fmt:message key="index_handler_declartions"/></h3>
+   <code>
+            <pre>
+   @HandlesExceptions
+   public class StandardHandlerDeclaration
+   {
+      final ResourceBundle messages =
+      ResourceBundle.getBundle("org.jboss.seam.exception.example.basic.servlet.messages");
+
+      public void throwableHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException &lt;Throwable&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "throwableHandler",
+         "markHandled");
+
+         event.unmute();
+         event.markHandled();
+      }
+
+      public void assertionErrorHandler(@Handles CaughtException &lt;AssertionError&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "assertionErrorHandler",
+         "rethrow");
+
+         event.rethrow();
+      }
+
+      public void nullPointerHandler(@Handles CaughtException &lt;NullPointerException&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "nullPointerHandler", "handled");
+
+         event.handled();
+      }
+
+      public void illegalArgumenBreadthFirsttHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException &lt;IllegalArgumentException&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalArgumentBreadthFirstHandler", "dropCause");
+
+         event.dropCause();
+      }
+
+      public void illegalArgumentHandler(@Handles CaughtException &lt;IllegalArgumentException&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalArgumentHandler", "handled");
+
+         event.handled();
+      }
+
+      public void illegalStateHandler(@Handles CaughtException &lt;IllegalStateException&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalStateHandler", "abort");
+
+         event.abort();
+      }
+
+      public void ioExceptionHandler(@Handles CaughtException &lt;IOException&gt; event, HttpServletResponse response)
+      {
+         HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalStateHandler", "rethrow(new ArithmeticException)");
+
+         event.rethrow(new ArithmeticException("Re-thrown"));
+      }
+   }
+            </pre>
+   </code>
    </body>
-</html>
+   </html>
 </fmt:bundle>
