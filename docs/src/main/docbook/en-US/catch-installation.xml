@@ -17,7 +17,7 @@
   -->
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="installation">
+<chapter id="catch-installation">
    <title>Seam Catch - Installation</title>
    <para>
       To use the Seam Catch module, you need to add the Seam Catch API to your project as a compile-time dependency. At
@@ -30,7 +30,7 @@
       another module (such as Seam Servlet). If not, you'll need to setup the dependencies as described below.
    </para>
 
-   <section id="maven-dependencies">
+   <section id="catch-maven-dependencies">
       <title>Maven dependency configuration</title>
       <para>
 	   	If you are using <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool, you can add the
