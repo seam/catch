@@ -26,7 +26,6 @@
 
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-reference-guide</artifactId>
-   <version>3.0.0.Beta2-SNAPSHOT</version>
    <packaging>jdocbook</packaging>
    <name>Seam Catch Module Reference Guide</name>
 

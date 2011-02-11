@@ -36,7 +36,7 @@
       <jboss.home>${env.JBOSS_HOME}</jboss.home>
       <jboss.domain>default</jboss.domain>
       <seam.servlet.version>3.0.0.Beta2</seam.servlet.version>
-      <seam.catch.version>3.0.0.Beta2</seam.catch.version>
+      <!--<seam.catch.version>${project.parent.version}</seam.catch.version>-->
       <jboss.spec.servlet.version>1.0.0.Final</jboss.spec.servlet.version>
       <jstl.version>1.2</jstl.version>
    </properties>
@@ -52,16 +52,6 @@
             <groupId>org.jboss.seam.servlet</groupId>
             <artifactId>seam-servlet</artifactId>
             <version>${seam.servlet.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.seam.catch</groupId>
-            <artifactId>seam-catch-api</artifactId>
-            <version>${seam.catch.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.seam.catch</groupId>
-            <artifactId>seam-catch</artifactId>
-            <version>${seam.catch.version}</version>
          </dependency>
          <dependency>
             <!-- Required until the Servlet 3.0 API can be resolved in Central -->
