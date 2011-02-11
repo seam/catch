@@ -36,7 +36,7 @@
       <jboss.home>${env.JBOSS_HOME}</jboss.home>
       <jboss.domain>default</jboss.domain>
       <seam.servlet.version>3.0.0.Beta2</seam.servlet.version>
-      <seam.catch.version>3.0.0.Beta1</seam.catch.version>
+      <seam.catch.version>3.0.0.Beta2</seam.catch.version>
       <jboss.spec.servlet.version>1.0.0.Final</jboss.spec.servlet.version>
       <jstl.version>1.2</jstl.version>
    </properties>
