@@ -16,18 +16,16 @@
  */
 package org.jboss.seam.exception.control;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
+import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Named;
 
 import org.jboss.seam.exception.control.extension.CatchExtension;
 
@@ -37,6 +35,9 @@ import org.jboss.seam.exception.control.extension.CatchExtension;
  */
 public class ExceptionHandlerDispatch
 {
+   private ExceptionToCatch exceptionToCatch;
+   private ExceptionStack exceptionStack;
+
    /**
     * Observes the event, finds the correct exception handler(s) and invokes them.
     *
@@ -46,12 +47,13 @@ public class ExceptionHandlerDispatch
     * @param stackEvent     Event for modifying the exception stack
     * @throws Throwable If a handler requests the exception to be re-thrown.
     */
-   @SuppressWarnings( { "unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored" })
+   @SuppressWarnings({"unchecked", "MethodWithMultipleLoops", "ThrowableResultOfMethodCallIgnored"})
    public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm,
-                               CatchExtension extension, Event<ExceptionStack> stackEvent) throws Throwable
+      CatchExtension extension, Event<ExceptionStack> stackEvent) throws Throwable
    {
-      final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>();
+      final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>(); // TODO: this variable is never read
       CreationalContext<Object> ctx = null;
+      this.exceptionToCatch = eventException;
 
       Throwable throwException = null;
 
@@ -59,7 +61,7 @@ public class ExceptionHandlerDispatch
       {
          ctx = bm.createCreationalContext(null);
 
-         final Set<HandlerMethod> processedHandlers = new HashSet<HandlerMethod>();
+         final Set<HandlerMethod<?>> processedHandlers = new HashSet<HandlerMethod<?>>();
 
          final ExceptionStack stack = new ExceptionStack(eventException.getException());
 
@@ -69,15 +71,17 @@ public class ExceptionHandlerDispatch
          inbound_cause:
          while (stack.getCurrent() != null)
          {
+            this.exceptionStack = stack;
 
-            final List<HandlerMethod> breadthFirstHandlerMethods = new ArrayList<HandlerMethod>(
-                  extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
-                        bm, eventException.getQualifiers(), TraversalMode.BREADTH_FIRST));
+            final List<HandlerMethod<?>> breadthFirstHandlerMethods = new ArrayList<HandlerMethod<?>>(
+               extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
+                  bm, eventException.getQualifiers(), TraversalMode.BREADTH_FIRST));
 
-            for (HandlerMethod handler : breadthFirstHandlerMethods)
+            for (HandlerMethod<?> handler : breadthFirstHandlerMethods)
             {
                if (!processedHandlers.contains(handler))
                {
+                  @SuppressWarnings("rawtypes")
                   final CaughtException breadthFirstEvent = new CaughtException(stack, true, eventException.isHandled());
                   handler.notify(breadthFirstEvent, bm);
 
@@ -109,17 +113,18 @@ public class ExceptionHandlerDispatch
                }
             }
 
-            final List<HandlerMethod> depthFirstHandlerMethods = new ArrayList<HandlerMethod>(
-                  extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
-                        bm, eventException.getQualifiers(), TraversalMode.DEPTH_FIRST));
+            final List<HandlerMethod<? extends Throwable>> depthFirstHandlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(
+               extension.getHandlersForExceptionType(stack.getCurrent().getClass(),
+                  bm, eventException.getQualifiers(), TraversalMode.DEPTH_FIRST));
 
             // Reverse these so category handlers are last
             Collections.reverse(depthFirstHandlerMethods);
 
-            for (HandlerMethod handler : depthFirstHandlerMethods)
+            for (HandlerMethod<?> handler : depthFirstHandlerMethods)
             {
                if (!processedHandlers.contains(handler))
                {
+                  @SuppressWarnings("rawtypes")
                   final CaughtException depthFirstEvent = new CaughtException(stack, false, eventException.isHandled());
                   handler.notify(depthFirstEvent, bm);
 
@@ -166,5 +171,21 @@ public class ExceptionHandlerDispatch
             ctx.release();
          }
       }
+   }
+
+   @Produces
+   @ConversationScoped
+   @Named("handledException")
+   public ExceptionStack getExceptionStack()
+   {
+      return this.exceptionStack;
+   }
+
+   @Produces
+   @ConversationScoped
+   @Named("caughtException")
+   public ExceptionToCatch getExceptionToCatch()
+   {
+      return this.exceptionToCatch;
    }
 }

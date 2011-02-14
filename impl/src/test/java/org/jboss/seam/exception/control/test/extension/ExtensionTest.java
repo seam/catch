@@ -58,7 +58,7 @@ public class ExtensionTest
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
-                  InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class)
+                  InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
             .addManifestResource(new StringAsset(
                   "<beans>" +
                         "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
@@ -97,14 +97,14 @@ public class ExtensionTest
    @Test
    public void assertNumberOfHandlersFoundMatchesExpectedBreathFirst()
    {
-      assertEquals(2, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
             Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST).size());
    }
 
    @Test
    public void assertSQLHandlerFound()
    {
-      final List<HandlerMethod> handlerMethods = new ArrayList<HandlerMethod>(extension.getHandlersForExceptionType(
+      final List<HandlerMethod<? extends Throwable>> handlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
             SQLException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
       assertThat(handlerMethods.size(), is(4));
       assertThat(handlerMethods.get(3).getExceptionType(), equalTo((Type) SQLException.class));
@@ -135,7 +135,7 @@ public class ExtensionTest
       HashSet<Annotation> qualifiers = new HashSet<Annotation>();
       qualifiers.add(CatchQualifierLiteral.INSTANCE);
       qualifiers.add(ArquillianLiteral.INSTANCE);
-      assertEquals(2, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
             TraversalMode.BREADTH_FIRST).size());
    }
 }

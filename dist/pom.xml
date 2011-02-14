@@ -21,7 +21,7 @@
    <parent>
       <groupId>org.jboss.seam.catch</groupId>
       <artifactId>seam-catch-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0.Beta2</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -87,7 +87,7 @@
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-example-jaxrs</artifactId>
+         <artifactId>seam-catch-example-basic-servlet</artifactId>
          <version>${project.version}</version>
          <type>war</type>
          <optional>true</optional>

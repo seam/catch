@@ -62,6 +62,7 @@ public class ModifyExceptionStackTest
             .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
    }
 
+   @SuppressWarnings("serial")
    public static class ApplicationException extends Exception
    {
 

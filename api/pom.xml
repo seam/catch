@@ -21,7 +21,7 @@
    <parent>
       <artifactId>seam-catch-parent</artifactId>
       <groupId>org.jboss.seam.catch</groupId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.0.Beta2</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -68,25 +68,6 @@
                         </configuration>
                      </execution>
                   </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>code-coverage</id>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>emma-maven-plugin</artifactId>
-               </plugin>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-surefire-plugin</artifactId>
-               </plugin>
-               <plugin>
-                  <groupId>org.sonatype.maven.plugin</groupId>
-                  <artifactId>emma4it-maven-plugin</artifactId>
                </plugin>
             </plugins>
          </build>

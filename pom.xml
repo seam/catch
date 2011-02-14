@@ -27,11 +27,12 @@
    <groupId>org.jboss.seam.catch</groupId>
    <artifactId>seam-catch-parent</artifactId>
    <packaging>pom</packaging>
-   <version>3.0.0-SNAPSHOT</version>
+   <version>3.0.0.Beta2</version>
    <name>Seam Catch Module</name>
+   <url>http://www.seamframework.org/Seam3/CatchModuleHome</url>
 
    <properties>
-      <seam.version>3.0.0.b07</seam.version>
+      <seam.version>3.0.0.b09</seam.version>
       <jboss.spec.version>1.0.0.CR1</jboss.spec.version>
    </properties>
 
@@ -103,9 +104,48 @@
          </activation>
          <modules>
             <module>docs</module>
-            <module>examples/jaxrs</module>
+            <module>examples/basic-servlet</module>
             <module>dist</module>
          </modules>
+      </profile>
+      <profile>
+         <id>jboss-public-repository</id>
+         <activation>
+            <property>
+               <name>jboss-public-repository</name>
+               <value>!false</value>
+            </property>
+         </activation>
+         <repositories>
+            <repository>
+               <id>jboss-public-repository-group</id>
+               <name>JBoss Public Maven Repository Group</name>
+               <url>http://repository.jboss.org/nexus/content/groups/public</url>
+               <releases>
+                  <enabled>true</enabled>
+                  <updatePolicy>never</updatePolicy>
+               </releases>
+               <snapshots>
+                  <enabled>false</enabled>
+                  <updatePolicy>never</updatePolicy>
+               </snapshots>
+            </repository>
+         </repositories>
+         <pluginRepositories>
+            <pluginRepository>
+               <id>jboss-public-repository-group</id>
+               <name>JBoss Public Maven Repository Group</name>
+               <url>http://repository.jboss.org/nexus/content/groups/public</url>
+               <releases>
+                  <enabled>true</enabled>
+                  <updatePolicy>never</updatePolicy>
+               </releases>
+               <snapshots>
+                  <enabled>false</enabled>
+                  <updatePolicy>never</updatePolicy>
+               </snapshots>
+            </pluginRepository>
+         </pluginRepositories>
       </profile>
    </profiles>
 

@@ -51,14 +51,14 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 /**
  * CDI extension to find handlers at startup.
  */
-@SuppressWarnings( { "unchecked", "WebBeanObservesInspection" })
+@SuppressWarnings({"ALL"})
 public class CatchExtension implements Extension
 {
-   private final Map<? super Type, Collection<HandlerMethod>> allHandlers;
+   private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
    public CatchExtension()
    {
-      this.allHandlers = new HashMap<Type, Collection<HandlerMethod>>();
+      this.allHandlers = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
    }
 
    /**
@@ -73,7 +73,7 @@ public class CatchExtension implements Extension
     *                                 instantiated for any reason when trying to obtain the actual type arguments from a
     *                                 {@link ParameterizedType}
     */
-   public void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm)
+   public <T> void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm)
    {
       if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
             pmb.getBean() instanceof Decorator)
@@ -81,13 +81,13 @@ public class CatchExtension implements Extension
          return;
       }
 
-      final AnnotatedType type = (AnnotatedType) pmb.getAnnotated();
+      final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
 
       if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm))
       {
-         final Set<AnnotatedMethod> methods = type.getMethods();
+         final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
 
-         for (AnnotatedMethod method : methods)
+         for (AnnotatedMethod<? super T> method : methods)
          {
             if (HandlerMethodImpl.isHandler(method))
             {
@@ -97,19 +97,23 @@ public class CatchExtension implements Extension
                   pmb.addDefinitionError(new IllegalArgumentException(
                         String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
                }
-               final Class exceptionType = (Class) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
-
-               if (this.allHandlers.containsKey(exceptionType))
-               {
-                  this.allHandlers.get(exceptionType).add(new HandlerMethodImpl(method, bm));
-               }
-               else
-               {
-                  this.allHandlers.put(exceptionType, new HashSet<HandlerMethod>(Arrays.asList(new HandlerMethodImpl(
-                        method, bm))));
-               }
+               final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
+               addHandlerMethod(exceptionType, method, bm);
             }
          }
+      }
+   }
+   
+   private <E extends Throwable, M> void addHandlerMethod(Class<E> exceptionType, AnnotatedMethod<M> method, BeanManager bm)
+   {
+      if (this.allHandlers.containsKey(exceptionType))
+      {
+         this.allHandlers.get(exceptionType).add(new HandlerMethodImpl<E>(method, bm));
+      }
+      else
+      {
+         this.allHandlers.put(exceptionType, new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(new HandlerMethodImpl<E>(
+               method, bm))));
       }
    }
 
@@ -123,11 +127,11 @@ public class CatchExtension implements Extension
     * @param traversalMode     traversal limiter
     * @return An order collection of handlers for the given type.
     */
-   public Collection<HandlerMethod> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
+   public Collection<HandlerMethod<? extends Throwable>> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
                                                                 Set<Annotation> handlerQualifiers,
                                                                 TraversalMode traversalMode)
    {
-      final Set<HandlerMethod> returningHandlers = new TreeSet<HandlerMethod>(new ExceptionHandlerComparator());
+      final Set<HandlerMethod<?>> returningHandlers = new TreeSet<HandlerMethod<?>>(new ExceptionHandlerComparator());
       final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
       final Set<Type> closure = h.getTypeClosure();
 
@@ -135,7 +139,7 @@ public class CatchExtension implements Extension
       {
          if (this.allHandlers.get(hierarchyType) != null)
          {
-            for (HandlerMethod handler : this.allHandlers.get(hierarchyType))
+            for (HandlerMethod<?> handler : this.allHandlers.get(hierarchyType))
             {
                if (handler.getTraversalMode() == traversalMode)
                {
@@ -155,7 +159,7 @@ public class CatchExtension implements Extension
          }
       }
 
-      return Collections.unmodifiableCollection(returningHandlers);
+      return (Collection<HandlerMethod<? extends Throwable>>) Collections.unmodifiableCollection(returningHandlers);
    }
 
    private boolean containsAny(final Collection<? extends Annotation> haystack,

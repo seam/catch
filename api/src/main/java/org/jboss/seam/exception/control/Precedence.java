@@ -26,7 +26,7 @@ package org.jboss.seam.exception.control;
  *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-public class Precedence
+public abstract class Precedence
 {
    public static final int BUILT_IN = -100;
 

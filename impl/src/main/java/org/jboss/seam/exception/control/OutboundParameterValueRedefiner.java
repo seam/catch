@@ -32,7 +32,7 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
    final private CaughtException<?> event;
    final private BeanManager bm;
    final private Bean<?> declaringBean;
-   final private HandlerMethod handlerMethod;
+   final private HandlerMethod<?> handlerMethod;
 
    /**
     * Sole constructor.

@@ -17,6 +17,7 @@
 
 package org.jboss.seam.exception.control;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,8 +26,10 @@ import java.util.Collections;
 /**
  * Information about the current exception and exception cause container.  This object is not immutable.
  */
-public class ExceptionStack
+public class ExceptionStack implements Serializable
 {
+   private static final long serialVersionUID = 5988683320170873619L;
+
    private boolean root;
    private boolean last;
    private int index;
@@ -35,6 +38,10 @@ public class ExceptionStack
    private Collection<Throwable> elements;
    private Throwable current;
 
+   public ExceptionStack()
+   {
+   } // needed to be a bean
+
    /**
     * Builds the stack from the given exception.
     *
@@ -42,6 +49,11 @@ public class ExceptionStack
     */
    public ExceptionStack(final Throwable exception)
    {
+      if (exception == null)
+      {
+         throw new IllegalArgumentException("exception must not be null");
+      }
+
       Throwable e = exception;
       this.elements = new ArrayList<Throwable>();
 
@@ -77,6 +89,11 @@ public class ExceptionStack
       if (causeChainElements == null || causeChainElements.size() == 0)
       {
          throw new IllegalArgumentException("Null or empty collection of causeChainElements is not valid");
+      }
+
+      if (currentElementIndex >= causeChainElements.size())
+      {
+         throw new IllegalArgumentException("currentElementIndex must be less than or equals to causeChainElements.size()");
       }
       this.elements = Collections.unmodifiableCollection(causeChainElements);
       this.index = currentElementIndex;
