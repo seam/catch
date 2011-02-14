@@ -17,8 +17,8 @@
   -->
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
       "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="client_usage">
-   <title>Usage</title>
+<chapter id="catch-client_usage">
+   <title>Seam Catch - Usage</title>
 
    <section id="client_usage.handlers">
       <title>Exception handlers</title>

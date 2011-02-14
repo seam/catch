@@ -17,20 +17,18 @@
   -->
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.35//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"  [ ]>
-<book lang="en">
-   <xi:include href="book_info.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+<book lang="en" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+   <xi:include href="book_info.xml"/>
 
    <toc/>
 
    <title>Seam Catch</title>
-   <xi:include href="introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-   <xi:include href="installation.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-   <xi:include href="client_usage.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-   <xi:include href="integration.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-   <!--<xi:include href="glossary.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /> -->
-   <!--
-   <xi:include href="another_chapter.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
-   -->
+   <xi:include href="catch-introduction.xml"/>
+   <xi:include href="catch-installation.xml"/>
+   <xi:include href="catch-client_usage.xml"/>
+   <xi:include href="catch-integration.xml"/>
+   <xi:include href="catch-glossary.xml"/>
 
 <!--
  vim:et:ts=3:sw=3:tw=120
