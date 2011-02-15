@@ -20,9 +20,9 @@
 
    <parent>
       <groupId>org.jboss.seam.catch</groupId>
-      <artifactId>seam-catch-parent</artifactId>
+      <artifactId>seam-catch-example-parent</artifactId>
       <version>3.0.0.Beta2</version>
-      <relativePath>../../pom.xml</relativePath>
+      <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
