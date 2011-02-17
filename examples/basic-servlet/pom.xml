@@ -20,9 +20,9 @@
 
    <parent>
       <groupId>org.jboss.seam.catch</groupId>
-      <artifactId>seam-catch-example-parent</artifactId>
+      <artifactId>seam-catch-parent</artifactId>
       <version>3.0.0.Beta2</version>
-      <relativePath>../pom.xml</relativePath>
+      <relativePath>../../pom.xml</relativePath>
    </parent>
 
    <groupId>org.jboss.seam.catch</groupId>
@@ -97,6 +97,24 @@
          <artifactId>jstl</artifactId>
          <scope>compile</scope>
       </dependency>
+      <dependency>
+         <groupId>org.seleniumhq.selenium.client-drivers</groupId>
+         <artifactId>selenium-java-client-driver</artifactId>
+         <version>${selenium.java.client.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.test</groupId>
+         <artifactId>richfaces-selenium</artifactId>
+         <version>${richfaces.selenium.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <version>${ftest.testng.version}</version>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
 
    <build>
@@ -135,6 +153,9 @@
                </plugin>
             </plugins>
          </build>
+      </profile>
+      <profile>
+         <id>ftest</id>
       </profile>
    </profiles>
 
