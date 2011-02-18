@@ -76,7 +76,7 @@
 
          <para>
             Catch supports qualifiers for the <literal>CaughtException</literal>. To add qualifiers to be used when
-            notifying handlers, the qualifiers must be add to the <literal>ExceptionToCatch</literal> via the 
+            notifying handlers, the qualifiers must be added to the <literal>ExceptionToCatch</literal> instance via the 
             constructor (please see API docs for more info). Qualifiers for integrations should be used to avoid 
             collisions in the application error handling both when defining handlers and when firing events from 
             the integration.
