@@ -38,11 +38,6 @@ public enum StackFrameFilterResult
    DROP_REMAINING,
 
    /**
-    * Drop this frame and any remaining frames in this cause
-    */
-   BREAK,
-
-   /**
     * Stops processing any remaining frames or causes
     */
    TERMINATE,

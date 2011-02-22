@@ -22,8 +22,6 @@ package org.jboss.seam.exception.filter;
  */
 public interface StackFrame
 {
-   StackElement getStackElement();
-
    StackTraceElement getStackTraceElement();
 
    void mark(String tag);
@@ -36,5 +34,5 @@ public interface StackFrame
 
    void setStackTraceElement(StackTraceElement element);
 
-   IterationStatus getIterationStatus();
+   int getIndex();
 }

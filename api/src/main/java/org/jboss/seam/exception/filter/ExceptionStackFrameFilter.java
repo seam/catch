@@ -17,8 +17,8 @@
 package org.jboss.seam.exception.filter;
 
 /**
- * A filter for processing the stack frames of a single exception (type parameter allows us to focus on a specific
- * exception type)
+ * A filter for processing the stack frames of a single originalException (type parameter allows us to focus on a specific
+ * originalException type)
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
  */

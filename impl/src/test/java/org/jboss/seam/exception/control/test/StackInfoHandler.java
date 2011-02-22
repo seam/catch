@@ -33,7 +33,6 @@ public class StackInfoHandler
 
       assertTrue(info.isLast());
       assertFalse(info.isRoot());
-      assertEquals(0, info.getIndex());
       assertNull(info.getNext());
       assertEquals(Exception.class, info.getCurrent().getClass());
       assertEquals(2, info.getCauseElements().size());
@@ -46,7 +45,6 @@ public class StackInfoHandler
 
       assertFalse(info.isLast());
       assertTrue(info.isRoot());
-      assertEquals(info.getCauseElements().size() - 1, info.getIndex());
       assertNotNull(info.getNext());
       assertEquals(NullPointerException.class, info.getCurrent().getClass());
       assertEquals(2, info.getCauseElements().size());

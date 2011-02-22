@@ -19,9 +19,13 @@ package org.jboss.seam.exception.control;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
+
+import sun.tools.asm.ArrayData;
 
 /**
  * Information about the current exception and exception cause container.  This object is not immutable.
@@ -32,10 +36,12 @@ public class ExceptionStack implements Serializable
 
    private boolean root;
    private boolean last;
-   private int index;
+   private int initialStackSize;
    private Throwable next;
-   private Collection<Throwable> remaining;
-   private Collection<Throwable> elements;
+   private Collection<ExceptionStackItem> remaining;
+   private Deque<ExceptionStackItem> exceptionStackItems;
+   private Deque<ExceptionStackItem> origExceptionStackItems;
+   private Collection<Throwable> causes;
    private Throwable current;
 
    public ExceptionStack()
@@ -55,24 +61,27 @@ public class ExceptionStack implements Serializable
       }
 
       Throwable e = exception;
-      this.elements = new ArrayList<Throwable>();
+      this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
 
       do
       {
-         this.elements.add(e);
+         this.exceptionStackItems.addFirst(new ExceptionStackItem(e));
          if (e instanceof SQLException)
          {
             SQLException sqlException = (SQLException) e;
+
             while (sqlException.getNextException() != null)
             {
                sqlException = sqlException.getNextException();
-               this.elements.add(sqlException);
+               this.exceptionStackItems.addFirst(new ExceptionStackItem(sqlException));
             }
          }
       }
       while ((e = e.getCause()) != null);
 
-      this.index = elements.size() - 1;
+      this.initialStackSize = this.exceptionStackItems.size();
+      this.causes = this.createThrowableCollectionFrom(exceptionStackItems);
+      this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
       this.init();
    }
 
@@ -83,7 +92,9 @@ public class ExceptionStack implements Serializable
     *                            unwrapped).
     * @param currentElementIndex index of current element within the causeChainElements.
     * @throws IllegalArgumentException if causeChainElements is empty or null.
+    * @deprecated There shouldn't be a use for this, please use the other constructor
     */
+   @Deprecated
    public ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex)
    {
       if (causeChainElements == null || causeChainElements.size() == 0)
@@ -95,20 +106,20 @@ public class ExceptionStack implements Serializable
       {
          throw new IllegalArgumentException("currentElementIndex must be less than or equals to causeChainElements.size()");
       }
-      this.elements = Collections.unmodifiableCollection(causeChainElements);
-      this.index = currentElementIndex;
+      this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(causeChainElements));
+      this.causes = Collections.unmodifiableCollection(causeChainElements);
+      this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
       this.init();
    }
 
    private void init()
    {
-      this.root = this.index == this.elements.size() - 1;
-      this.next = this.index - 1 >= 0 ? (Throwable) this.elements.toArray()[this.index - 1] : null;
+      this.root = this.exceptionStackItems.size() == this.initialStackSize;
 
-      if (this.index >= 0)
+      if (!this.exceptionStackItems.isEmpty())
       {
-         this.remaining = new ArrayList<Throwable>(this.elements).subList(0, this.index);
-         this.current = (Throwable) this.elements.toArray()[this.index];
+         this.current = this.exceptionStackItems.removeFirst().getThrowable();
+         this.remaining = Collections.unmodifiableCollection(this.exceptionStackItems);
       }
       else
       {
@@ -117,16 +128,36 @@ public class ExceptionStack implements Serializable
       }
 
       this.last = this.remaining.isEmpty();
+      this.next = (this.last) ? null : this.exceptionStackItems.peekFirst().getThrowable();
+   }
+
+   private Collection<ExceptionStackItem> createExceptionStackCollectionFrom(Collection<Throwable> throwables)
+   {
+      final Deque<ExceptionStackItem> returningCollection = new ArrayDeque<ExceptionStackItem>(throwables.size());
+
+      for (Throwable t : throwables)
+      {
+         returningCollection.addFirst(new ExceptionStackItem(t));
+      }
+
+      return returningCollection;
+   }
+
+   private Collection<Throwable> createThrowableCollectionFrom(final Collection<ExceptionStackItem> exceptionStackItems)
+   {
+      final Deque<Throwable> returningCollection = new ArrayDeque<Throwable>(exceptionStackItems.size() + 1); // allow current
+
+      for (ExceptionStackItem item : exceptionStackItems)
+      {
+         returningCollection.addFirst(item.getThrowable());
+      }
+
+      return returningCollection;
    }
 
    public Collection<Throwable> getCauseElements()
    {
-      return Collections.unmodifiableCollection(this.elements);
-   }
-
-   public int getIndex()
-   {
-      return this.index;
+      return Collections.unmodifiableCollection(this.causes);
    }
 
    public boolean isLast()
@@ -141,7 +172,7 @@ public class ExceptionStack implements Serializable
 
    public Collection<Throwable> getRemaining()
    {
-      return Collections.unmodifiableCollection(this.remaining);
+      return Collections.unmodifiableCollection(this.createThrowableCollectionFrom(this.remaining));
    }
 
    public boolean isRoot()
@@ -151,30 +182,22 @@ public class ExceptionStack implements Serializable
 
    public Throwable getCurrent()
    {
-      return current;
+      return this.current;
    }
 
    public void setCauseElements(Collection<Throwable> elements)
    {
-      this.elements = Collections.unmodifiableCollection(elements);
+      this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(elements));
       this.init();
    }
 
-   public void setIndex(int index)
+   public Deque<ExceptionStackItem> getOrigExceptionStackItems()
    {
-      if (index >= this.elements.size())
-      {
-         throw new IllegalArgumentException("Index greater than elements.size()");
-      }
-      this.index = index;
-      this.init();
+      return new ArrayDeque<ExceptionStackItem>(this.origExceptionStackItems);
    }
 
-   /**
-    * Move to the next causing exception.
-    */
-   protected void advanceToNextCause()
+   protected void dropCause()
    {
-      this.setIndex(this.index - 1);
+      this.init();
    }
 }
