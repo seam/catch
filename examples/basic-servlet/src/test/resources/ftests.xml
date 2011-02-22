@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="Seam Basic Servlet Example" verbose="2" parallel="false">
+   <test name="basic_servlet_ftest">
+      <parameter name="example.context.path" value="/seam-catch-example-basic-servlet" />
+      <packages>
+         <package name="org.jboss.seam.exception.example.basic.servlet.ftest" />
+      </packages>
+   </test>
+</suite>
