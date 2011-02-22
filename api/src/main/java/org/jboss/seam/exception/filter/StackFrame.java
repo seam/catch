@@ -17,22 +17,59 @@
 package org.jboss.seam.exception.filter;
 
 /**
+ * Controller for stack trace filtering.
+ *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
  */
 public interface StackFrame
 {
+   /**
+    * @return {@link StackTraceElement} represented by this.
+    */
    StackTraceElement getStackTraceElement();
 
+   /**
+    * Sets a mark on a particular stack element. Typically used to "fold" stack elements.
+    *
+    * @param tag unique marker key.
+    */
    void mark(String tag);
 
+   /**
+    * Obtains the stack element that was marked with the given tag.
+    *
+    * @param tag marker key to find
+    * @return stack element that was first marked with the tag
+    */
    StackFrame getMarkedFrame(String tag);
 
+   /**
+    * Checks if the given marker key has been set.
+    *
+    * @param tag marker key
+    * @return true if the marker for the given key has been set
+    */
    boolean isMarkSet(String tag);
 
+   /**
+    * Removes the given marker.
+    *
+    * @param tag marker key
+    */
    void clearMark(String tag);
 
+   /**
+    * Change the {@link StackTraceElement} for this frame.
+    *
+    * @param element new element
+    */
    void setStackTraceElement(StackTraceElement element);
 
+   /**
+    * Retrieves the index of this frame in the stack trace.
+    *
+    * @return index of this frame
+    */
    int getIndex();
 }

@@ -25,6 +25,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Internal implementation of {@link StackFrame}.
+ */
 final class StackFrameImpl implements StackFrame
 {
    private StackTraceElement stackTraceElement;
@@ -44,6 +47,7 @@ final class StackFrameImpl implements StackFrame
       this.markMap = copy.markMap;
       this.index = traceIndex;
    }
+
    @Override
    public StackTraceElement getStackTraceElement()
    {

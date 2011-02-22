@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.text.MessageFormat;
-import java.util.Arrays;
 
 import org.jboss.seam.exception.filter.ExceptionStackFrameFilter;
 import org.jboss.seam.exception.filter.ExceptionStackOutput;
@@ -75,7 +74,9 @@ public class StackFilteringTest
       final String result = exceptionStackOutput.printTrace();
       final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
 
-      while (lineNumberReader.readLine() != null) {} // just get the line numbers
+      while (lineNumberReader.readLine() != null)
+      {
+      } // just get the line numbers
 
       assertThat(lineNumberReader.getLineNumber(), is(2)); // The five at lines and the one root cause
    }
@@ -89,7 +90,9 @@ public class StackFilteringTest
          public StackFrameFilterResult process(StackFrame frame)
          {
             if (frame.getIndex() >= 5)
+            {
                return StackFrameFilterResult.DROP_REMAINING;
+            }
             return StackFrameFilterResult.INCLUDE;
          }
       };
@@ -99,7 +102,9 @@ public class StackFilteringTest
       final String result = exceptionStackOutput.printTrace();
       final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
 
-      while (lineNumberReader.readLine() != null) {} // just get the line numbers
+      while (lineNumberReader.readLine() != null)
+      {
+      } // just get the line numbers
 
       assertThat(lineNumberReader.getLineNumber(), is(6)); // The five at lines and the one root cause
    }
@@ -107,7 +112,8 @@ public class StackFilteringTest
    @Test
    public void dropTest() throws IOException
    {
-      final ExceptionStackFrameFilter<NoClassDefFoundError> filter = new ExceptionStackFrameFilter<NoClassDefFoundError>() {
+      final ExceptionStackFrameFilter<NoClassDefFoundError> filter = new ExceptionStackFrameFilter<NoClassDefFoundError>()
+      {
          @Override
          public StackFrameFilterResult process(StackFrame frame)
          {
@@ -134,7 +140,7 @@ public class StackFilteringTest
             {
                return StackFrameFilterResult.DROP_REMAINING;
             }
-            
+
             return StackFrameFilterResult.INCLUDE;
          }
       };
@@ -157,5 +163,26 @@ public class StackFilteringTest
 
       assertThat("Actual: " + result, lineNumberReader.getLineNumber() < 22, is(true));
       assertThat(invokeLines, is(1));
+   }
+
+   @Test
+   public void testBuldingWrappedExceptionsWorksCorrectly() throws IOException
+   {
+      Exception e1 = new NullPointerException("Inside");
+      Exception e2 = new RuntimeException("Outer", e1);
+
+      ExceptionStackOutput<Exception> exceptionStackOutput = new ExceptionStackOutput<Exception>(e2);
+
+      final String result = exceptionStackOutput.printTrace();
+      final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
+      String line;
+
+      while ((line = lineNumberReader.readLine()) != null)
+      {
+         if (lineNumberReader.getLineNumber() == 3)
+         {
+            assertThat(line.startsWith("Wrapped"), is(true));
+         }
+      }
    }
 }

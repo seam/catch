@@ -17,12 +17,19 @@
 package org.jboss.seam.exception.filter;
 
 /**
- * A filter for processing the stack frames of a single originalException (type parameter allows us to focus on a specific
- * originalException type)
+ * A filter for processing the stack frames of a single originalException (type parameter allows us to focus on a
+ * specific originalException type)
+ *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
  */
 public interface ExceptionStackFrameFilter<T extends Throwable>
 {
+   /**
+    * Defines logic about how to filter the given frame.
+    *
+    * @param frame Current frame in the exception stack trace.
+    * @return one of {@link StackFrameFilterResult}.
+    */
    public StackFrameFilterResult process(StackFrame frame);
 }
