@@ -30,6 +30,7 @@
       <fileSet>
          <directory>src/main/assembly</directory>
          <outputDirectory>.</outputDirectory>
+         <filtered>true</filtered>
          <includes>
             <include>readme.txt</include>
             <include>license.txt</include>
@@ -44,14 +45,15 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.catch:seam-catch-api</include>
-            <include>org.jboss.seam.catch:seam-catch-impl</include>
+            <include>org.jboss.seam.catch:seam-catch</include>
          </includes>
          <excludes>
-            <exclude>org.jboss.seam.catch:seam-catch-impl:jar:javadoc</exclude>
+            <exclude>org.jboss.seam.catch:*:*:javadoc</exclude>
+            <exclude>org.jboss.seam.catch:*:*:sources</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
+      
       <!-- Add necessary dependencies -->
       <dependencySet>
          <outputDirectory>lib</outputDirectory>
@@ -74,9 +76,10 @@
             <include>org.jboss.seam.catch:seam-catch-example-*</include>
          </includes>
       </dependencySet>
+      
       <!-- Pull in JavaDoc -->
       <dependencySet>
-         <outputDirectory>docs/api</outputDirectory>
+         <outputDirectory>doc/api</outputDirectory>
          <unpack>true</unpack>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>

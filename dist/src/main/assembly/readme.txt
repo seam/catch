@@ -1,7 +1,7 @@
 
  Seam Catch Module
  Next Generation Exception Handling
- 3.0.0.Alpha3
+ ${project.version}
 
  What is it?
  ===========
@@ -20,13 +20,17 @@
 
     Dependencies
 
- docs/
+ doc/
 
     API Docs and reference guide
   
  examples/
 
     Examples for module
+    
+ source/
+
+    Source code for module
   
  Licensing
  =========
