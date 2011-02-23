@@ -89,7 +89,7 @@
          <groupId>org.jboss.seam.catch</groupId>
          <artifactId>seam-catch-example-basic-servlet</artifactId>
          <version>${project.version}</version>
-         <type>war</type>
+         <type>zip</type>
          <optional>true</optional>
       </dependency>
 

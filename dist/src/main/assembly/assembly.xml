@@ -65,15 +65,14 @@
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
+      
       <!-- Pull in the example projects -->
       <dependencySet>
          <outputDirectory>examples</outputDirectory>
-         <!--
          <unpack>true</unpack>
-         -->
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.catch:seam-catch-example-*</include>
+            <include>org.jboss.seam.catch:seam-catch-example-basic-servlet</include>
          </includes>
       </dependencySet>
       
