@@ -51,7 +51,6 @@ public class ExceptionHandlerDispatch
    public void executeHandlers(@Observes @Any ExceptionToCatch eventException, final BeanManager bm,
       CatchExtension extension, Event<ExceptionStack> stackEvent) throws Throwable
    {
-      final Stack<Throwable> unwrappedExceptions = new Stack<Throwable>(); // TODO: this variable is never read
       CreationalContext<Object> ctx = null;
       this.exceptionToCatch = eventException;
 
@@ -102,7 +101,7 @@ public class ExceptionHandlerDispatch
                         return;
                      case DROP_CAUSE:
                         eventException.setHandled(true);
-                        stack.advanceToNextCause();
+                        stack.dropCause();
                         continue inbound_cause;
                      case RETHROW:
                         throwException = eventException.getException();
@@ -145,7 +144,7 @@ public class ExceptionHandlerDispatch
                         return;
                      case DROP_CAUSE:
                         eventException.setHandled(true);
-                        stack.advanceToNextCause();
+                        stack.dropCause();
                         continue inbound_cause;
                      case RETHROW:
                         throwException = eventException.getException();
@@ -155,8 +154,7 @@ public class ExceptionHandlerDispatch
                   }
                }
             }
-
-            stack.advanceToNextCause();
+            this.exceptionStack.dropCause();
          }
 
          if (throwException != null)

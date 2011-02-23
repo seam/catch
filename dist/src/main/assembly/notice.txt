@@ -1,6 +1,6 @@
  ===================================================================================
  ==  NOTICE file corresponding to section 4d of the Apache License, Version 2.0,  ==
- ==  in this case for the Seam [MODULE_NAME] distribution.                        ==
+ ==  in this case for the Seam Catch distribution.                                ==
  ===================================================================================
 
  Seam Catch

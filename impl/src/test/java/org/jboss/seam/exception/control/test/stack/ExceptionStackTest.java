@@ -57,14 +57,6 @@ public class ExceptionStackTest
    }
 
    @Test(expected = IllegalArgumentException.class)
-   public void assertIllegalArgumentExceptionIfSetIndexEqualToSize()
-   {
-      final ExceptionStack es = new ExceptionStack(new Exception());
-
-      es.setIndex(1);
-   }
-
-   @Test(expected = IllegalArgumentException.class)
    public void assertIllegalArgumentExceptionIfCreatedWithEmptyCollection()
    {
       final ExceptionStack es = new ExceptionStack(Collections.<Throwable>emptyList(), 0);

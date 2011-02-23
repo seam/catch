@@ -126,10 +126,36 @@
                <skip>true</skip>
             </configuration>
          </plugin>
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <version>2.0.2</version>
+           <configuration>
+             <source>1.6</source>
+             <target>1.6</target>
+           </configuration>
+         </plugin>
       </plugins>
    </build>
 
    <profiles>
+      <profile>
+         <id>distribution</id>
+         <activation>
+            <property>
+               <name>release</name>
+            </property>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-assembly-plugin</artifactId>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>   
+   
       <profile>
          <id>jbossas</id>
          <activation>
