@@ -104,5 +104,21 @@
             </excludes>
          </unpackOptions>
       </dependencySet>
+      
+      <!-- Add the source -->
+      <dependencySet>
+         <outputDirectory>source</outputDirectory>
+         <unpack>true</unpack>
+         <useProjectArtifact>false</useProjectArtifact>
+         <includes>
+            <include>org.jboss.seam.catch:seam-catch-api:*:sources</include>
+            <include>org.jboss.seam.catch:seam-catch-impl:*:sources</include>
+         </includes>
+         <unpackOptions>
+            <excludes>
+               <exclude>META-INF/</exclude>
+            </excludes>
+         </unpackOptions>
+      </dependencySet>       
    </dependencySets>
 </assembly>
