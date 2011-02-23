@@ -24,6 +24,9 @@ package org.jboss.seam.exception.control;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * Container for the exception and it's stack trace.
+ */
 public final class ExceptionStackItem implements Serializable
 {
    final private Throwable throwable;

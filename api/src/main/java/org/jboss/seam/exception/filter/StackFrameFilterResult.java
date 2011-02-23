@@ -17,7 +17,7 @@
 package org.jboss.seam.exception.filter;
 
 /**
- * Valid returns types for a {@link ExceptionStackFrameFilter#process(StackFrame)}.
+ * Valid returns types for a {@link StackFrameFilter#process(StackFrame)}.
  *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>

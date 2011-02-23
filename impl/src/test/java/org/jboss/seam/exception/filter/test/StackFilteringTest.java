@@ -26,9 +26,9 @@ import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.text.MessageFormat;
 
-import org.jboss.seam.exception.filter.ExceptionStackFrameFilter;
 import org.jboss.seam.exception.filter.ExceptionStackOutput;
 import org.jboss.seam.exception.filter.StackFrame;
+import org.jboss.seam.exception.filter.StackFrameFilter;
 import org.jboss.seam.exception.filter.StackFrameFilterResult;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class StackFilteringTest
    @Test
    public void terminateTest()
    {
-      final ExceptionStackFrameFilter<NoClassDefFoundError> filter = new ExceptionStackFrameFilter<NoClassDefFoundError>()
+      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
       {
          @Override
          public StackFrameFilterResult process(StackFrame frame)
@@ -60,7 +60,7 @@ public class StackFilteringTest
    @Test
    public void terminateAfterTest() throws IOException
    {
-      final ExceptionStackFrameFilter<NoClassDefFoundError> filter = new ExceptionStackFrameFilter<NoClassDefFoundError>()
+      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
       {
          @Override
          public StackFrameFilterResult process(StackFrame frame)
@@ -84,7 +84,7 @@ public class StackFilteringTest
    @Test
    public void dropRemainingTest() throws IOException
    {
-      final ExceptionStackFrameFilter<NoClassDefFoundError> filter = new ExceptionStackFrameFilter<NoClassDefFoundError>()
+      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
       {
          @Override
          public StackFrameFilterResult process(StackFrame frame)
@@ -112,7 +112,7 @@ public class StackFilteringTest
    @Test
    public void dropTest() throws IOException
    {
-      final ExceptionStackFrameFilter<NoClassDefFoundError> filter = new ExceptionStackFrameFilter<NoClassDefFoundError>()
+      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
       {
          @Override
          public StackFrameFilterResult process(StackFrame frame)

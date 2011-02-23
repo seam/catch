@@ -30,12 +30,12 @@ import org.jboss.seam.exception.control.ExceptionStackItem;
  * way, meaning the stack is unwrapped and the root cause is printed first followed by the next exception that wrapped
  * the root cause. This class is immutable.
  * <p/>
- * It may also make use of {@link ExceptionStackFrameFilter} instances to filter the stack trace output.
+ * It may also make use of {@link StackFrameFilter} instances to filter the stack trace output.
  */
 public class ExceptionStackOutput<T extends Throwable>
 {
    private final Deque<ExceptionStackItem> exceptionStackItems;
-   private final ExceptionStackFrameFilter<T> filter;
+   private final StackFrameFilter<T> filter;
 
    // TODO: Really needs to be a properties file or something
    public static final String ROOT_CAUSE_TEXT = new StringBuilder("Root exception {0}").append(System.getProperty("line.separator")).toString();
@@ -56,9 +56,9 @@ public class ExceptionStackOutput<T extends Throwable>
     * Constructor which includes filtering
     *
     * @param exception Exception containing stack to be displayed
-    * @param filter    a {@link ExceptionStackFrameFilter} instance used to do the filtering
+    * @param filter    a {@link StackFrameFilter} instance used to do the filtering
     */
-   public ExceptionStackOutput(final T exception, final ExceptionStackFrameFilter<T> filter)
+   public ExceptionStackOutput(final T exception, final StackFrameFilter<T> filter)
    {
       this.exceptionStackItems = new ExceptionStack(exception).getOrigExceptionStackItems();
       this.filter = filter;
