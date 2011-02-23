@@ -25,8 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 
-import sun.tools.asm.ArrayData;
-
 /**
  * Information about the current exception and exception cause container.  This object is not immutable.
  */
