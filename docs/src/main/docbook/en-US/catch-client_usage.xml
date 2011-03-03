@@ -567,12 +567,12 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
                - marks the exception as handled and terminates further handling.
             </listitem>
             <listitem>
-               <literal>proceed()</literal>
+               <literal>markHandled()</literal>
                - default. Marks the exception as handled and proceeds with the rest of the
                handlers.
             </listitem>
             <listitem>
-               <literal>proceedToCause()</literal>
+               <literal>dropCause()</literal>
                - marks the exception as handled, but proceeds to the next cause in
                the cause container, without calling other handlers for the current cause.
             </listitem>
@@ -618,7 +618,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
 
             <para>
                Modifying the ExceptionStack may be useful to remove exception types that are effectively meaningless
-               sucsh as <literal>EJBException</literal>, changing the exception type to something more meaningful such
+               such as <literal>EJBException</literal>, changing the exception type to something more meaningful such
                as cases like <literal>SQLException</literal>, or wrapping exceptions as custom application exception
                types.
             </para>
