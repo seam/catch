@@ -39,63 +39,55 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class CallingHandlersTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(CalledExceptionHandler.class, CatchExtension.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class CallingHandlersTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(CalledExceptionHandler.class, CatchExtension.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   private BeanManager bm;
+    @Inject
+    private BeanManager bm;
 
-   @Test
-   public void assertOutboundHanldersAreCalled()
-   {
-      bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+    @Test
+    public void assertOutboundHanldersAreCalled() {
+        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
 
-      assertTrue(CalledExceptionHandler.OUTBOUND_HANDLER_CALLED);
-   }
+        assertTrue(CalledExceptionHandler.OUTBOUND_HANDLER_CALLED);
+    }
 
-   @Test
-   public void assertOutboundHanldersAreCalledOnce()
-   {
-      CalledExceptionHandler.OUTBOUND_HANDLER_TIMES_CALLED = 0;
-      bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
-      assertEquals(1, CalledExceptionHandler.OUTBOUND_HANDLER_TIMES_CALLED);
-   }
+    @Test
+    public void assertOutboundHanldersAreCalledOnce() {
+        CalledExceptionHandler.OUTBOUND_HANDLER_TIMES_CALLED = 0;
+        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+        assertEquals(1, CalledExceptionHandler.OUTBOUND_HANDLER_TIMES_CALLED);
+    }
 
-   @Test
-   public void assertInboundHanldersAreCalledOnce()
-   {
-      CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED = 0;
-      bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
-      assertEquals(1, CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED);
-   }
+    @Test
+    public void assertInboundHanldersAreCalledOnce() {
+        CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED = 0;
+        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+        assertEquals(1, CalledExceptionHandler.INBOUND_HANDLER_TIMES_CALLED);
+    }
 
-   @Test
-   public void assertAdditionalParamsAreInjected()
-   {
-      bm.fireEvent(new ExceptionToCatch(new RuntimeException(new IllegalArgumentException())));
-      assertTrue(CalledExceptionHandler.BEANMANAGER_INJECTED);
-   }
+    @Test
+    public void assertAdditionalParamsAreInjected() {
+        bm.fireEvent(new ExceptionToCatch(new RuntimeException(new IllegalArgumentException())));
+        assertTrue(CalledExceptionHandler.BEANMANAGER_INJECTED);
+    }
 
-   @Test
-   public void assertAdditionalParamsAreInjectedWithDifferentHandlerLocation()
-   {
-      bm.fireEvent(new ExceptionToCatch(new SQLException()));
-      assertTrue(CalledExceptionHandler.LOCATION_DIFFER_BEANMANAGER_INJECTED);
-   }
+    @Test
+    public void assertAdditionalParamsAreInjectedWithDifferentHandlerLocation() {
+        bm.fireEvent(new ExceptionToCatch(new SQLException()));
+        assertTrue(CalledExceptionHandler.LOCATION_DIFFER_BEANMANAGER_INJECTED);
+    }
 
-   @Test
-   public void assertProtectedHandlersAreCalled()
-   {
-      bm.fireEvent(new ExceptionToCatch(new IllegalStateException()));
-      assertTrue(CalledExceptionHandler.PROTECTED_HANDLER_CALLED);
-   }
+    @Test
+    public void assertProtectedHandlersAreCalled() {
+        bm.fireEvent(new ExceptionToCatch(new IllegalStateException()));
+        assertTrue(CalledExceptionHandler.PROTECTED_HANDLER_CALLED);
+    }
 }

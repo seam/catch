@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -38,44 +38,41 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertArrayEquals;
 
 @RunWith(Arquillian.class)
-public class TraversalPathTest
-{
-   @Inject
-   private BeanManager manager;
+public class TraversalPathTest {
+    @Inject
+    private BeanManager manager;
 
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addPackage(CatchExtension.class.getPackage())
-            .addPackage(TraversalPathTest.class.getPackage())
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addPackage(CatchExtension.class.getPackage())
+                .addPackage(TraversalPathTest.class.getPackage())
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   /**
-    * Tests SEAMCATCH-32, see JIRA for more information about this test. https://issues.jboss.org/browse/SEAMCATCH-32
-    */
-   @Test
-   public void testTraversalPathOrder()
-   {
-      // create an exception stack E1 -> E2 -> E3
-      Exception1 exception = new Exception1(new Exception2(new Exception3()));
+    /**
+     * Tests SEAMCATCH-32, see JIRA for more information about this test. https://issues.jboss.org/browse/SEAMCATCH-32
+     */
+    @Test
+    public void testTraversalPathOrder() {
+        // create an exception stack E1 -> E2 -> E3
+        Exception1 exception = new Exception1(new Exception2(new Exception3()));
 
-      manager.fireEvent(new ExceptionToCatch(exception));
+        manager.fireEvent(new ExceptionToCatch(exception));
 
-      /*
-           handleException3SuperclassBF
-           handleException3BF
-           handleException3DF
-           handleException3SuperclassDF
-           handleException2BF
-           handleException2DF
-           handleException1BF
-           handleException1DF
-       */
-      Object[] expectedOrder = { 1, 2, 3, 4, 5, 6, 7, 8 };
-      assertArrayEquals(expectedOrder, ExceptionHandler.getExecutionorder().toArray());
-   }
+        /*
+            handleException3SuperclassBF
+            handleException3BF
+            handleException3DF
+            handleException3SuperclassDF
+            handleException2BF
+            handleException2DF
+            handleException1BF
+            handleException1DF
+        */
+        Object[] expectedOrder = {1, 2, 3, 4, 5, 6, 7, 8};
+        assertArrayEquals(expectedOrder, ExceptionHandler.getExecutionorder().toArray());
+    }
 }

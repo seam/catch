@@ -22,8 +22,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 
 @SuppressWarnings("all")
-public class CatchQualifierLiteral extends AnnotationLiteral<CatchQualifier> implements CatchQualifier
-{
-   private static final long serialVersionUID = 6052715391406598552L;
-   public static final CatchQualifier INSTANCE = new CatchQualifierLiteral();
+public class CatchQualifierLiteral extends AnnotationLiteral<CatchQualifier> implements CatchQualifier {
+    private static final long serialVersionUID = 6052715391406598552L;
+    public static final CatchQualifier INSTANCE = new CatchQualifierLiteral();
 }

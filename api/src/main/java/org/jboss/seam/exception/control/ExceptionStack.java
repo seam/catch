@@ -20,7 +20,6 @@ package org.jboss.seam.exception.control;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -28,174 +27,147 @@ import java.util.Deque;
 /**
  * Information about the current exception and exception cause container.  This object is not immutable.
  */
-public class ExceptionStack implements Serializable
-{
-   private static final long serialVersionUID = 5988683320170873619L;
+public class ExceptionStack implements Serializable {
+    private static final long serialVersionUID = 5988683320170873619L;
 
-   private boolean root;
-   private boolean last;
-   private int initialStackSize;
-   private Throwable next;
-   private Collection<ExceptionStackItem> remaining;
-   private Deque<ExceptionStackItem> exceptionStackItems;
-   private Deque<ExceptionStackItem> origExceptionStackItems;
-   private Collection<Throwable> causes;
-   private Throwable current;
+    private boolean root;
+    private boolean last;
+    private int initialStackSize;
+    private Throwable next;
+    private Collection<ExceptionStackItem> remaining;
+    private Deque<ExceptionStackItem> exceptionStackItems;
+    private Deque<ExceptionStackItem> origExceptionStackItems;
+    private Collection<Throwable> causes;
+    private Throwable current;
 
-   public ExceptionStack()
-   {
-   } // needed to be a bean
+    public ExceptionStack() {
+    } // needed to be a bean
 
-   /**
-    * Builds the stack from the given exception.
-    *
-    * @param exception Caught exception
-    */
-   public ExceptionStack(final Throwable exception)
-   {
-      if (exception == null)
-      {
-         throw new IllegalArgumentException("exception must not be null");
-      }
+    /**
+     * Builds the stack from the given exception.
+     *
+     * @param exception Caught exception
+     */
+    public ExceptionStack(final Throwable exception) {
+        if (exception == null) {
+            throw new IllegalArgumentException("exception must not be null");
+        }
 
-      Throwable e = exception;
-      this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
+        Throwable e = exception;
+        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>();
 
-      do
-      {
-         this.exceptionStackItems.addFirst(new ExceptionStackItem(e));
-         if (e instanceof SQLException)
-         {
-            SQLException sqlException = (SQLException) e;
+        do {
+            this.exceptionStackItems.addFirst(new ExceptionStackItem(e));
+            if (e instanceof SQLException) {
+                SQLException sqlException = (SQLException) e;
 
-            while (sqlException.getNextException() != null)
-            {
-               sqlException = sqlException.getNextException();
-               this.exceptionStackItems.addFirst(new ExceptionStackItem(sqlException));
+                while (sqlException.getNextException() != null) {
+                    sqlException = sqlException.getNextException();
+                    this.exceptionStackItems.addFirst(new ExceptionStackItem(sqlException));
+                }
             }
-         }
-      }
-      while ((e = e.getCause()) != null);
+        }
+        while ((e = e.getCause()) != null);
 
-      this.initialStackSize = this.exceptionStackItems.size();
-      this.causes = this.createThrowableCollectionFrom(exceptionStackItems);
-      this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
-      this.init();
-   }
+        this.initialStackSize = this.exceptionStackItems.size();
+        this.causes = this.createThrowableCollectionFrom(exceptionStackItems);
+        this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
+        this.init();
+    }
 
-   /**
-    * Basic constructor.
-    *
-    * @param causeChainElements  collection of all causing elements for an exception from top to bottom (not
-    *                            unwrapped).
-    * @param currentElementIndex index of current element within the causeChainElements.
-    * @throws IllegalArgumentException if causeChainElements is empty or null.
-    * @deprecated There shouldn't be a use for this, please use the other constructor
-    */
-   @Deprecated
-   public ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex)
-   {
-      if (causeChainElements == null || causeChainElements.size() == 0)
-      {
-         throw new IllegalArgumentException("Null or empty collection of causeChainElements is not valid");
-      }
+    /**
+     * Basic constructor.
+     *
+     * @param causeChainElements  collection of all causing elements for an exception from top to bottom (not
+     *                            unwrapped).
+     * @param currentElementIndex index of current element within the causeChainElements.
+     * @throws IllegalArgumentException if causeChainElements is empty or null.
+     * @deprecated There shouldn't be a use for this, please use the other constructor
+     */
+    @Deprecated
+    public ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex) {
+        if (causeChainElements == null || causeChainElements.size() == 0) {
+            throw new IllegalArgumentException("Null or empty collection of causeChainElements is not valid");
+        }
 
-      if (currentElementIndex >= causeChainElements.size())
-      {
-         throw new IllegalArgumentException("currentElementIndex must be less than or equals to causeChainElements.size()");
-      }
-      this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(causeChainElements));
-      this.causes = Collections.unmodifiableCollection(causeChainElements);
-      this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
-      this.init();
-   }
+        if (currentElementIndex >= causeChainElements.size()) {
+            throw new IllegalArgumentException("currentElementIndex must be less than or equals to causeChainElements.size()");
+        }
+        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(causeChainElements));
+        this.causes = Collections.unmodifiableCollection(causeChainElements);
+        this.origExceptionStackItems = new ArrayDeque<ExceptionStackItem>(exceptionStackItems);
+        this.init();
+    }
 
-   private void init()
-   {
-      this.root = this.exceptionStackItems.size() == this.initialStackSize;
+    private void init() {
+        this.root = this.exceptionStackItems.size() == this.initialStackSize;
 
-      if (!this.exceptionStackItems.isEmpty())
-      {
-         this.current = this.exceptionStackItems.removeFirst().getThrowable();
-         this.remaining = Collections.unmodifiableCollection(this.exceptionStackItems);
-      }
-      else
-      {
-         this.remaining = Collections.emptyList();
-         this.current = null;
-      }
+        if (!this.exceptionStackItems.isEmpty()) {
+            this.current = this.exceptionStackItems.removeFirst().getThrowable();
+            this.remaining = Collections.unmodifiableCollection(this.exceptionStackItems);
+        } else {
+            this.remaining = Collections.emptyList();
+            this.current = null;
+        }
 
-      this.last = this.remaining.isEmpty();
-      this.next = (this.last) ? null : this.exceptionStackItems.peekFirst().getThrowable();
-   }
+        this.last = this.remaining.isEmpty();
+        this.next = (this.last) ? null : this.exceptionStackItems.peekFirst().getThrowable();
+    }
 
-   private Collection<ExceptionStackItem> createExceptionStackCollectionFrom(Collection<Throwable> throwables)
-   {
-      final Deque<ExceptionStackItem> returningCollection = new ArrayDeque<ExceptionStackItem>(throwables.size());
+    private Collection<ExceptionStackItem> createExceptionStackCollectionFrom(Collection<Throwable> throwables) {
+        final Deque<ExceptionStackItem> returningCollection = new ArrayDeque<ExceptionStackItem>(throwables.size());
 
-      for (Throwable t : throwables)
-      {
-         returningCollection.addFirst(new ExceptionStackItem(t));
-      }
+        for (Throwable t : throwables) {
+            returningCollection.addFirst(new ExceptionStackItem(t));
+        }
 
-      return returningCollection;
-   }
+        return returningCollection;
+    }
 
-   private Collection<Throwable> createThrowableCollectionFrom(final Collection<ExceptionStackItem> exceptionStackItems)
-   {
-      final Deque<Throwable> returningCollection = new ArrayDeque<Throwable>(exceptionStackItems.size() + 1); // allow current
+    private Collection<Throwable> createThrowableCollectionFrom(final Collection<ExceptionStackItem> exceptionStackItems) {
+        final Deque<Throwable> returningCollection = new ArrayDeque<Throwable>(exceptionStackItems.size() + 1); // allow current
 
-      for (ExceptionStackItem item : exceptionStackItems)
-      {
-         returningCollection.addFirst(item.getThrowable());
-      }
+        for (ExceptionStackItem item : exceptionStackItems) {
+            returningCollection.addFirst(item.getThrowable());
+        }
 
-      return returningCollection;
-   }
+        return returningCollection;
+    }
 
-   public Collection<Throwable> getCauseElements()
-   {
-      return Collections.unmodifiableCollection(this.causes);
-   }
+    public Collection<Throwable> getCauseElements() {
+        return Collections.unmodifiableCollection(this.causes);
+    }
 
-   public boolean isLast()
-   {
-      return this.last;
-   }
+    public boolean isLast() {
+        return this.last;
+    }
 
-   public Throwable getNext()
-   {
-      return this.next;
-   }
+    public Throwable getNext() {
+        return this.next;
+    }
 
-   public Collection<Throwable> getRemaining()
-   {
-      return Collections.unmodifiableCollection(this.createThrowableCollectionFrom(this.remaining));
-   }
+    public Collection<Throwable> getRemaining() {
+        return Collections.unmodifiableCollection(this.createThrowableCollectionFrom(this.remaining));
+    }
 
-   public boolean isRoot()
-   {
-      return this.root;
-   }
+    public boolean isRoot() {
+        return this.root;
+    }
 
-   public Throwable getCurrent()
-   {
-      return this.current;
-   }
+    public Throwable getCurrent() {
+        return this.current;
+    }
 
-   public void setCauseElements(Collection<Throwable> elements)
-   {
-      this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(elements));
-      this.init();
-   }
+    public void setCauseElements(Collection<Throwable> elements) {
+        this.exceptionStackItems = new ArrayDeque<ExceptionStackItem>(this.createExceptionStackCollectionFrom(elements));
+        this.init();
+    }
 
-   public Deque<ExceptionStackItem> getOrigExceptionStackItems()
-   {
-      return new ArrayDeque<ExceptionStackItem>(this.origExceptionStackItems);
-   }
+    public Deque<ExceptionStackItem> getOrigExceptionStackItems() {
+        return new ArrayDeque<ExceptionStackItem>(this.origExceptionStackItems);
+    }
 
-   protected void dropCause()
-   {
-      this.init();
-   }
+    protected void dropCause() {
+        this.init();
+    }
 }

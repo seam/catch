@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -27,16 +27,13 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
 @HandlesExceptions
-public class ThrowingNewHandler
-{
-   public void rethrow(@Handles CaughtException<NullPointerException> event)
-   {
-      event.rethrow(new UnsupportedOperationException());
-   }
+public class ThrowingNewHandler {
+    public void rethrow(@Handles CaughtException<NullPointerException> event) {
+        event.rethrow(new UnsupportedOperationException());
+    }
 
-   public void rethrowInbound(
-         @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event)
-   {
-      event.rethrow(new UnsupportedOperationException());
-   }
+    public void rethrowInbound(
+            @Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event) {
+        event.rethrow(new UnsupportedOperationException());
+    }
 }

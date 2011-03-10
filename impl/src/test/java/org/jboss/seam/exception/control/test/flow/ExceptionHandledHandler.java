@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -23,26 +23,22 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
 @HandlesExceptions
-public class ExceptionHandledHandler
-{
-   public static boolean EX_ASC_CALLED = false;
-   public static boolean IAE_ASC_CALLED = false;
-   public static boolean NPE_DESC_CALLED = false;
+public class ExceptionHandledHandler {
+    public static boolean EX_ASC_CALLED = false;
+    public static boolean IAE_ASC_CALLED = false;
+    public static boolean NPE_DESC_CALLED = false;
 
-   public void exHandler(@Handles CaughtException<Exception> event)
-   {
-      EX_ASC_CALLED = true;
-   }
+    public void exHandler(@Handles CaughtException<Exception> event) {
+        EX_ASC_CALLED = true;
+    }
 
-   public void npeHandler(@Handles CaughtException<IllegalArgumentException> event)
-   {
-      IAE_ASC_CALLED = true;
-      event.handled();
-   }
+    public void npeHandler(@Handles CaughtException<IllegalArgumentException> event) {
+        IAE_ASC_CALLED = true;
+        event.handled();
+    }
 
-   public void npeDescHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
-   {
-      NPE_DESC_CALLED = true;
-      event.handled();
-   }
+    public void npeDescHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event) {
+        NPE_DESC_CALLED = true;
+        event.handled();
+    }
 }

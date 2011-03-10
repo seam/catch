@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -27,15 +27,12 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 @HandlesExceptions
 @PretendInterceptorBinding
 @Interceptor
-public class InterceptorAsHandler
-{
-   @AroundInvoke
-   public Object intercept(InvocationContext ctx) throws Exception
-   {
-      return ctx.proceed();
-   }
+public class InterceptorAsHandler {
+    @AroundInvoke
+    public Object intercept(InvocationContext ctx) throws Exception {
+        return ctx.proceed();
+    }
 
-   public void handlesAll(@Handles CaughtException<Throwable> caught)
-   {
-   }
+    public void handlesAll(@Handles CaughtException<Throwable> caught) {
+    }
 }

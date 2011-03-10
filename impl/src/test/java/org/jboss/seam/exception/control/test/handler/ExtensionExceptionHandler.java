@@ -30,79 +30,65 @@ import org.jboss.seam.exception.control.test.extension.Arquillian;
 import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 
 @HandlesExceptions
-public class ExtensionExceptionHandler
-{
-   public void catchDescException(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
-   {
-      // Nothing to do currently
-   }
+public class ExtensionExceptionHandler {
+    public void catchDescException(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event) {
+        // Nothing to do currently
+    }
 
-   public void catchFrameworkDescException(@Handles(during = TraversalMode.BREADTH_FIRST, precedence = Precedence.FRAMEWORK) CaughtException<Exception> event)
-   {
-      // Nothing to do here
-   }
+    public void catchFrameworkDescException(@Handles(during = TraversalMode.BREADTH_FIRST, precedence = Precedence.FRAMEWORK) CaughtException<Exception> event) {
+        // Nothing to do here
+    }
 
-   public void catchRuntime(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<RuntimeException> event)
-   {
-      // Nothing to do currently
-   }
-   public void catchThrowableBreadthFirst(
-      @Handles(precedence = 10, during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event)
-   {
-      // Nothing to do currently
-   }
+    public void catchRuntime(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<RuntimeException> event) {
+        // Nothing to do currently
+    }
 
-   public void catchThrowableP20BreadthFirst(
-      @Handles(precedence = 20, during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event)
-   {
-      // Nothing to do currently
-   }
+    public void catchThrowableBreadthFirst(
+            @Handles(precedence = 10, during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event) {
+        // Nothing to do currently
+    }
 
-   public void catchThrowable(
-         @Handles(precedence = 10, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event)
-   {
-      // Nothing to do currently
-   }
+    public void catchThrowableP20BreadthFirst(
+            @Handles(precedence = 20, during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event) {
+        // Nothing to do currently
+    }
 
-   public void catchThrowableP20(
-         @Handles(precedence = 20, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event)
-   {
-      // Nothing to do currently
-   }
+    public void catchThrowable(
+            @Handles(precedence = 10, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event) {
+        // Nothing to do currently
+    }
 
-   public void catchIAE(@Handles CaughtException<IllegalArgumentException> event)
-   {
-      // Nothing to do currently
-   }
+    public void catchThrowableP20(
+            @Handles(precedence = 20, during = TraversalMode.DEPTH_FIRST) CaughtException<Throwable> event) {
+        // Nothing to do currently
+    }
 
-   public void qualifiedHandler(@Handles @CatchQualifier CaughtException<Exception> event)
-   {
-      // Method to verify the qualifiers are working correctly for handlers
-   }
+    public void catchIAE(@Handles CaughtException<IllegalArgumentException> event) {
+        // Nothing to do currently
+    }
 
-   public void arqHandler(@Handles @Arquillian CaughtException<Throwable> event)
-   {
-      // Method to verify the qualifiers are working correctly for handlers
-   }
+    public void qualifiedHandler(@Handles @CatchQualifier CaughtException<Exception> event) {
+        // Method to verify the qualifiers are working correctly for handlers
+    }
 
-   public void arqTestingHandler(@Handles @Arquillian @CatchQualifier CaughtException<Throwable> event)
-   {
-      // Method to verify the qualifiers are working correctly for handlers
-   }
+    public void arqHandler(@Handles @Arquillian CaughtException<Throwable> event) {
+        // Method to verify the qualifiers are working correctly for handlers
+    }
 
-   public void differentParamHandlerLocationHandler(int number, BeanManager bm,
-                                                    @Handles CaughtException<SQLException> event)
-   {
-      // Nothing here, just need to make sure this handler is picked up
-   }
+    public void arqTestingHandler(@Handles @Arquillian @CatchQualifier CaughtException<Throwable> event) {
+        // Method to verify the qualifiers are working correctly for handlers
+    }
 
-   public void doNothingMethod()
-   {
-      // Method to make sure only @Handles methods are found
-   }
+    public void differentParamHandlerLocationHandler(int number, BeanManager bm,
+                                                     @Handles CaughtException<SQLException> event) {
+        // Nothing here, just need to make sure this handler is picked up
+    }
 
-   public void doNothingTwo(String p1, String p2, int p3)
-   {
-      // Same as above
-   }
+    public void doNothingMethod() {
+        // Method to make sure only @Handles methods are found
+    }
+
+    public void doNothingTwo(String p1, String p2, int p3) {
+        // Same as above
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,22 +21,19 @@ import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-@SuppressWarnings( { "AssignmentToStaticFieldFromInstanceMethod" })
+@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
 @HandlesExceptions
-public class AbortingDepthHandler
-{
-   public static boolean abortCalled = false;
-   public static boolean proceedCalled = false;
+public class AbortingDepthHandler {
+    public static boolean abortCalled = false;
+    public static boolean proceedCalled = false;
 
-   public void abortHandler(@Handles CaughtException<Exception> event)
-   {
-      abortCalled = true;
-      event.abort();
-   }
+    public void abortHandler(@Handles CaughtException<Exception> event) {
+        abortCalled = true;
+        event.abort();
+    }
 
-   public void proceedHandler(@Handles CaughtException<Throwable> event)
-   {
-      proceedCalled = true;
-      event.markHandled();
-   }
+    public void proceedHandler(@Handles CaughtException<Throwable> event) {
+        proceedCalled = true;
+        event.markHandled();
+    }
 }

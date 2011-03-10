@@ -38,65 +38,57 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItems;
 
-public class ExceptionStackTest
-{
-   @Test
-   public void testSQLExceptionUnwrap()
-   {
-      SQLTransactionRollbackException transactionRollbackException = new SQLTransactionRollbackException();
-      SQLRecoverableException recoverableException = new SQLRecoverableException();
-      SQLSyntaxErrorException syntaxErrorException = new SQLSyntaxErrorException();
-      recoverableException.setNextException(syntaxErrorException);
-      transactionRollbackException.setNextException(recoverableException);
-      Throwable e = new Exception(transactionRollbackException);
+public class ExceptionStackTest {
+    @Test
+    public void testSQLExceptionUnwrap() {
+        SQLTransactionRollbackException transactionRollbackException = new SQLTransactionRollbackException();
+        SQLRecoverableException recoverableException = new SQLRecoverableException();
+        SQLSyntaxErrorException syntaxErrorException = new SQLSyntaxErrorException();
+        recoverableException.setNextException(syntaxErrorException);
+        transactionRollbackException.setNextException(recoverableException);
+        Throwable e = new Exception(transactionRollbackException);
 
-      ExceptionStack es = new ExceptionStack(e);
+        ExceptionStack es = new ExceptionStack(e);
 
-      assertThat(es.getCauseElements().size(), is(4));
-      assertThat(es.getCauseElements(), hasItems(e, transactionRollbackException, recoverableException, syntaxErrorException));
-   }
+        assertThat(es.getCauseElements().size(), is(4));
+        assertThat(es.getCauseElements(), hasItems(e, transactionRollbackException, recoverableException, syntaxErrorException));
+    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void assertIllegalArgumentExceptionIfCreatedWithEmptyCollection()
-   {
-      final ExceptionStack es = new ExceptionStack(Collections.<Throwable>emptyList(), 0);
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void assertIllegalArgumentExceptionIfCreatedWithEmptyCollection() {
+        final ExceptionStack es = new ExceptionStack(Collections.<Throwable>emptyList(), 0);
+    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void assertIllegalArgumentExceptionIfCreatedWithNullCollection()
-   {
-      final ExceptionStack es = new ExceptionStack(null, 4);
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void assertIllegalArgumentExceptionIfCreatedWithNullCollection() {
+        final ExceptionStack es = new ExceptionStack(null, 4);
+    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void assertIllegalArgumentExceptionIfCreatedWithNull()
-   {
-      final ExceptionStack es = new ExceptionStack(null);
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void assertIllegalArgumentExceptionIfCreatedWithNull() {
+        final ExceptionStack es = new ExceptionStack(null);
+    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void assertIllegalArgumentExceptionIfCreatedWithInitialIndexEqualToSize()
-   {
-      final List<Throwable> exceptionList = new ArrayList<Throwable>(Arrays.asList(new Exception()));
-      final ExceptionStack es = new ExceptionStack(exceptionList, 1);
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void assertIllegalArgumentExceptionIfCreatedWithInitialIndexEqualToSize() {
+        final List<Throwable> exceptionList = new ArrayList<Throwable>(Arrays.asList(new Exception()));
+        final ExceptionStack es = new ExceptionStack(exceptionList, 1);
+    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void assertIllegalArgumentExceptionIfCreatedWithInitialIndexGreaterThanSize()
-   {
-      final List<Throwable> exceptionList = new ArrayList<Throwable>(Arrays.asList(new Exception()));
-      final ExceptionStack es = new ExceptionStack(exceptionList, 4);
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void assertIllegalArgumentExceptionIfCreatedWithInitialIndexGreaterThanSize() {
+        final List<Throwable> exceptionList = new ArrayList<Throwable>(Arrays.asList(new Exception()));
+        final ExceptionStack es = new ExceptionStack(exceptionList, 4);
+    }
 
-   @Test
-   public void assertStackCreatedAndTraversedCorrectly()
-   {
-      final List<Throwable> exceptionList = new ArrayList<Throwable>(Arrays.asList(new RuntimeException(),
-         new IOException(), new FileNotFoundException(), new NullPointerException()));
-      final ExceptionStack es = new ExceptionStack(exceptionList, 3);
+    @Test
+    public void assertStackCreatedAndTraversedCorrectly() {
+        final List<Throwable> exceptionList = new ArrayList<Throwable>(Arrays.asList(new RuntimeException(),
+                new IOException(), new FileNotFoundException(), new NullPointerException()));
+        final ExceptionStack es = new ExceptionStack(exceptionList, 3);
 
-      assertThat(es.getCurrent(), is(exceptionList.get(3)));
+        assertThat(es.getCurrent(), is(exceptionList.get(3)));
 
-      assertThat(es.getNext(), is(exceptionList.get(2)));
-   }
+        assertThat(es.getNext(), is(exceptionList.get(2)));
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,38 +16,31 @@
  */
 package org.jboss.seam.exception.control;
 
-public class ExceptionResponse
-{
-   private Class<? extends Throwable> forType;
-   private String message;
+public class ExceptionResponse {
+    private Class<? extends Throwable> forType;
+    private String message;
 
-   public ExceptionResponse()
-   {
-   }
+    public ExceptionResponse() {
+    }
 
-   public ExceptionResponse(Class<? extends Throwable> forType, String message)
-   {
-      this.forType = forType;
-      this.message = message;
-   }
+    public ExceptionResponse(Class<? extends Throwable> forType, String message) {
+        this.forType = forType;
+        this.message = message;
+    }
 
-   public Class<? extends Throwable> getForType()
-   {
-      return forType;
-   }
+    public Class<? extends Throwable> getForType() {
+        return forType;
+    }
 
-   public void setForType(Class<? extends Throwable> forType)
-   {
-      this.forType = forType;
-   }
+    public void setForType(Class<? extends Throwable> forType) {
+        this.forType = forType;
+    }
 
-   public String getMessage()
-   {
-      return message;
-   }
+    public String getMessage() {
+        return message;
+    }
 
-   public void setMessage(String message)
-   {
-      this.message = message;
-   }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

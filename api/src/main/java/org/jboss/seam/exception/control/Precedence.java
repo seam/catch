@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -26,15 +26,14 @@ package org.jboss.seam.exception.control;
  *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-public abstract class Precedence
-{
-   public static final int BUILT_IN = -100;
+public abstract class Precedence {
+    public static final int BUILT_IN = -100;
 
-   public static final int FRAMEWORK = -50;
+    public static final int FRAMEWORK = -50;
 
-   public static final int DEFAULT = 0;
+    public static final int DEFAULT = 0;
 
-   public static final int LOW = 50;
+    public static final int LOW = 50;
 
-   public static final int HIGH = 100;
+    public static final int HIGH = 100;
 }

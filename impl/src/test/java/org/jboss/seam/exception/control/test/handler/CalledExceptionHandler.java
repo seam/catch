@@ -27,51 +27,42 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
 @HandlesExceptions
-public class CalledExceptionHandler
-{
-   public static boolean OUTBOUND_HANDLER_CALLED = false;
-   public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean PROTECTED_HANDLER_CALLED = false;
-   public static int INBOUND_HANDLER_TIMES_CALLED = 0;
-   public static boolean BEANMANAGER_INJECTED = false;
-   public static boolean LOCATION_DIFFER_BEANMANAGER_INJECTED = false;
+public class CalledExceptionHandler {
+    public static boolean OUTBOUND_HANDLER_CALLED = false;
+    public static int OUTBOUND_HANDLER_TIMES_CALLED = 0;
+    public static boolean PROTECTED_HANDLER_CALLED = false;
+    public static int INBOUND_HANDLER_TIMES_CALLED = 0;
+    public static boolean BEANMANAGER_INJECTED = false;
+    public static boolean LOCATION_DIFFER_BEANMANAGER_INJECTED = false;
 
-   public void basicHandler(@Handles CaughtException<Exception> event)
-   {
-      OUTBOUND_HANDLER_CALLED = true;
-      OUTBOUND_HANDLER_TIMES_CALLED++;
-   }
+    public void basicHandler(@Handles CaughtException<Exception> event) {
+        OUTBOUND_HANDLER_CALLED = true;
+        OUTBOUND_HANDLER_TIMES_CALLED++;
+    }
 
-   public void basicInboundHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
-   {
-      INBOUND_HANDLER_TIMES_CALLED++;
-      event.markHandled();
-   }
+    public void basicInboundHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event) {
+        INBOUND_HANDLER_TIMES_CALLED++;
+        event.markHandled();
+    }
 
-   public void extraInjections(@Handles CaughtException<IllegalArgumentException> event, BeanManager bm)
-   {
-      if (bm != null)
-      {
-         BEANMANAGER_INJECTED = true;
-      }
-   }
+    public void extraInjections(@Handles CaughtException<IllegalArgumentException> event, BeanManager bm) {
+        if (bm != null) {
+            BEANMANAGER_INJECTED = true;
+        }
+    }
 
-   void protectedHandler(@Handles CaughtException<IllegalStateException> event)
-   {
-      PROTECTED_HANDLER_CALLED = true;
+    void protectedHandler(@Handles CaughtException<IllegalStateException> event) {
+        PROTECTED_HANDLER_CALLED = true;
 
-      if (!event.isMarkedHandled())
-      {
-         event.markHandled();
-      }
-   }
+        if (!event.isMarkedHandled()) {
+            event.markHandled();
+        }
+    }
 
-   @SuppressWarnings("unused")
-   private void handlerLocationInjections(BeanManager bm, @Handles CaughtException<SQLException> event)
-   {
-      if (bm != null)
-      {
-         LOCATION_DIFFER_BEANMANAGER_INJECTED = true;
-      }
-   }
+    @SuppressWarnings("unused")
+    private void handlerLocationInjections(BeanManager bm, @Handles CaughtException<SQLException> event) {
+        if (bm != null) {
+            LOCATION_DIFFER_BEANMANAGER_INJECTED = true;
+        }
+    }
 }

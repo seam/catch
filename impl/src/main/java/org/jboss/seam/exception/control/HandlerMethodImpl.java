@@ -41,258 +41,219 @@ import org.jboss.seam.solder.reflection.annotated.InjectableMethod;
  *
  * @param <T> Type of the exception this handler handles.
  */
-public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T>
-{
-   private final Class<?> beanClass;
-   private Bean<?> bean;
-   private final Set<Annotation> qualifiers;
-   private final Type exceptionType;
-   private final AnnotatedMethod<?> handler;
-   private final TraversalMode traversalMode;
-   private final int precedence;
-   private final Method javaMethod;
-   private final AnnotatedParameter<?> handlerParameter;
+public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> {
+    private final Class<?> beanClass;
+    private Bean<?> bean;
+    private final Set<Annotation> qualifiers;
+    private final Type exceptionType;
+    private final AnnotatedMethod<?> handler;
+    private final TraversalMode traversalMode;
+    private final int precedence;
+    private final Method javaMethod;
+    private final AnnotatedParameter<?> handlerParameter;
 
-   /**
-    * Determines if the given method is a handler by looking for the {@link Handles} annotation on a parameter.
-    *
-    * @param method method to search
-    * @return true if {@link Handles} is found, false otherwise
-    */
-   public static boolean isHandler(final AnnotatedMethod<?> method)
-   {
-      if (method == null)
-      {
-         throw new IllegalArgumentException("Method must not be null");
-      }
+    /**
+     * Determines if the given method is a handler by looking for the {@link Handles} annotation on a parameter.
+     *
+     * @param method method to search
+     * @return true if {@link Handles} is found, false otherwise
+     */
+    public static boolean isHandler(final AnnotatedMethod<?> method) {
+        if (method == null) {
+            throw new IllegalArgumentException("Method must not be null");
+        }
 
-      for (AnnotatedParameter<?> param : method.getParameters())
-      {
-         if (param.isAnnotationPresent(Handles.class))
-         {
+        for (AnnotatedParameter<?> param : method.getParameters()) {
+            if (param.isAnnotationPresent(Handles.class)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static AnnotatedParameter<?> findHandlerParameter(final AnnotatedMethod<?> method) {
+        if (!isHandler(method)) {
+            throw new IllegalArgumentException("Method is not a valid handler");
+        }
+
+        AnnotatedParameter<?> returnParam = null;
+
+        for (AnnotatedParameter<?> param : method.getParameters()) {
+            if (param.isAnnotationPresent(Handles.class)) {
+                returnParam = param;
+                break;
+            }
+        }
+
+        return returnParam;
+    }
+
+    /**
+     * Sole Constructor.
+     *
+     * @param method found handler
+     * @param bm     active BeanManager
+     * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with {@link
+     *                                  Handles}
+     */
+    public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm) {
+        if (!HandlerMethodImpl.isHandler(method)) {
+            throw new IllegalArgumentException(MessageFormat.format("{0} is not a valid handler", method));
+        }
+
+        final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
+
+        this.handler = method;
+        this.javaMethod = method.getJavaMember();
+
+        this.handlerParameter = findHandlerParameter(method);
+
+        if (!this.handlerParameter.isAnnotationPresent(Handles.class)) {
+            throw new IllegalArgumentException("Method is not annotated with @Handles");
+        }
+
+        this.traversalMode = this.handlerParameter.getAnnotation(Handles.class).during();
+        this.precedence = this.handlerParameter.getAnnotation(Handles.class).precedence();
+        tmpQualifiers.addAll(Beans.getQualifiers(bm, this.handlerParameter.getAnnotations()));
+
+        if (tmpQualifiers.isEmpty()) {
+            tmpQualifiers.add(AnyLiteral.INSTANCE);
+        }
+
+        this.qualifiers = tmpQualifiers;
+        this.beanClass = method.getJavaMember().getDeclaringClass();
+        this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Class<?> getBeanClass() {
+        return this.beanClass;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Bean<?> getBean(BeanManager bm) {
+        if (this.bean == null) {
+            this.bean = bm.resolve(bm.getBeans(this.beanClass));
+        }
+        return this.bean;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set<Annotation> getQualifiers() {
+        return Collections.unmodifiableSet(this.qualifiers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Type getExceptionType() {
+        return this.exceptionType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void notify(final CaughtException<T> event, final BeanManager bm) {
+        CreationalContext<?> ctx = null;
+        try {
+            ctx = bm.createCreationalContext(null);
+            Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
+            InjectableMethod<?> im = createInjectableMethod(this.handler, getBean(bm), bm);
+            im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this));
+        } finally {
+            if (ctx != null) {
+                ctx.release();
+            }
+        }
+    }
+
+    private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod, Bean<?> bean, BeanManager manager) {
+        return new InjectableMethod<X>(handlerMethod, bean, manager);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public TraversalMode getTraversalMode() {
+        return this.traversalMode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getPrecedence() {
+        return this.precedence;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Method getJavaMethod() {
+        return this.javaMethod;
+    }
+
+    public AnnotatedParameter<?> getHandlerParameter() {
+        return this.handlerParameter;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
-         }
-      }
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-      return false;
-   }
+        HandlerMethodImpl<?> that = (HandlerMethodImpl<?>) o;
 
-   public static AnnotatedParameter<?> findHandlerParameter(final AnnotatedMethod<?> method)
-   {
-      if (!isHandler(method))
-      {
-         throw new IllegalArgumentException("Method is not a valid handler");
-      }
+        if (!beanClass.equals(that.beanClass)) {
+            return false;
+        }
+        if (!javaMethod.equals(that.javaMethod)) {
+            return false;
+        }
+        if (!qualifiers.equals(that.qualifiers)) {
+            return false;
+        }
+        if (!exceptionType.equals(that.exceptionType)) {
+            return false;
+        }
+        if (precedence != that.precedence) {
+            return false;
+        }
+        if (!handlerParameter.equals(that.handlerParameter)) {
+            return false;
+        }
+        return traversalMode == that.traversalMode;
 
-      AnnotatedParameter<?> returnParam = null;
+    }
 
-      for (AnnotatedParameter<?> param : method.getParameters())
-      {
-         if (param.isAnnotationPresent(Handles.class))
-         {
-            returnParam = param;
-            break;
-         }
-      }
+    @Override
+    public int hashCode() {
+        int result = beanClass.hashCode();
+        result = 5 * result + qualifiers.hashCode();
+        result = 5 * result + exceptionType.hashCode();
+        result = 5 * result + traversalMode.hashCode();
+        result = 5 * result + precedence;
+        result = 5 * result + javaMethod.hashCode();
+        result = 5 * result + handlerParameter.hashCode();
+        return result;
+    }
 
-      return returnParam;
-   }
-
-   /**
-    * Sole Constructor.
-    *
-    * @param method found handler
-    * @param bm     active BeanManager
-    * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with {@link
-    *                                  Handles}
-    */
-   public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm)
-   {
-      if (!HandlerMethodImpl.isHandler(method))
-      {
-         throw new IllegalArgumentException(MessageFormat.format("{0} is not a valid handler", method));
-      }
-
-      final Set<Annotation> tmpQualifiers = new HashSet<Annotation>();
-
-      this.handler = method;
-      this.javaMethod = method.getJavaMember();
-
-      this.handlerParameter = findHandlerParameter(method);
-
-      if (!this.handlerParameter.isAnnotationPresent(Handles.class))
-      {
-         throw new IllegalArgumentException("Method is not annotated with @Handles");
-      }
-
-      this.traversalMode = this.handlerParameter.getAnnotation(Handles.class).during();
-      this.precedence = this.handlerParameter.getAnnotation(Handles.class).precedence();
-      tmpQualifiers.addAll(Beans.getQualifiers(bm, this.handlerParameter.getAnnotations()));
-
-      if (tmpQualifiers.isEmpty())
-      {
-         tmpQualifiers.add(AnyLiteral.INSTANCE);
-      }
-
-      this.qualifiers = tmpQualifiers;
-      this.beanClass = method.getJavaMember().getDeclaringClass();
-      this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Class<?> getBeanClass()
-   {
-      return this.beanClass;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public synchronized Bean<?> getBean(BeanManager bm)
-   {
-      if (this.bean == null)
-      {
-         this.bean = bm.resolve(bm.getBeans(this.beanClass));
-      }
-      return this.bean;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Set<Annotation> getQualifiers()
-   {
-      return Collections.unmodifiableSet(this.qualifiers);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Type getExceptionType()
-   {
-      return this.exceptionType;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void notify(final CaughtException<T> event, final BeanManager bm)
-   {
-      CreationalContext<?> ctx = null;
-      try
-      {
-         ctx = bm.createCreationalContext(null);
-         Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
-         InjectableMethod<?> im = createInjectableMethod(this.handler, getBean(bm), bm);
-         im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this));
-      }
-      finally
-      {
-         if (ctx != null)
-         {
-            ctx.release();
-         }
-      }
-   }
-
-   private <X> InjectableMethod<X> createInjectableMethod(AnnotatedMethod<X> handlerMethod, Bean<?> bean, BeanManager manager)
-   {
-      return new InjectableMethod<X>(handlerMethod, bean, manager);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public TraversalMode getTraversalMode()
-   {
-      return this.traversalMode;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public int getPrecedence()
-   {
-      return this.precedence;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Method getJavaMethod()
-   {
-      return this.javaMethod;
-   }
-
-   public AnnotatedParameter<?> getHandlerParameter()
-   {
-      return this.handlerParameter;
-   }
-
-   @Override
-   public boolean equals(Object o)
-   {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
-      {
-         return false;
-      }
-
-      HandlerMethodImpl<?> that = (HandlerMethodImpl<?>) o;
-
-      if (!beanClass.equals(that.beanClass))
-      {
-         return false;
-      }
-      if (!javaMethod.equals(that.javaMethod))
-      {
-         return false;
-      }
-      if (!qualifiers.equals(that.qualifiers))
-      {
-         return false;
-      }
-      if (!exceptionType.equals(that.exceptionType))
-      {
-         return false;
-      }
-      if (precedence != that.precedence)
-      {
-         return false;
-      }
-      if (!handlerParameter.equals(that.handlerParameter))
-      {
-         return false;
-      }
-      return traversalMode == that.traversalMode;
-
-   }
-
-   @Override
-   public int hashCode()
-   {
-      int result = beanClass.hashCode();
-      result = 5 * result + qualifiers.hashCode();
-      result = 5 * result + exceptionType.hashCode();
-      result = 5 * result + traversalMode.hashCode();
-      result = 5 * result + precedence;
-      result = 5 * result + javaMethod.hashCode();
-      result = 5 * result + handlerParameter.hashCode();
-      return result;
-   }
-
-   @Override
-   public String toString()
-   {
-      return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ")
-            .append("TraversalMode: ").append(this.traversalMode).append(" ")
-            .append("Handles Type: ").append(this.exceptionType).append(" ")
-            .append("Precedence: ").append(this.precedence).append(" ")
-            .append(this.handler.toString()).toString();
-   }
+    @Override
+    public String toString() {
+        return new StringBuilder("Qualifiers: ").append(this.qualifiers).append(" ")
+                .append("TraversalMode: ").append(this.traversalMode).append(" ")
+                .append("Handles Type: ").append(this.exceptionType).append(" ")
+                .append("Precedence: ").append(this.precedence).append(" ")
+                .append(this.handler.toString()).toString();
+    }
 }

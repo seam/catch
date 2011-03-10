@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,35 +22,36 @@ import org.jboss.seam.exception.control.ExceptionStack;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @HandlesExceptions
-public class StackInfoHandler
-{
-   public void outerInfoInspector(@Handles CaughtException<Exception> event)
-   {
-      ExceptionStack info = event.getExceptionStack();
+public class StackInfoHandler {
+    public void outerInfoInspector(@Handles CaughtException<Exception> event) {
+        ExceptionStack info = event.getExceptionStack();
 
-      assertTrue(info.isLast());
-      assertFalse(info.isRoot());
-      assertNull(info.getNext());
-      assertEquals(Exception.class, info.getCurrent().getClass());
-      assertEquals(2, info.getCauseElements().size());
-      assertEquals(0, info.getRemaining().size());
-   }
+        assertTrue(info.isLast());
+        assertFalse(info.isRoot());
+        assertNull(info.getNext());
+        assertEquals(Exception.class, info.getCurrent().getClass());
+        assertEquals(2, info.getCauseElements().size());
+        assertEquals(0, info.getRemaining().size());
+    }
 
-   public void rootInfoInspector(@Handles CaughtException<NullPointerException> event)
-   {
-      ExceptionStack info = event.getExceptionStack();
+    public void rootInfoInspector(@Handles CaughtException<NullPointerException> event) {
+        ExceptionStack info = event.getExceptionStack();
 
-      assertFalse(info.isLast());
-      assertTrue(info.isRoot());
-      assertNotNull(info.getNext());
-      assertEquals(NullPointerException.class, info.getCurrent().getClass());
-      assertEquals(2, info.getCauseElements().size());
-      assertEquals(1, info.getRemaining().size());
-      assertEquals(event.getException(), info.getCurrent());
+        assertFalse(info.isLast());
+        assertTrue(info.isRoot());
+        assertNotNull(info.getNext());
+        assertEquals(NullPointerException.class, info.getCurrent().getClass());
+        assertEquals(2, info.getCauseElements().size());
+        assertEquals(1, info.getRemaining().size());
+        assertEquals(event.getException(), info.getCurrent());
 
-      event.dropCause();
-   }
+        event.dropCause();
+    }
 }

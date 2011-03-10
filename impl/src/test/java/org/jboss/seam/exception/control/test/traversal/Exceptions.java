@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -17,29 +17,22 @@
 package org.jboss.seam.exception.control.test.traversal;
 
 @SuppressWarnings("serial")
-public class Exceptions
-{
-   public static class Exception1 extends Exception
-   {
-      public Exception1(Throwable cause)
-      {
-         super(cause);
-      }
-   }
+public class Exceptions {
+    public static class Exception1 extends Exception {
+        public Exception1(Throwable cause) {
+            super(cause);
+        }
+    }
 
-   public static class Exception2 extends Exception
-   {
-      public Exception2(Throwable cause)
-      {
-         super(cause);
-      }
-   }
+    public static class Exception2 extends Exception {
+        public Exception2(Throwable cause) {
+            super(cause);
+        }
+    }
 
-   public static class Exception3Super extends Exception
-   {
-   }
+    public static class Exception3Super extends Exception {
+    }
 
-   public static class Exception3 extends Exception3Super
-   {
-   }
+    public static class Exception3 extends Exception3Super {
+    }
 }

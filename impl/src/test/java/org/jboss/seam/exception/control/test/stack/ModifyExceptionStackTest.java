@@ -48,42 +48,36 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 
 @RunWith(Arquillian.class)
 @HandlesExceptions
-public class ModifyExceptionStackTest
-{
-   private Exception startException;
+public class ModifyExceptionStackTest {
+    private Exception startException;
 
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(ModifyExceptionStackTest.class, CatchExtension.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(ModifyExceptionStackTest.class, CatchExtension.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @SuppressWarnings("serial")
-   public static class ApplicationException extends Exception
-   {
+    @SuppressWarnings("serial")
+    public static class ApplicationException extends Exception {
 
-   }
+    }
 
-   @Test
-   public void assertModifyingStack(Event<ExceptionToCatch> event)
-   {
-      this.startException = new Exception(new NullPointerException());
-      event.fire(new ExceptionToCatch(this.startException));
-   }
+    @Test
+    public void assertModifyingStack(Event<ExceptionToCatch> event) {
+        this.startException = new Exception(new NullPointerException());
+        event.fire(new ExceptionToCatch(this.startException));
+    }
 
-   public void changeStackObserver(@Observes ExceptionStack stack)
-   {
-      ArrayList<Throwable> causes = new ArrayList<Throwable>(stack.getCauseElements());
-      causes.set(0, new ApplicationException());
-      stack.setCauseElements(causes);
-   }
+    public void changeStackObserver(@Observes ExceptionStack stack) {
+        ArrayList<Throwable> causes = new ArrayList<Throwable>(stack.getCauseElements());
+        causes.set(0, new ApplicationException());
+        stack.setCauseElements(causes);
+    }
 
-   public void assertionHandler(@Handles CaughtException<Throwable> e)
-   {
-      assertThat(e.getExceptionStack().getCauseElements(), not(hasItem((Throwable) this.startException)));
-   }
+    public void assertionHandler(@Handles CaughtException<Throwable> e) {
+        assertThat(e.getExceptionStack().getCauseElements(), not(hasItem((Throwable) this.startException)));
+    }
 }

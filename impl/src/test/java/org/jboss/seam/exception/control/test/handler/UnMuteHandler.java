@@ -23,20 +23,17 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
 @HandlesExceptions
-public class UnMuteHandler
-{
-   public static int DEPTH_FIRST_NUMBER_CALLED = 0;
-   public static int BREADTH_FIRST_NUMBER_CALLED = 0;
+public class UnMuteHandler {
+    public static int DEPTH_FIRST_NUMBER_CALLED = 0;
+    public static int BREADTH_FIRST_NUMBER_CALLED = 0;
 
-   public void unMuteHandlerAsc(@Handles CaughtException<Exception> event)
-   {
-      DEPTH_FIRST_NUMBER_CALLED++;
-      event.unmute();
-   }
+    public void unMuteHandlerAsc(@Handles CaughtException<Exception> event) {
+        DEPTH_FIRST_NUMBER_CALLED++;
+        event.unmute();
+    }
 
-   public void unMuteHandlerDesc(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
-   {
-      BREADTH_FIRST_NUMBER_CALLED++;
-      event.unmute();
-   }
+    public void unMuteHandlerDesc(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event) {
+        BREADTH_FIRST_NUMBER_CALLED++;
+        event.unmute();
+    }
 }

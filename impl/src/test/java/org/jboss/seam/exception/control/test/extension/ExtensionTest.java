@@ -51,91 +51,82 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
-public class ExtensionTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
-                  InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
-            .addManifestResource(new StringAsset(
-                  "<beans>" +
-                        "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
-                        "   <decorators><class>" + DecoratorAsHandler.class.getName() + "</class></decorators>" +
-                        "</beans>"), "beans.xml")
-            .addServiceProvider(Extension.class, CatchExtension.class);
-   }
+public class ExtensionTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
+                        InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
+                .addManifestResource(new StringAsset(
+                        "<beans>" +
+                                "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
+                                "   <decorators><class>" + DecoratorAsHandler.class.getName() + "</class></decorators>" +
+                                "</beans>"), "beans.xml")
+                .addServiceProvider(Extension.class, CatchExtension.class);
+    }
 
-   @Inject
-   CatchExtension extension;
-   @Inject
-   BeanManager bm;
+    @Inject
+    CatchExtension extension;
+    @Inject
+    BeanManager bm;
 
-   @Test
-   public void assertAnyHandlersAreFound()
-   {
-      assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
-            Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).isEmpty());
-   }
+    @Test
+    public void assertAnyHandlersAreFound() {
+        assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+                Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).isEmpty());
+    }
 
-   /**
-    * Verifies that the expected number of handlers are found. If the extension where to scan interceptors and
-    * decorators for handlers, this assertion would fail.
-    *
-    * @see ExtensionExceptionHandler
-    * @see InterceptorAsHandler
-    * @see DecoratorAsHandler
-    */
-   @Test
-   public void assertNumberOfHandlersFoundMatchesExpectedDepthFirst()
-   {
-      assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
-            Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).size());
-   }
+    /**
+     * Verifies that the expected number of handlers are found. If the extension where to scan interceptors and
+     * decorators for handlers, this assertion would fail.
+     *
+     * @see ExtensionExceptionHandler
+     * @see InterceptorAsHandler
+     * @see DecoratorAsHandler
+     */
+    @Test
+    public void assertNumberOfHandlersFoundMatchesExpectedDepthFirst() {
+        assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+                Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).size());
+    }
 
-   @Test
-   public void assertNumberOfHandlersFoundMatchesExpectedBreathFirst()
-   {
-      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
-            Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST).size());
-   }
+    @Test
+    public void assertNumberOfHandlersFoundMatchesExpectedBreathFirst() {
+        assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
+                Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST).size());
+    }
 
-   @Test
-   public void assertSQLHandlerFound()
-   {
-      final List<HandlerMethod<? extends Throwable>> handlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
-            SQLException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
-      assertThat(handlerMethods.size(), is(4));
-      assertThat(handlerMethods.get(3).getExceptionType(), equalTo((Type) SQLException.class));
-   }
+    @Test
+    public void assertSQLHandlerFound() {
+        final List<HandlerMethod<? extends Throwable>> handlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
+                SQLException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
+        assertThat(handlerMethods.size(), is(4));
+        assertThat(handlerMethods.get(3).getExceptionType(), equalTo((Type) SQLException.class));
+    }
 
-   @Test
-   public void assertQualifiedHandlerAndOthersAreFound()
-   {
-      HashSet<Annotation> qualifiers = new HashSet<Annotation>();
-      qualifiers.add(CatchQualifierLiteral.INSTANCE);
-      assertEquals(7, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
-            TraversalMode.DEPTH_FIRST).size());
-   }
+    @Test
+    public void assertQualifiedHandlerAndOthersAreFound() {
+        HashSet<Annotation> qualifiers = new HashSet<Annotation>();
+        qualifiers.add(CatchQualifierLiteral.INSTANCE);
+        assertEquals(7, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+                TraversalMode.DEPTH_FIRST).size());
+    }
 
-   @Test
-   public void assertAllValidHandlersAreFoundDepthFirst()
-   {
-      HashSet<Annotation> qualifiers = new HashSet<Annotation>();
-      qualifiers.add(CatchQualifierLiteral.INSTANCE);
-      qualifiers.add(ArquillianLiteral.INSTANCE);
-      assertEquals(8, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
-            TraversalMode.DEPTH_FIRST).size());
-   }
+    @Test
+    public void assertAllValidHandlersAreFoundDepthFirst() {
+        HashSet<Annotation> qualifiers = new HashSet<Annotation>();
+        qualifiers.add(CatchQualifierLiteral.INSTANCE);
+        qualifiers.add(ArquillianLiteral.INSTANCE);
+        assertEquals(8, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+                TraversalMode.DEPTH_FIRST).size());
+    }
 
-   @Test
-   public void assertAllValidHandlersAreFoundBreadthFirst()
-   {
-      HashSet<Annotation> qualifiers = new HashSet<Annotation>();
-      qualifiers.add(CatchQualifierLiteral.INSTANCE);
-      qualifiers.add(ArquillianLiteral.INSTANCE);
-      assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
-            TraversalMode.BREADTH_FIRST).size());
-   }
+    @Test
+    public void assertAllValidHandlersAreFoundBreadthFirst() {
+        HashSet<Annotation> qualifiers = new HashSet<Annotation>();
+        qualifiers.add(CatchQualifierLiteral.INSTANCE);
+        qualifiers.add(ArquillianLiteral.INSTANCE);
+        assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
+                TraversalMode.BREADTH_FIRST).size());
+    }
 }

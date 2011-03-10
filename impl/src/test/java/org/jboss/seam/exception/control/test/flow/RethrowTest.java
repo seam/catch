@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -34,30 +34,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class RethrowTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(RethrowHandler.class, CatchExtension.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class RethrowTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(RethrowHandler.class, CatchExtension.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   private BeanManager bm;
+    @Inject
+    private BeanManager bm;
 
-   @Test(expected = NullPointerException.class)
-   public void assertOutboundRethrow()
-   {
-      bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
-   }
+    @Test(expected = NullPointerException.class)
+    public void assertOutboundRethrow() {
+        bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
+    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void assertInboundRethrow()
-   {
-      bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void assertInboundRethrow() {
+        bm.fireEvent(new ExceptionToCatch(new IllegalArgumentException()));
+    }
 }

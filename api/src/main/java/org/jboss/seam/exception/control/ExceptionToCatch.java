@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -27,63 +27,56 @@ import java.util.Set;
  * Entry point event into the Catch system.  This object is nearly immutable, the only mutable portion
  * is the handled flag.
  */
-public class ExceptionToCatch implements Serializable
-{
-   private static final long serialVersionUID = 2629791852079147814L;
+public class ExceptionToCatch implements Serializable {
+    private static final long serialVersionUID = 2629791852079147814L;
 
-   private Throwable exception;
-   private boolean handled;
-   private transient Set<Annotation> qualifiers;
+    private Throwable exception;
+    private boolean handled;
+    private transient Set<Annotation> qualifiers;
 
-   public ExceptionToCatch()
-   {
-   } // needed to be a bean
+    public ExceptionToCatch() {
+    } // needed to be a bean
 
-   /**
-    * Constructor that adds qualifiers for the handler(s) to run.
-    * Typically only integrators will be using this constructor.
-    *
-    * @param exception  Exception to handle
-    * @param qualifiers qualifiers to use to narrow the handlers called
-    */
-   public ExceptionToCatch(Throwable exception, Annotation... qualifiers)
-   {
-      this.exception = exception;
-      this.qualifiers = new HashSet<Annotation>();
-      Collections.addAll(this.qualifiers, qualifiers);
-   }
+    /**
+     * Constructor that adds qualifiers for the handler(s) to run.
+     * Typically only integrators will be using this constructor.
+     *
+     * @param exception  Exception to handle
+     * @param qualifiers qualifiers to use to narrow the handlers called
+     */
+    public ExceptionToCatch(Throwable exception, Annotation... qualifiers) {
+        this.exception = exception;
+        this.qualifiers = new HashSet<Annotation>();
+        Collections.addAll(this.qualifiers, qualifiers);
+    }
 
-   /**
-    * Basic constructor without any qualifiers defined.
-    *
-    * @param exception Exception to handle.
-    */
-   public ExceptionToCatch(Throwable exception)
-   {
-      this.exception = exception;
-      this.qualifiers = Collections.emptySet();
-   }
+    /**
+     * Basic constructor without any qualifiers defined.
+     *
+     * @param exception Exception to handle.
+     */
+    public ExceptionToCatch(Throwable exception) {
+        this.exception = exception;
+        this.qualifiers = Collections.emptySet();
+    }
 
-   public Throwable getException()
-   {
-      return exception;
-   }
+    public Throwable getException() {
+        return exception;
+    }
 
-   /**
-    * NOTE: Will be moved to protected in a later release!!
-    */
-   public void setHandled(boolean handled) // TODO: Move to protected
-   {
-      this.handled = handled;
-   }
+    /**
+     * NOTE: Will be moved to protected in a later release!!
+     */
+    public void setHandled(boolean handled) // TODO: Move to protected
+    {
+        this.handled = handled;
+    }
 
-   public boolean isHandled()
-   {
-      return handled;
-   }
+    public boolean isHandled() {
+        return handled;
+    }
 
-   public Set<Annotation> getQualifiers()
-   {
-      return Collections.unmodifiableSet(qualifiers);
-   }
+    public Set<Annotation> getQualifiers() {
+        return Collections.unmodifiableSet(qualifiers);
+    }
 }

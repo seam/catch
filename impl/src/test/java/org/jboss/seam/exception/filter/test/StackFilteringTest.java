@@ -35,154 +35,127 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class StackFilteringTest
-{
-   @Test
-   public void terminateTest()
-   {
-      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
-      {
-         @Override
-         public StackFrameFilterResult process(StackFrame frame)
-         {
-            return StackFrameFilterResult.TERMINATE;
-         }
-      };
-
-      final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
-      final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
-      final String result = exceptionStackOutput.printTrace();
-      final String expectedResult = MessageFormat.format(ExceptionStackOutput.ROOT_CAUSE_TEXT, noClassDefFoundError);
-
-      assertThat(result, is(expectedResult));
-   }
-
-   @Test
-   public void terminateAfterTest() throws IOException
-   {
-      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
-      {
-         @Override
-         public StackFrameFilterResult process(StackFrame frame)
-         {
-            return StackFrameFilterResult.TERMINATE_AFTER;
-         }
-      };
-
-      final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
-      final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
-      final String result = exceptionStackOutput.printTrace();
-      final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
-
-      while (lineNumberReader.readLine() != null)
-      {
-      } // just get the line numbers
-
-      assertThat(lineNumberReader.getLineNumber(), is(2)); // The five at lines and the one root cause
-   }
-
-   @Test
-   public void dropRemainingTest() throws IOException
-   {
-      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
-      {
-         @Override
-         public StackFrameFilterResult process(StackFrame frame)
-         {
-            if (frame.getIndex() >= 5)
-            {
-               return StackFrameFilterResult.DROP_REMAINING;
+public class StackFilteringTest {
+    @Test
+    public void terminateTest() {
+        final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>() {
+            @Override
+            public StackFrameFilterResult process(StackFrame frame) {
+                return StackFrameFilterResult.TERMINATE;
             }
-            return StackFrameFilterResult.INCLUDE;
-         }
-      };
+        };
 
-      final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
-      final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
-      final String result = exceptionStackOutput.printTrace();
-      final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
+        final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
+        final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
+        final String result = exceptionStackOutput.printTrace();
+        final String expectedResult = MessageFormat.format(ExceptionStackOutput.ROOT_CAUSE_TEXT, noClassDefFoundError);
 
-      while (lineNumberReader.readLine() != null)
-      {
-      } // just get the line numbers
+        assertThat(result, is(expectedResult));
+    }
 
-      assertThat(lineNumberReader.getLineNumber(), is(6)); // The five at lines and the one root cause
-   }
-
-   @Test
-   public void dropTest() throws IOException
-   {
-      final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>()
-      {
-         @Override
-         public StackFrameFilterResult process(StackFrame frame)
-         {
-            if (frame.isMarkSet("reflections.invoke"))
-            {
-               if (frame.getStackTraceElement().getClassName().contains("java.lang.reflect"))
-               {
-                  frame.clearMark("reflections.invoke");
-                  return StackFrameFilterResult.INCLUDE;
-               }
-               else if (frame.getStackTraceElement().getMethodName().startsWith("invoke"))
-               {
-                  return StackFrameFilterResult.DROP;
-               }
+    @Test
+    public void terminateAfterTest() throws IOException {
+        final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>() {
+            @Override
+            public StackFrameFilterResult process(StackFrame frame) {
+                return StackFrameFilterResult.TERMINATE_AFTER;
             }
+        };
 
-            if (frame.getStackTraceElement().getMethodName().startsWith("invoke"))
-            {
-               frame.mark("reflections.invoke");
-               return StackFrameFilterResult.DROP;
+        final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
+        final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
+        final String result = exceptionStackOutput.printTrace();
+        final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
+
+        while (lineNumberReader.readLine() != null) {
+        } // just get the line numbers
+
+        assertThat(lineNumberReader.getLineNumber(), is(2)); // The five at lines and the one root cause
+    }
+
+    @Test
+    public void dropRemainingTest() throws IOException {
+        final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>() {
+            @Override
+            public StackFrameFilterResult process(StackFrame frame) {
+                if (frame.getIndex() >= 5) {
+                    return StackFrameFilterResult.DROP_REMAINING;
+                }
+                return StackFrameFilterResult.INCLUDE;
             }
+        };
 
-            if (frame.getIndex() > 18)
-            {
-               return StackFrameFilterResult.DROP_REMAINING;
+        final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
+        final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
+        final String result = exceptionStackOutput.printTrace();
+        final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
+
+        while (lineNumberReader.readLine() != null) {
+        } // just get the line numbers
+
+        assertThat(lineNumberReader.getLineNumber(), is(6)); // The five at lines and the one root cause
+    }
+
+    @Test
+    public void dropTest() throws IOException {
+        final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>() {
+            @Override
+            public StackFrameFilterResult process(StackFrame frame) {
+                if (frame.isMarkSet("reflections.invoke")) {
+                    if (frame.getStackTraceElement().getClassName().contains("java.lang.reflect")) {
+                        frame.clearMark("reflections.invoke");
+                        return StackFrameFilterResult.INCLUDE;
+                    } else if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
+                        return StackFrameFilterResult.DROP;
+                    }
+                }
+
+                if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
+                    frame.mark("reflections.invoke");
+                    return StackFrameFilterResult.DROP;
+                }
+
+                if (frame.getIndex() > 18) {
+                    return StackFrameFilterResult.DROP_REMAINING;
+                }
+
+                return StackFrameFilterResult.INCLUDE;
             }
+        };
 
-            return StackFrameFilterResult.INCLUDE;
-         }
-      };
+        final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
+        final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
+        final String result = exceptionStackOutput.printTrace();
+        final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
+        int invokeLines = 0;
+        String line;
 
-      final NoClassDefFoundError noClassDefFoundError = new NoClassDefFoundError("java.lang.String Not found");
-      final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
-      final String result = exceptionStackOutput.printTrace();
-      final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
-      int invokeLines = 0;
-      String line;
-
-      while ((line = lineNumberReader.readLine()) != null)
-      {
-         if (line.contains("reflect"))
-         {
-            invokeLines++;
-         }
-      } // just get the line numbers
+        while ((line = lineNumberReader.readLine()) != null) {
+            if (line.contains("reflect")) {
+                invokeLines++;
+            }
+        } // just get the line numbers
 
 
-      assertThat("Actual: " + result, lineNumberReader.getLineNumber() < 22, is(true));
-      assertThat(invokeLines, is(1));
-   }
+        assertThat("Actual: " + result, lineNumberReader.getLineNumber() < 22, is(true));
+        assertThat(invokeLines, is(1));
+    }
 
-   @Test
-   public void testBuldingWrappedExceptionsWorksCorrectly() throws IOException
-   {
-      Exception e1 = new NullPointerException("Inside");
-      Exception e2 = new RuntimeException("Outer", e1);
+    @Test
+    public void testBuldingWrappedExceptionsWorksCorrectly() throws IOException {
+        Exception e1 = new NullPointerException("Inside");
+        Exception e2 = new RuntimeException("Outer", e1);
 
-      ExceptionStackOutput<Exception> exceptionStackOutput = new ExceptionStackOutput<Exception>(e2);
+        ExceptionStackOutput<Exception> exceptionStackOutput = new ExceptionStackOutput<Exception>(e2);
 
-      final String result = exceptionStackOutput.printTrace();
-      final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
-      String line;
+        final String result = exceptionStackOutput.printTrace();
+        final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
+        String line;
 
-      while ((line = lineNumberReader.readLine()) != null)
-      {
-         if (lineNumberReader.getLineNumber() == 3)
-         {
-            assertThat(line.startsWith("Wrapped"), is(true));
-         }
-      }
-   }
+        while ((line = lineNumberReader.readLine()) != null) {
+            if (lineNumberReader.getLineNumber() == 3) {
+                assertThat(line.startsWith("Wrapped"), is(true));
+            }
+        }
+    }
 }

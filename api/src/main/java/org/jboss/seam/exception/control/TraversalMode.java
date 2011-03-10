@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -20,8 +20,7 @@ package org.jboss.seam.exception.control;
 /**
  * Direction of a exception cause chain traversal.
  */
-public enum TraversalMode
-{
-   DEPTH_FIRST,
-   BREADTH_FIRST
+public enum TraversalMode {
+    DEPTH_FIRST,
+    BREADTH_FIRST
 }

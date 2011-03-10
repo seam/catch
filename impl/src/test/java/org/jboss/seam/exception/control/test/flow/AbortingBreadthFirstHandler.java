@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,22 +22,19 @@ import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
 
-@SuppressWarnings( { "AssignmentToStaticFieldFromInstanceMethod" })
+@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
 @HandlesExceptions
-public class AbortingBreadthFirstHandler
-{
-   public static boolean abortCalled = false;
-   public static boolean proceedCalled = false;
+public class AbortingBreadthFirstHandler {
+    public static boolean abortCalled = false;
+    public static boolean proceedCalled = false;
 
-   public void abortHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event)
-   {
-      abortCalled = true;
-      event.abort();
-   }
+    public void abortHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Exception> event) {
+        abortCalled = true;
+        event.abort();
+    }
 
-   public void proceedHandler(@Handles CaughtException<NullPointerException> event)
-   {
-      proceedCalled = true;
-      event.markHandled();
-   }
+    public void proceedHandler(@Handles CaughtException<NullPointerException> event) {
+        proceedCalled = true;
+        event.markHandled();
+    }
 }

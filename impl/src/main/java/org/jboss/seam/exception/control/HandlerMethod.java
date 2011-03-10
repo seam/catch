@@ -26,55 +26,54 @@ import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
-public interface HandlerMethod<T extends Throwable>
-{
-   /**
-    * Obtains the bean class of the bean that declares the observer method.
-    */
-   Class<?> getBeanClass();
+public interface HandlerMethod<T extends Throwable> {
+    /**
+     * Obtains the bean class of the bean that declares the observer method.
+     */
+    Class<?> getBeanClass();
 
-   /**
-    * Obtains the Bean reference that declares the observer method.
-    *
-    * @param bm Active BeanManager
-    */
-   Bean<?> getBean(BeanManager bm);
+    /**
+     * Obtains the Bean reference that declares the observer method.
+     *
+     * @param bm Active BeanManager
+     */
+    Bean<?> getBean(BeanManager bm);
 
-   /**
-    * Obtains the set of handled event qualifiers.
-    */
-   Set<Annotation> getQualifiers();
+    /**
+     * Obtains the set of handled event qualifiers.
+     */
+    Set<Annotation> getQualifiers();
 
-   /**
-    * Obtains the handled event type.
-    */
-   Type getExceptionType();
+    /**
+     * Obtains the handled event type.
+     */
+    Type getExceptionType();
 
-   /**
-    * Calls the handler method, passing the given event object.
-    *
-    * @param event event to pass to the handler.
-    * @param bm    Active BeanManager
-    */
-   void notify(CaughtException<T> event, BeanManager bm);
+    /**
+     * Calls the handler method, passing the given event object.
+     *
+     * @param event event to pass to the handler.
+     * @param bm    Active BeanManager
+     */
+    void notify(CaughtException<T> event, BeanManager bm);
 
-   /**
-    * Obtains the direction of the traversal path the handler will be listening.
-    */
-   TraversalMode getTraversalMode();
+    /**
+     * Obtains the direction of the traversal path the handler will be listening.
+     */
+    TraversalMode getTraversalMode();
 
-   /**
-    * Obtains the precedence of the handler.
-    */
-   int getPrecedence();
+    /**
+     * Obtains the precedence of the handler.
+     */
+    int getPrecedence();
 
-   /**
-    * Obtains the actual method of the handler.
-    */
-   Method getJavaMethod();
+    /**
+     * Obtains the actual method of the handler.
+     */
+    Method getJavaMethod();
 
-   /**
-    * Obtains the actual parameter defining this as a handler.
-    */
-   AnnotatedParameter<?> getHandlerParameter();
+    /**
+     * Obtains the actual parameter defining this as a handler.
+     */
+    AnnotatedParameter<?> getHandlerParameter();
 }

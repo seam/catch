@@ -27,72 +27,60 @@ import java.util.Arrays;
 /**
  * Container for the exception and it's stack trace.
  */
-public final class ExceptionStackItem implements Serializable
-{
-   final private Throwable throwable;
-   final private StackTraceElement[] stackTraceElements;
+public final class ExceptionStackItem implements Serializable {
+    final private Throwable throwable;
+    final private StackTraceElement[] stackTraceElements;
 
-   public ExceptionStackItem(final Throwable cause)
-   {
-      this(cause, cause.getStackTrace());
-   }
+    public ExceptionStackItem(final Throwable cause) {
+        this(cause, cause.getStackTrace());
+    }
 
-   public ExceptionStackItem(Throwable throwable, StackTraceElement[] stackTraceElements)
-   {
-      this.stackTraceElements = stackTraceElements.clone();
-      this.throwable = throwable;
-   }
+    public ExceptionStackItem(Throwable throwable, StackTraceElement[] stackTraceElements) {
+        this.stackTraceElements = stackTraceElements.clone();
+        this.throwable = throwable;
+    }
 
-   public StackTraceElement[] getStackTraceElements()
-   {
-      return this.stackTraceElements.clone();
-   }
+    public StackTraceElement[] getStackTraceElements() {
+        return this.stackTraceElements.clone();
+    }
 
-   public Throwable getThrowable()
-   {
-      return this.throwable;
-   }
+    public Throwable getThrowable() {
+        return this.throwable;
+    }
 
-   @Override
-   public String toString()
-   {
-      return new StringBuilder().
-            append("throwable: ").append(throwable).append(", ").
-            append("stackTraceElements: ").append(stackTraceElements).
-            toString();
-   }
+    @Override
+    public String toString() {
+        return new StringBuilder().
+                append("throwable: ").append(throwable).append(", ").
+                append("stackTraceElements: ").append(stackTraceElements).
+                toString();
+    }
 
-   @Override
-   public boolean equals(Object o)
-   {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
-      {
-         return false;
-      }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-      ExceptionStackItem that = (ExceptionStackItem) o;
+        ExceptionStackItem that = (ExceptionStackItem) o;
 
-      if (!Arrays.equals(stackTraceElements, that.stackTraceElements))
-      {
-         return false;
-      }
-      if (!throwable.equals(that.throwable))
-      {
-         return false;
-      }
+        if (!Arrays.equals(stackTraceElements, that.stackTraceElements)) {
+            return false;
+        }
+        if (!throwable.equals(that.throwable)) {
+            return false;
+        }
 
-      return true;
-   }
+        return true;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      int result = throwable.hashCode();
-      result = 31 * result + Arrays.hashCode(stackTraceElements);
-      return result;
-   }
+    @Override
+    public int hashCode() {
+        int result = throwable.hashCode();
+        result = 31 * result + Arrays.hashCode(stackTraceElements);
+        return result;
+    }
 }

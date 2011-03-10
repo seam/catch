@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -38,45 +38,41 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 @RunWith(Arquillian.class)
-public class HandlerComparatorTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class HandlerComparatorTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   CatchExtension extension;
-   @Inject
-   BeanManager bm;
+    @Inject
+    CatchExtension extension;
+    @Inject
+    BeanManager bm;
 
-   @Test
-   public void assertOrderIsCorrectDepthFirst()
-   {
-      List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
-            IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
+    @Test
+    public void assertOrderIsCorrectDepthFirst() {
+        List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
+                IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
 
-      assertEquals("catchThrowable", handlers.get(0).getJavaMethod().getName());
-      assertEquals("catchThrowableP20", handlers.get(1).getJavaMethod().getName());
-      assertEquals("catchRuntime", handlers.get(2).getJavaMethod().getName());
-      assertEquals("catchIAE", handlers.get(3).getJavaMethod().getName());
-   }
+        assertEquals("catchThrowable", handlers.get(0).getJavaMethod().getName());
+        assertEquals("catchThrowableP20", handlers.get(1).getJavaMethod().getName());
+        assertEquals("catchRuntime", handlers.get(2).getJavaMethod().getName());
+        assertEquals("catchIAE", handlers.get(3).getJavaMethod().getName());
+    }
 
-   @Test
-   public void assertOrderIsCorrectBreadthFirst()
-   {
-      List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
-         Exception.class, bm, Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST));
+    @Test
+    public void assertOrderIsCorrectBreadthFirst() {
+        List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
+                Exception.class, bm, Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST));
 
-      assertThat(handlers.size(), is(4));
-   }
+        assertThat(handlers.size(), is(4));
+    }
 }

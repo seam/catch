@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -37,26 +37,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class BreadthFirstAbortControlTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(AbortingBreadthFirstHandler.class, CatchExtension.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class BreadthFirstAbortControlTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(AbortingBreadthFirstHandler.class, CatchExtension.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   private BeanManager bm;
+    @Inject
+    private BeanManager bm;
 
-   @Test
-   public void assertNoOtherHandlersCalledAfterAbort()
-   {
-      bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
-      assertTrue(AbortingBreadthFirstHandler.abortCalled);
-      assertFalse(AbortingBreadthFirstHandler.proceedCalled);
-   }
+    @Test
+    public void assertNoOtherHandlersCalledAfterAbort() {
+        bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
+        assertTrue(AbortingBreadthFirstHandler.abortCalled);
+        assertFalse(AbortingBreadthFirstHandler.proceedCalled);
+    }
 }

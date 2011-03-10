@@ -22,30 +22,29 @@ package org.jboss.seam.exception.filter;
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
  */
-public enum StackFrameFilterResult
-{
-   /**
-    * Include this frame
-    */
-   INCLUDE,
+public enum StackFrameFilterResult {
+    /**
+     * Include this frame
+     */
+    INCLUDE,
 
-   /**
-    * Drop this frame
-    */
-   DROP,
+    /**
+     * Drop this frame
+     */
+    DROP,
 
-   /**
-    * Include this frame, but skip any remaining frames in this cause
-    */
-   DROP_REMAINING,
+    /**
+     * Include this frame, but skip any remaining frames in this cause
+     */
+    DROP_REMAINING,
 
-   /**
-    * Stops processing any remaining frames or causes
-    */
-   TERMINATE,
+    /**
+     * Stops processing any remaining frames or causes
+     */
+    TERMINATE,
 
-   /**
-    * Include this frame, then stop processing any remaining frames or causes
-    */
-   TERMINATE_AFTER
+    /**
+     * Include this frame, then stop processing any remaining frames or causes
+     */
+    TERMINATE_AFTER
 }

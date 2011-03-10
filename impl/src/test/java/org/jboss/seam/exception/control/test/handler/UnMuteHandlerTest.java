@@ -36,27 +36,24 @@ import org.junit.runner.RunWith;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class UnMuteHandlerTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(UnMuteHandler.class, CatchExtension.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class UnMuteHandlerTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(UnMuteHandler.class, CatchExtension.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   private BeanManager bm;
+    @Inject
+    private BeanManager bm;
 
-   @Test
-   public void assertCorrectNumberOfCallsForUnMute()
-   {
-      bm.fireEvent(new ExceptionToCatch(new Exception(new NullPointerException())));
+    @Test
+    public void assertCorrectNumberOfCallsForUnMute() {
+        bm.fireEvent(new ExceptionToCatch(new Exception(new NullPointerException())));
 
-      assertEquals(2, UnMuteHandler.DEPTH_FIRST_NUMBER_CALLED);
-      assertEquals(2, UnMuteHandler.BREADTH_FIRST_NUMBER_CALLED);
-   }
+        assertEquals(2, UnMuteHandler.DEPTH_FIRST_NUMBER_CALLED);
+        assertEquals(2, UnMuteHandler.BREADTH_FIRST_NUMBER_CALLED);
+    }
 }

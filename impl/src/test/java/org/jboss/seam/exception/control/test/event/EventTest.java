@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -44,52 +44,45 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @HandlesExceptions
-public class EventTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(EventTest.class, CatchExtension.class, EventQualifier.class, EventQualifierLiteral.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class EventTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(EventTest.class, CatchExtension.class, EventQualifier.class, EventQualifierLiteral.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   private BeanManager bm;
+    @Inject
+    private BeanManager bm;
 
-   private int qualiferCalledCount = 0;
+    private int qualiferCalledCount = 0;
 
-   @Test
-   public void assertEventIsCreatedCorrectly()
-   {
-      bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
-   }
+    @Test
+    public void assertEventIsCreatedCorrectly() {
+        bm.fireEvent(new ExceptionToCatch(new NullPointerException()));
+    }
 
-   @Test
-   public void assertEventWithQualifiersIsCreatedCorrectly()
-   {
-      this.bm.fireEvent(new ExceptionToCatch(new NullPointerException(), EventQualifierLiteral.INSTANCE));
-   }
+    @Test
+    public void assertEventWithQualifiersIsCreatedCorrectly() {
+        this.bm.fireEvent(new ExceptionToCatch(new NullPointerException(), EventQualifierLiteral.INSTANCE));
+    }
 
-   public void verifyDescEvent(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event)
-   {
-      this.qualiferCalledCount++;
-      assertTrue(event.isBreadthFirstTraversal());
-      assertFalse(event.isDepthFirstTraversal());
-   }
+    public void verifyDescEvent(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<NullPointerException> event) {
+        this.qualiferCalledCount++;
+        assertTrue(event.isBreadthFirstTraversal());
+        assertFalse(event.isDepthFirstTraversal());
+    }
 
-   public void verifyAscEvent(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<NullPointerException> event)
-   {
-      this.qualiferCalledCount++;
-      assertFalse(event.isBreadthFirstTraversal());
-      assertTrue(event.isDepthFirstTraversal());
-   }
+    public void verifyAscEvent(@Handles(during = TraversalMode.DEPTH_FIRST) CaughtException<NullPointerException> event) {
+        this.qualiferCalledCount++;
+        assertFalse(event.isBreadthFirstTraversal());
+        assertTrue(event.isDepthFirstTraversal());
+    }
 
-   public void verifyQualifierEvent(@Handles @EventQualifier CaughtException<NullPointerException> event)
-   {
-      this.qualiferCalledCount++;
-      assertThat(this.qualiferCalledCount, is(1));
-   }
+    public void verifyQualifierEvent(@Handles @EventQualifier CaughtException<NullPointerException> event) {
+        this.qualiferCalledCount++;
+        assertThat(this.qualiferCalledCount, is(1));
+    }
 }

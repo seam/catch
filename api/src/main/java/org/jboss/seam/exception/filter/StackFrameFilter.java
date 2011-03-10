@@ -23,13 +23,12 @@ package org.jboss.seam.exception.filter;
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  * @author <a href="http://community.jboss.org/people/dan.j.allen">Dan Allen</a>
  */
-public interface StackFrameFilter<T extends Throwable>
-{
-   /**
-    * Defines logic about how to filter the given frame.
-    *
-    * @param frame Current frame in the exception stack trace.
-    * @return one of {@link StackFrameFilterResult}.
-    */
-   public StackFrameFilterResult process(StackFrame frame);
+public interface StackFrameFilter<T extends Throwable> {
+    /**
+     * Defines logic about how to filter the given frame.
+     *
+     * @param frame Current frame in the exception stack trace.
+     * @return one of {@link StackFrameFilterResult}.
+     */
+    public StackFrameFilterResult process(StackFrame frame);
 }

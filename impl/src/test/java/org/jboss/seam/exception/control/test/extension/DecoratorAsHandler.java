@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -30,15 +30,13 @@ import org.jboss.seam.exception.control.HandlesExceptions;
  */
 @Decorator
 @HandlesExceptions
-public abstract class DecoratorAsHandler extends Account
-{
-   @SuppressWarnings("unused")
-   @Inject
-   @Delegate
-   @Any
-   private Account account;
+public abstract class DecoratorAsHandler extends Account {
+    @SuppressWarnings("unused")
+    @Inject
+    @Delegate
+    @Any
+    private Account account;
 
-   public void handlesAll(@Handles CaughtException<Throwable> caught)
-   {
-   }
+    public void handlesAll(@Handles CaughtException<Throwable> caught) {
+    }
 }

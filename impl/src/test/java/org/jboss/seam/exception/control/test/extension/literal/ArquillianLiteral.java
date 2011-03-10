@@ -22,9 +22,8 @@ import javax.enterprise.util.AnnotationLiteral;
 import org.jboss.seam.exception.control.test.extension.Arquillian;
 
 @SuppressWarnings("all")
-public class ArquillianLiteral extends AnnotationLiteral<Arquillian> implements Arquillian
-{
-   private static final long serialVersionUID = -3525383414748064487L;
+public class ArquillianLiteral extends AnnotationLiteral<Arquillian> implements Arquillian {
+    private static final long serialVersionUID = -3525383414748064487L;
 
-   public static final Arquillian INSTANCE = new ArquillianLiteral();
+    public static final Arquillian INSTANCE = new ArquillianLiteral();
 }

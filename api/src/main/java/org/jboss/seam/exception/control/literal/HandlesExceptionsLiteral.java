@@ -24,11 +24,11 @@ import org.jboss.seam.exception.control.HandlesExceptions;
 /**
  * Annotation literal for {@link org.jboss.seam.exception.control.HandlesExceptions}.
  */
-public class HandlesExceptionsLiteral extends AnnotationLiteral<HandlesExceptions> implements HandlesExceptions
-{
-   private static final long serialVersionUID = -6775381615228078023L;
+public class HandlesExceptionsLiteral extends AnnotationLiteral<HandlesExceptions> implements HandlesExceptions {
+    private static final long serialVersionUID = -6775381615228078023L;
 
-   public static final HandlesExceptions INSTANCE = new HandlesExceptionsLiteral();
+    public static final HandlesExceptions INSTANCE = new HandlesExceptionsLiteral();
 
-   private HandlesExceptionsLiteral() {}
+    private HandlesExceptionsLiteral() {
+    }
 }

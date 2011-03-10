@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -36,29 +36,26 @@ import org.junit.runner.RunWith;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class ProceedCauseHandlerTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addPackage(CaughtException.class.getPackage())
-            .addClasses(ProceedCauseHandler.class, CatchExtension.class)
-            .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-            .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-   }
+public class ProceedCauseHandlerTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CaughtException.class.getPackage())
+                .addClasses(ProceedCauseHandler.class, CatchExtension.class)
+                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+    }
 
-   @Inject
-   private BeanManager bm;
+    @Inject
+    private BeanManager bm;
 
-   @Test
-   public void assertCorrectNumberOfHandlerCallsForProceedCause()
-   {
-      bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
-      assertEquals(0, ProceedCauseHandler.BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED);
-      assertEquals(1, ProceedCauseHandler.BREADTH_FIRST_NPE_CALLED);
+    @Test
+    public void assertCorrectNumberOfHandlerCallsForProceedCause() {
+        bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
+        assertEquals(0, ProceedCauseHandler.BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED);
+        assertEquals(1, ProceedCauseHandler.BREADTH_FIRST_NPE_CALLED);
 
-      assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED);
-      assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_CALLED);
-   }
+        assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED);
+        assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_CALLED);
+    }
 }

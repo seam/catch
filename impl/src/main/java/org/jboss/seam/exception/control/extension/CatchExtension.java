@@ -52,126 +52,102 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
  * CDI extension to find handlers at startup.
  */
 @SuppressWarnings({"ALL"})
-public class CatchExtension implements Extension
-{
-   private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
+public class CatchExtension implements Extension {
+    private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
-   public CatchExtension()
-   {
-      this.allHandlers = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
-   }
+    public CatchExtension() {
+        this.allHandlers = new HashMap<Type, Collection<HandlerMethod<? extends Throwable>>>();
+    }
 
-   /**
-    * Listener to ProcessBean event to locate handlers.
-    *
-    * @param pmb Event from CDI SPI
-    * @param bm  Activated Bean Manager
-    * @throws TypeNotPresentException if any of the actual type arguments refers to a non-existent type declaration when
-    *                                 trying to obtain the actual type arguments from a {@link ParameterizedType}
-    * @throws java.lang.reflect.MalformedParameterizedTypeException
-    *                                 if any of the actual type parameters refer to a parameterized type that cannot be
-    *                                 instantiated for any reason when trying to obtain the actual type arguments from a
-    *                                 {@link ParameterizedType}
-    */
-   public <T> void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm)
-   {
-      if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
-            pmb.getBean() instanceof Decorator)
-      {
-         return;
-      }
+    /**
+     * Listener to ProcessBean event to locate handlers.
+     *
+     * @param pmb Event from CDI SPI
+     * @param bm  Activated Bean Manager
+     * @throws TypeNotPresentException if any of the actual type arguments refers to a non-existent type declaration when
+     *                                 trying to obtain the actual type arguments from a {@link ParameterizedType}
+     * @throws java.lang.reflect.MalformedParameterizedTypeException
+     *                                 if any of the actual type parameters refer to a parameterized type that cannot be
+     *                                 instantiated for any reason when trying to obtain the actual type arguments from a
+     *                                 {@link ParameterizedType}
+     */
+    public <T> void findHandlers(@Observes final ProcessBean<?> pmb, final BeanManager bm) {
+        if (!(pmb.getAnnotated() instanceof AnnotatedType) || pmb.getBean() instanceof Interceptor ||
+                pmb.getBean() instanceof Decorator) {
+            return;
+        }
 
-      final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
+        final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
 
-      if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm))
-      {
-         final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
+        if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm)) {
+            final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
 
-         for (AnnotatedMethod<? super T> method : methods)
-         {
-            if (HandlerMethodImpl.isHandler(method))
-            {
-               final AnnotatedParameter<?> param = HandlerMethodImpl.findHandlerParameter(method);
-               if (method.getJavaMember().getExceptionTypes().length != 0)
-               {
-                  pmb.addDefinitionError(new IllegalArgumentException(
-                        String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
-               }
-               final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
-               addHandlerMethod(exceptionType, method, bm);
+            for (AnnotatedMethod<? super T> method : methods) {
+                if (HandlerMethodImpl.isHandler(method)) {
+                    final AnnotatedParameter<?> param = HandlerMethodImpl.findHandlerParameter(method);
+                    if (method.getJavaMember().getExceptionTypes().length != 0) {
+                        pmb.addDefinitionError(new IllegalArgumentException(
+                                String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
+                    }
+                    final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
+                    addHandlerMethod(exceptionType, method, bm);
+                }
             }
-         }
-      }
-   }
-   
-   private <E extends Throwable, M> void addHandlerMethod(Class<E> exceptionType, AnnotatedMethod<M> method, BeanManager bm)
-   {
-      if (this.allHandlers.containsKey(exceptionType))
-      {
-         this.allHandlers.get(exceptionType).add(new HandlerMethodImpl<E>(method, bm));
-      }
-      else
-      {
-         this.allHandlers.put(exceptionType, new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(new HandlerMethodImpl<E>(
-               method, bm))));
-      }
-   }
+        }
+    }
 
-   /**
-    * Obtains the applicable handlers for the given type or super type of the given type.  Also makes use of {@link
-    * org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
-    *
-    * @param exceptionClass    Type of exception to narrow handler list
-    * @param bm                active BeanManager
-    * @param handlerQualifiers additional handlerQualifiers to limit handlers
-    * @param traversalMode     traversal limiter
-    * @return An order collection of handlers for the given type.
-    */
-   public Collection<HandlerMethod<? extends Throwable>> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
-                                                                Set<Annotation> handlerQualifiers,
-                                                                TraversalMode traversalMode)
-   {
-      final Set<HandlerMethod<?>> returningHandlers = new TreeSet<HandlerMethod<?>>(new ExceptionHandlerComparator());
-      final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
-      final Set<Type> closure = h.getTypeClosure();
+    private <E extends Throwable, M> void addHandlerMethod(Class<E> exceptionType, AnnotatedMethod<M> method, BeanManager bm) {
+        if (this.allHandlers.containsKey(exceptionType)) {
+            this.allHandlers.get(exceptionType).add(new HandlerMethodImpl<E>(method, bm));
+        } else {
+            this.allHandlers.put(exceptionType, new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(new HandlerMethodImpl<E>(
+                    method, bm))));
+        }
+    }
 
-      for (Type hierarchyType : closure)
-      {
-         if (this.allHandlers.get(hierarchyType) != null)
-         {
-            for (HandlerMethod<?> handler : this.allHandlers.get(hierarchyType))
-            {
-               if (handler.getTraversalMode() == traversalMode)
-               {
-                  if (handler.getQualifiers().contains(AnyLiteral.INSTANCE))
-                  {
-                     returningHandlers.add(handler);
-                  }
-                  else
-                  {
-                     if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers))
-                     {
-                        returningHandlers.add(handler);
-                     }
-                  }
-               }
+    /**
+     * Obtains the applicable handlers for the given type or super type of the given type.  Also makes use of {@link
+     * org.jboss.seam.exception.control.ExceptionHandlerComparator} to order the handlers.
+     *
+     * @param exceptionClass    Type of exception to narrow handler list
+     * @param bm                active BeanManager
+     * @param handlerQualifiers additional handlerQualifiers to limit handlers
+     * @param traversalMode     traversal limiter
+     * @return An order collection of handlers for the given type.
+     */
+    public Collection<HandlerMethod<? extends Throwable>> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
+                                                                                      Set<Annotation> handlerQualifiers,
+                                                                                      TraversalMode traversalMode) {
+        final Set<HandlerMethod<?>> returningHandlers = new TreeSet<HandlerMethod<?>>(new ExceptionHandlerComparator());
+        final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
+        final Set<Type> closure = h.getTypeClosure();
+
+        for (Type hierarchyType : closure) {
+            if (this.allHandlers.get(hierarchyType) != null) {
+                for (HandlerMethod<?> handler : this.allHandlers.get(hierarchyType)) {
+                    if (handler.getTraversalMode() == traversalMode) {
+                        if (handler.getQualifiers().contains(AnyLiteral.INSTANCE)) {
+                            returningHandlers.add(handler);
+                        } else {
+                            if (!handlerQualifiers.isEmpty() && this.containsAny(handler.getQualifiers(), handlerQualifiers)) {
+                                returningHandlers.add(handler);
+                            }
+                        }
+                    }
+                }
             }
-         }
-      }
+        }
 
-      return (Collection<HandlerMethod<? extends Throwable>>) Collections.unmodifiableCollection(returningHandlers);
-   }
+        return (Collection<HandlerMethod<? extends Throwable>>) Collections.unmodifiableCollection(returningHandlers);
+    }
 
-   private boolean containsAny(final Collection<? extends Annotation> haystack,
-                               final Collection<? extends Annotation> needles)
-   {
-      for (Annotation a : needles)
-      {
-         if (haystack.contains(a))
-         {
-            return true;
-         }
-      }
-      return false;
-   }
+    private boolean containsAny(final Collection<? extends Annotation> haystack,
+                                final Collection<? extends Annotation> needles) {
+        for (Annotation a : needles) {
+            if (haystack.contains(a)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -27,50 +27,42 @@ import org.jboss.seam.solder.reflection.annotated.ParameterValueRedefiner;
  * Redefiner allowing to inject a non contextual instance of {@link CaughtException} into the first parameter. This
  * class is immutable.
  */
-public class OutboundParameterValueRedefiner implements ParameterValueRedefiner
-{
-   final private CaughtException<?> event;
-   final private BeanManager bm;
-   final private Bean<?> declaringBean;
-   final private HandlerMethod<?> handlerMethod;
+public class OutboundParameterValueRedefiner implements ParameterValueRedefiner {
+    final private CaughtException<?> event;
+    final private BeanManager bm;
+    final private Bean<?> declaringBean;
+    final private HandlerMethod<?> handlerMethod;
 
-   /**
-    * Sole constructor.
-    *
-    * @param event   instance of CaughtException to inject.
-    * @param manager active BeanManager
-    * @param handler Handler method this redefiner is for
-    */
-   public OutboundParameterValueRedefiner(final CaughtException<?> event, final BeanManager manager,
-                                          final HandlerMethod<?> handler)
-   {
-      this.event = event;
-      this.bm = manager;
-      this.declaringBean = handler.getBean(bm);
-      this.handlerMethod = handler;
-   }
+    /**
+     * Sole constructor.
+     *
+     * @param event   instance of CaughtException to inject.
+     * @param manager active BeanManager
+     * @param handler Handler method this redefiner is for
+     */
+    public OutboundParameterValueRedefiner(final CaughtException<?> event, final BeanManager manager,
+                                           final HandlerMethod<?> handler) {
+        this.event = event;
+        this.bm = manager;
+        this.declaringBean = handler.getBean(bm);
+        this.handlerMethod = handler;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Object redefineParameterValue(ParameterValue value)
-   {
-      CreationalContext<?> ctx = this.bm.createCreationalContext(this.declaringBean);
+    /**
+     * {@inheritDoc}
+     */
+    public Object redefineParameterValue(ParameterValue value) {
+        CreationalContext<?> ctx = this.bm.createCreationalContext(this.declaringBean);
 
-      try
-      {
-         if (value.getPosition() == this.handlerMethod.getHandlerParameter().getPosition())
-         {
-            return event;
-         }
-         return value.getDefaultValue(ctx);
-      }
-      finally
-      {
-         if (ctx != null)
-         {
-            ctx.release();
-         }
-      }
-   }
+        try {
+            if (value.getPosition() == this.handlerMethod.getHandlerParameter().getPosition()) {
+                return event;
+            }
+            return value.getDefaultValue(ctx);
+        } finally {
+            if (ctx != null) {
+                ctx.release();
+            }
+        }
+    }
 }

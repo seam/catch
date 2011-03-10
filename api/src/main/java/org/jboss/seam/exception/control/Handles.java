@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -31,15 +31,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @Documented
-public @interface Handles
-{
-   /**
-    * Direction of the cause chain traversal to listen.
-    */
-   public abstract TraversalMode during() default TraversalMode.DEPTH_FIRST;
+public @interface Handles {
+    /**
+     * Direction of the cause chain traversal to listen.
+     */
+    public abstract TraversalMode during() default TraversalMode.DEPTH_FIRST;
 
-   /**
-    * Precedence relative to handlers for the same type
-    */
-   public abstract int precedence() default Precedence.DEFAULT;
+    /**
+     * Precedence relative to handlers for the same type
+     */
+    public abstract int precedence() default Precedence.DEFAULT;
 }
