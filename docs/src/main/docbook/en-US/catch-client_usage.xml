@@ -184,9 +184,9 @@ public class MyHandlers
 
          <itemizedlist>
             <listitem>
-               a precedence relative to other handlers for the same exception type. Handlers with higher precendence are
-               invoked before handlers with lower precendence that handle the same exception type. The default
-               precendence (if not specified) is 0.
+               a precedence relative to other handlers for the same exception type. Handlers with higher precedence are
+               invoked before handlers with lower precedence that handle the same exception type. The default
+               precedence (if not specified) is 0.
             </listitem>
             <listitem>
                the type of the traversal mode (i.e., phase) during which the handler is invoked. The default
@@ -453,22 +453,22 @@ void handleIOException(@Handles(during = TraversalMode.BREADTH_FIRST)
 
       </section>
 
-      <section id="precendence">
-         <title>Handler precendence</title>
+      <section id="precedence">
+         <title>Handler precedence</title>
 
          <para>
-            When Catch finds more than one handler for the same exception type, it orders the handlers by precendence.
-            Handlers with higher precendence are executed before handlers with a lower precedence. If Catch detects two
+            When Catch finds more than one handler for the same exception type, it orders the handlers by precedence.
+            Handlers with higher precedence are executed before handlers with a lower precedence. If Catch detects two
             handlers for the same type with the same precedence, it detects it as an error and throws an exception at
             deployment time.
          </para>
 
          <para>
-            Let's define two handlers with different precendence:
+            Let's define two handlers with different precedence:
          </para>
 
          <programlisting role="JAVA"><![CDATA[
-void handleIOExceptionFirst(@Handles(precendence = 100) CaughtException<IOException> evt)
+void handleIOExceptionFirst(@Handles(precedence = 100) CaughtException<IOException> evt)
 {
    System.out.println("Invoked first");
 }
@@ -480,12 +480,12 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
          </programlisting>
 
          <para>
-            The first method is invoked first since it has a higher precendence (100) than the second method, which has
+            The first method is invoked first since it has a higher precedence (100) than the second method, which has
             the default precedence (0).
          </para>
 
          <para>
-            To make specifying precendence values more convenient, Catch provides several built-in constants, available
+            To make specifying precedence values more convenient, Catch provides several built-in constants, available
             on the
             <literal>Precedence</literal>
             class:
@@ -510,9 +510,9 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
          <listitem>Unwrap exception stack</listitem>
          <listitem>Begin processing root cause</listitem>
          <listitem>Find handler for least specific handler marked for BREADTH_FIRST traversal</listitem>
-         <listitem>If multiple handlers for same type, invoke handlers with higher precendence first</listitem>
+         <listitem>If multiple handlers for same type, invoke handlers with higher precedence first</listitem>
          <listitem>Find handler for most specific handler marked for DEPTH_FIRST traversal</listitem>
-         <listitem>If multiple handlers for same type, invoke handlers with higher precendence first</listitem>
+         <listitem>If multiple handlers for same type, invoke handlers with higher precedence first</listitem>
          <listitem>Continue above steps for each exception in stack</listitem>
       </orderedlist>
 
