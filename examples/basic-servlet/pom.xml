@@ -34,24 +34,12 @@
    <properties>
       <jboss.home>${env.JBOSS_HOME}</jboss.home>
       <jboss.domain>default</jboss.domain>
-      <seam.servlet.version>3.0.0.Beta2</seam.servlet.version>
-      <!--<seam.catch.version>${project.parent.version}</seam.catch.version>-->
       <jboss.spec.servlet.version>1.0.0.Final</jboss.spec.servlet.version>
       <jstl.version>1.2</jstl.version>
    </properties>
 
    <dependencyManagement>
       <dependencies>
-         <dependency>
-            <groupId>org.jboss.seam.servlet</groupId>
-            <artifactId>seam-servlet-api</artifactId>
-            <version>${seam.servlet.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.seam.servlet</groupId>
-            <artifactId>seam-servlet</artifactId>
-            <version>${seam.servlet.version}</version>
-         </dependency>
          <dependency>
             <!-- Required until the Servlet 3.0 API can be resolved in Central -->
             <groupId>org.jboss.spec.javax.servlet</groupId>
@@ -72,26 +60,17 @@
          <artifactId>jboss-servlet-api_3.0_spec</artifactId>
          <scope>provided</scope>
       </dependency>
-      <dependency>
-         <groupId>org.jboss.seam.servlet</groupId>
-         <artifactId>seam-servlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch</artifactId>
-         <scope>runtime</scope>
-      </dependency>
+
       <dependency>
          <groupId>org.jboss.seam.servlet</groupId>
          <artifactId>seam-servlet</artifactId>
-         <scope>runtime</scope>
       </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.catch</groupId>
+         <artifactId>seam-catch</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>jstl</groupId>
          <artifactId>jstl</artifactId>
@@ -102,6 +81,7 @@
          <artifactId>selenium-java-client-driver</artifactId>
          <scope>test</scope>
       </dependency>
+
       <dependency>
          <groupId>org.jboss.test</groupId>
          <artifactId>richfaces-selenium</artifactId>
@@ -116,7 +96,7 @@
    </dependencies>
 
    <build>
-      <finalName>seam-catch-example-basic-servlet</finalName>
+      <finalName>catch-basic-servlet</finalName>
       <plugins>
          <plugin>
             <!-- no unit tests, surefire would instead run functional tests in incorrect phase -->
