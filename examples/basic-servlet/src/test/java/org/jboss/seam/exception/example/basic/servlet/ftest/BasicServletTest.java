@@ -62,14 +62,9 @@ public class BasicServletTest extends AbstractTestCase
    public void testAssertionError()
    {
       waitHttp(selenium).click(ASSERTIONERROR_LINK);
-      assertTrue(selenium.isTextPresent("using handler throwableHandler marking exception with markHandled " +
-                                        "message: No enum const class org.jboss.seam.exception.example.basic." +
-                                        "servlet.navigation.NavigationServlet$NavigationEnum.ASSERTIONERROR"),
-                                        "The information about using throwableHandler should appear");
-      assertTrue(selenium.isTextPresent("using handler illegalArgumentBreadthFirstHandler marking exception with " +
-                                        "dropCause message: No enum const class org.jboss.seam.exception.example.basic." +
-                                        "servlet.navigation.NavigationServlet$NavigationEnum.ASSERTIONERROR"),
-                                        "The information about using illegalArgumentBreadthFirstHandler should appear");
+      assertTrue(selenium.isTextPresent("javax.enterprise.event.ObserverException"));
+      assertTrue(selenium.isTextPresent("javax.servlet.ServletException: java.lang.AssertionError: Assertion Error"));
+      assertTrue(selenium.isTextPresent("java.lang.AssertionError: Assertion Error"));
    }
    
    @Test
