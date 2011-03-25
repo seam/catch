@@ -40,7 +40,7 @@ public class NavigationServlet extends HttpServlet
    private enum NavigationEnum
    {
       NULLPOINTEREXCEPTION(new NullPointerException("Null pointer thrown")),
-      ASSERTIONERRROR(new AssertionError("Assertion Error")),
+      ASSERTIONERROR(new AssertionError("Assertion Error")),
       IOEXCEPTION(new IOException("IOException")),
       WRAPPEDILLEGALARG(new IllegalStateException("Wrapping IllegalStateException", new IllegalArgumentException("Inner IAE")));
 
