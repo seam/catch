@@ -51,7 +51,7 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 /**
  * CDI extension to find handlers at startup.
  */
-@SuppressWarnings({"ALL"})
+@SuppressWarnings("unchecked")
 public class CatchExtension implements Extension {
     private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
@@ -77,7 +77,7 @@ public class CatchExtension implements Extension {
             return;
         }
 
-        final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
+		final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
 
         if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm)) {
             final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
@@ -118,7 +118,7 @@ public class CatchExtension implements Extension {
     public Collection<HandlerMethod<? extends Throwable>> getHandlersForExceptionType(Type exceptionClass, BeanManager bm,
                                                                                       Set<Annotation> handlerQualifiers,
                                                                                       TraversalMode traversalMode) {
-        final Set<HandlerMethod<?>> returningHandlers = new TreeSet<HandlerMethod<?>>(new ExceptionHandlerComparator());
+        final Collection<HandlerMethod<? extends Throwable>> returningHandlers = new TreeSet<HandlerMethod<? extends Throwable>>(new ExceptionHandlerComparator());
         final HierarchyDiscovery h = new HierarchyDiscovery(exceptionClass);
         final Set<Type> closure = h.getTypeClosure();
 
@@ -138,7 +138,7 @@ public class CatchExtension implements Extension {
             }
         }
 
-        return (Collection<HandlerMethod<? extends Throwable>>) Collections.unmodifiableCollection(returningHandlers);
+        return Collections.unmodifiableCollection(returningHandlers);
     }
 
     private boolean containsAny(final Collection<? extends Annotation> haystack,
