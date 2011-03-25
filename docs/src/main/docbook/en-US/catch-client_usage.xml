@@ -600,8 +600,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
             on the
             <literal>CaughtException</literal>
             object. Please see
-            <ulink
-                  href="http://docs.jboss.org/seam/3/catch/latest/api/org/jboss/seam/exception/control/ExceptionStack.html">
+            <ulink url="http://docs.jboss.org/seam/3/catch/latest/api/org/jboss/seam/exception/control/ExceptionStack.html">
                API
                docs
             </ulink>
