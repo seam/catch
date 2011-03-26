@@ -36,10 +36,6 @@
       <jboss.spec.version>1.0.0.CR1</jboss.spec.version>
    </properties>
 
-   <prerequisites>
-      <maven>3.0</maven>
-   </prerequisites>
-
    <modules>
       <module>api</module>
       <module>impl</module>
