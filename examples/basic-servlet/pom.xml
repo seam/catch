@@ -64,6 +64,7 @@
       <dependency>
          <groupId>org.jboss.seam.servlet</groupId>
          <artifactId>seam-servlet</artifactId>
+         <version>3.0.0.CR3</version>
       </dependency>
 
       <dependency>
