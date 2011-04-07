@@ -2,7 +2,7 @@
  *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-package org.jboss.seam.exception.example.basic.servlet.handler;
+package org.jboss.seam.exception.examples.basicservlet.handler;
 
 import java.io.IOException;
 import java.text.MessageFormat;

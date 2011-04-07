@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.seam.exception.example.basic.servlet.ftest;
+package org.jboss.seam.exception.examples.basicservlet.ftest;
 
 import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;

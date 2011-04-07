@@ -19,7 +19,7 @@
  *
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-package org.jboss.seam.exception.example.basic.servlet.handler;
+package org.jboss.seam.exception.examples.basicservlet.handler;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -37,7 +37,7 @@ import org.jboss.seam.exception.control.TraversalMode;
 @HandlesExceptions
 public class StandardHandlerDeclaration
 {
-   final ResourceBundle messages = ResourceBundle.getBundle("org.jboss.seam.exception.example.basic.servlet.messages");
+   final ResourceBundle messages = ResourceBundle.getBundle("org.jboss.seam.exception.examples.basicservlet.messages");
 
    public void throwableHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event,
                                 HttpServletResponse response)
