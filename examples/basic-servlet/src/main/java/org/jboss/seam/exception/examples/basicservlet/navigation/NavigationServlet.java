@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.example.basic.servlet.navigation;
+package org.jboss.seam.exception.examples.basicservlet.navigation;
 
 import java.io.IOException;
 

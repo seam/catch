@@ -17,7 +17,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<fmt:bundle basename="org.jboss.seam.exception.example.basic.servlet.messages">
+<fmt:bundle basename="org.jboss.seam.exception.examples.basicservlet.messages">
    <html>
    <head>
       <title><fmt:message key="index_title"/></title>
@@ -39,7 +39,7 @@
    public class StandardHandlerDeclaration
    {
       final ResourceBundle messages =
-      ResourceBundle.getBundle("org.jboss.seam.exception.example.basic.servlet.messages");
+      ResourceBundle.getBundle("org.jboss.seam.exception.examples.basicservlet.messages");
 
       public void throwableHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException &lt;Throwable&gt; event, HttpServletResponse response)
       {
