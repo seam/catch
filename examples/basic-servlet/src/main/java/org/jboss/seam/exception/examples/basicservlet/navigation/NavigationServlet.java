@@ -35,61 +35,53 @@ import org.jboss.seam.exception.control.ExceptionToCatch;
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
 @WebServlet(name = "NavigationServlet", urlPatterns = "/Navigation/*")
-public class NavigationServlet extends HttpServlet
-{
-   private enum NavigationEnum
-   {
-      NULLPOINTEREXCEPTION(new NullPointerException("Null pointer thrown")),
-      ASSERTIONERROR(new AssertionError("Assertion Error")),
-      IOEXCEPTION(new IOException("IOException")),
-      WRAPPEDILLEGALARG(new IllegalStateException("Wrapping IllegalStateException", new IllegalArgumentException("Inner IAE")));
+public class NavigationServlet extends HttpServlet {
+    private enum NavigationEnum {
+        NULLPOINTEREXCEPTION(new NullPointerException("Null pointer thrown")),
+        ASSERTIONERROR(new AssertionError("Assertion Error")),
+        IOEXCEPTION(new IOException("IOException")),
+        WRAPPEDILLEGALARG(new IllegalStateException("Wrapping IllegalStateException", new IllegalArgumentException("Inner IAE")));
 
-      private final Throwable exception;
+        private final Throwable exception;
 
-      private NavigationEnum(final Throwable e)
-      {
-         this.exception = e;
-      }
+        private NavigationEnum(final Throwable e) {
+            this.exception = e;
+        }
 
-      public Throwable getException()
-      {
-         return exception;
-      }
-   }
+        public Throwable getException() {
+            return exception;
+        }
+    }
 
-   @Inject
-   private Event<ExceptionToCatch> catchEvent;
+    @Inject
+    private Event<ExceptionToCatch> catchEvent;
 
-   /**
-    * Receives standard HTTP requests from the public <code>service</code> method and dispatches them to the
-    * <code>do</code><i>XXX</i> methods defined in this class. This method is an HTTP-specific version of the {@link
-    * javax.servlet.Servlet#service} method. There's no need to override this method.
-    *
-    * @param req  the {@link javax.servlet.http.HttpServletRequest} object that contains the request the client made of
-    *             the servlet
-    * @param resp the {@link javax.servlet.http.HttpServletResponse} object that contains the response the servlet
-    *             returns to the client
-    * @throws java.io.IOException            if an input or output error occurs while the servlet is handling the HTTP
-    *                                        request
-    * @throws javax.servlet.ServletException if the HTTP request cannot be handled
-    * @see javax.servlet.Servlet#service
-    */
-   @Override
-   protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      final String uri = req.getRequestURI();
+    /**
+     * Receives standard HTTP requests from the public <code>service</code> method and dispatches them to the
+     * <code>do</code><i>XXX</i> methods defined in this class. This method is an HTTP-specific version of the {@link
+     * javax.servlet.Servlet#service} method. There's no need to override this method.
+     *
+     * @param req  the {@link javax.servlet.http.HttpServletRequest} object that contains the request the client made of
+     *             the servlet
+     * @param resp the {@link javax.servlet.http.HttpServletResponse} object that contains the response the servlet
+     *             returns to the client
+     * @throws java.io.IOException            if an input or output error occurs while the servlet is handling the HTTP
+     *                                        request
+     * @throws javax.servlet.ServletException if the HTTP request cannot be handled
+     * @see javax.servlet.Servlet#service
+     */
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final String uri = req.getRequestURI();
 
-      try
-      {
-         final NavigationEnum nav = NavigationEnum.valueOf(uri.substring(uri.lastIndexOf("/") + 1).toUpperCase());
+        try {
+            final NavigationEnum nav = NavigationEnum.valueOf(uri.substring(uri.lastIndexOf("/") + 1).toUpperCase());
 
-         throw new ServletException(nav.getException()); // wrapping because we don't want to try / catch and we can't add
-         // the throws list
-      }
-      catch (IllegalArgumentException e)
-      {
-         this.catchEvent.fire(new ExceptionToCatch(e)); // If there is no catch integration, this is how to add basic
-         // integration yourself
-      }
-   }
+            throw new ServletException(nav.getException()); // wrapping because we don't want to try / catch and we can't add
+            // the throws list
+        } catch (IllegalArgumentException e) {
+            this.catchEvent.fire(new ExceptionToCatch(e)); // If there is no catch integration, this is how to add basic
+            // integration yourself
+        }
+    }
 }

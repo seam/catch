@@ -35,59 +35,51 @@ import org.jboss.seam.exception.control.TraversalMode;
  * A sample Exception Handler container, using the typical means of declaring handlers.
  */
 @HandlesExceptions
-public class StandardHandlerDeclaration
-{
-   final ResourceBundle messages = ResourceBundle.getBundle("org.jboss.seam.exception.examples.basicservlet.messages");
+public class StandardHandlerDeclaration {
+    final ResourceBundle messages = ResourceBundle.getBundle("org.jboss.seam.exception.examples.basicservlet.messages");
 
-   public void throwableHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event,
-                                HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "throwableHandler", "markHandled");
+    public void throwableHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<Throwable> event,
+                                 HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "throwableHandler", "markHandled");
 
-      event.unmute();
-      event.markHandled();
-   }
+        event.unmute();
+        event.markHandled();
+    }
 
-   public void assertionErrorHandler(@Handles CaughtException<AssertionError> event,
-                                     HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "assertionErrorHandler", "rethrow");
+    public void assertionErrorHandler(@Handles CaughtException<AssertionError> event,
+                                      HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "assertionErrorHandler", "rethrow");
 
-      event.rethrow();
-   }
+        event.rethrow();
+    }
 
-   public void nullPointerHandler(@Handles CaughtException<NullPointerException> event, HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "nullPointerHandler", "handled");
+    public void nullPointerHandler(@Handles CaughtException<NullPointerException> event, HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "nullPointerHandler", "handled");
 
-      event.handled();
-   }
+        event.handled();
+    }
 
-   public void illegalArgumenBreadthFirsttHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event, HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalArgumentBreadthFirstHandler", "dropCause");
+    public void illegalArgumenBreadthFirsttHandler(@Handles(during = TraversalMode.BREADTH_FIRST) CaughtException<IllegalArgumentException> event, HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalArgumentBreadthFirstHandler", "dropCause");
 
-      event.dropCause();
-   }
+        event.dropCause();
+    }
 
-   public void illegalArgumentHandler(@Handles CaughtException<IllegalArgumentException> event, HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalArgumentHandler", "handled");
+    public void illegalArgumentHandler(@Handles CaughtException<IllegalArgumentException> event, HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalArgumentHandler", "handled");
 
-      event.handled();
-   }
+        event.handled();
+    }
 
-   public void illegalStateHandler(@Handles CaughtException<IllegalStateException> event, HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalStateHandler", "abort");
+    public void illegalStateHandler(@Handles CaughtException<IllegalStateException> event, HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalStateHandler", "abort");
 
-      event.abort();
-   }
+        event.abort();
+    }
 
-   public void ioExceptionHandler(@Handles CaughtException<IOException> event, HttpServletResponse response)
-   {
-      HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalStateHandler", "rethrow(new ArithmeticException)");
+    public void ioExceptionHandler(@Handles CaughtException<IOException> event, HttpServletResponse response) {
+        HandlerOutput.printToResponse(this.messages, event.getException(), response, "illegalStateHandler", "rethrow(new ArithmeticException)");
 
-      event.rethrow(new ArithmeticException("Re-thrown"));
-   }
+        event.rethrow(new ArithmeticException("Re-thrown"));
+    }
 }

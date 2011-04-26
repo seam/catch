@@ -67,8 +67,8 @@ public class ExceptionToCatch implements Serializable {
     /**
      * NOTE: Will be moved to protected in a later release!!
      */
-    public void setHandled(boolean handled) // TODO: Move to protected
-    {
+    // TODO: Move to protected
+    public void setHandled(boolean handled) {
         this.handled = handled;
     }
 
