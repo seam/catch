@@ -212,27 +212,27 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
             return false;
         }
 
-        HandlerMethodImpl<?> that = (HandlerMethodImpl<?>) o;
+        HandlerMethod<?> that = (HandlerMethod<?>) o;
 
-        if (!beanClass.equals(that.beanClass)) {
+        if (!beanClass.equals(that.getBeanClass())) {
             return false;
         }
-        if (!javaMethod.equals(that.javaMethod)) {
+        if (!javaMethod.equals(that.getJavaMethod())) {
             return false;
         }
-        if (!qualifiers.equals(that.qualifiers)) {
+        if (!qualifiers.equals(that.getQualifiers())) {
             return false;
         }
-        if (!exceptionType.equals(that.exceptionType)) {
+        if (!exceptionType.equals(that.getExceptionType())) {
             return false;
         }
-        if (precedence != that.precedence) {
+        if (precedence != that.getPrecedence()) {
             return false;
         }
-        if (!handlerParameter.equals(that.handlerParameter)) {
+        if (!handlerParameter.equals(that.getHandlerParameter())) {
             return false;
         }
-        return traversalMode == that.traversalMode;
+        return traversalMode == that.getTraversalMode();
 
     }
 

@@ -76,4 +76,15 @@ public interface HandlerMethod<T extends Throwable> {
      * Obtains the actual parameter defining this as a handler.
      */
     AnnotatedParameter<?> getHandlerParameter();
+
+    /**
+     * Basic {@link Object#equals(Object)} but must use all of the get methods from this interface to maintain compatibility.
+     *
+     * @param o Object being compared to this.
+     * @return true or false based on standard equality.
+     */
+    boolean equals(Object o);
+
+    @Override
+    int hashCode();
 }

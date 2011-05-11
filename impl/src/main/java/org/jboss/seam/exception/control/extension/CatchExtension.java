@@ -41,6 +41,7 @@ import javax.enterprise.inject.spi.ProcessBean;
 
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.HandlerMethod;
+import org.jboss.seam.exception.control.HandlerMethodContainer;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
@@ -52,7 +53,7 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
  * CDI extension to find handlers at startup.
  */
 @SuppressWarnings("unchecked")
-public class CatchExtension implements Extension {
+public class CatchExtension implements Extension, HandlerMethodContainer {
     private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
     public CatchExtension() {
@@ -77,7 +78,7 @@ public class CatchExtension implements Extension {
             return;
         }
 
-		final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
+        final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
 
         if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm)) {
             final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
@@ -90,18 +91,9 @@ public class CatchExtension implements Extension {
                                 String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
                     }
                     final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
-                    addHandlerMethod(exceptionType, method, bm);
+                    registerHandlerMethod(new HandlerMethodImpl(method, bm));
                 }
             }
-        }
-    }
-
-    private <E extends Throwable, M> void addHandlerMethod(Class<E> exceptionType, AnnotatedMethod<M> method, BeanManager bm) {
-        if (this.allHandlers.containsKey(exceptionType)) {
-            this.allHandlers.get(exceptionType).add(new HandlerMethodImpl<E>(method, bm));
-        } else {
-            this.allHandlers.put(exceptionType, new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(new HandlerMethodImpl<E>(
-                    method, bm))));
         }
     }
 
@@ -149,5 +141,14 @@ public class CatchExtension implements Extension {
             }
         }
         return false;
+    }
+
+    @Override
+    public <T extends Throwable> void registerHandlerMethod(HandlerMethod<T> handlerMethod) {
+        if (this.allHandlers.containsKey(handlerMethod.getExceptionType())) {
+            this.allHandlers.get(handlerMethod.getExceptionType()).add(handlerMethod);
+        } else {
+            this.allHandlers.put(handlerMethod.getExceptionType(), new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
+        }
     }
 }
