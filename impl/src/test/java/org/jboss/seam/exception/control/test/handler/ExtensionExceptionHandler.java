@@ -26,6 +26,7 @@ import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.Precedence;
 import org.jboss.seam.exception.control.TraversalMode;
+import org.jboss.seam.exception.control.test.extension.Account;
 import org.jboss.seam.exception.control.test.extension.Arquillian;
 import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 
@@ -79,7 +80,7 @@ public class ExtensionExceptionHandler {
         // Method to verify the qualifiers are working correctly for handlers
     }
 
-    public void differentParamHandlerLocationHandler(int number, BeanManager bm,
+    public void differentParamHandlerLocationHandler(Account act, BeanManager bm,
                                                      @Handles CaughtException<SQLException> event) {
         // Nothing here, just need to make sure this handler is picked up
     }

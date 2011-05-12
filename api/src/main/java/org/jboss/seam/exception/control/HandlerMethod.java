@@ -18,27 +18,20 @@
 package org.jboss.seam.exception.control;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
+/**
+ * Meta data interface about an exception handler. It is the responsibility of the
+ * implementation to support {@link javax.enterprise.inject.spi.InjectionPoint}s and to
+ * validate those {@link javax.enterprise.inject.spi.InjectionPoint}s.
+ *
+ * @param <T> Exception for which this handler is responsible
+ * @author <a href="http://community.jboss.org/people/lightguard">Jason Porter</a>
+ */
 public interface HandlerMethod<T extends Throwable> {
-    /**
-     * Obtains the bean class of the bean that declares the observer method.
-     */
-    Class<?> getBeanClass();
-
-    /**
-     * Obtains the Bean reference that declares the observer method.
-     *
-     * @param bm Active BeanManager
-     */
-    Bean<?> getBean(BeanManager bm);
-
     /**
      * Obtains the set of handled event qualifiers.
      */
@@ -66,16 +59,6 @@ public interface HandlerMethod<T extends Throwable> {
      * Obtains the precedence of the handler.
      */
     int getPrecedence();
-
-    /**
-     * Obtains the actual method of the handler.
-     */
-    Method getJavaMethod();
-
-    /**
-     * Obtains the actual parameter defining this as a handler.
-     */
-    AnnotatedParameter<?> getHandlerParameter();
 
     /**
      * Basic {@link Object#equals(Object)} but must use all of the get methods from this interface to maintain compatibility.

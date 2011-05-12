@@ -31,8 +31,10 @@ import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.jboss.seam.solder.bean.Beans;
+import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import org.jboss.seam.solder.literal.AnyLiteral;
 import org.jboss.seam.solder.reflection.annotated.InjectableMethod;
 
@@ -51,6 +53,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
     private final int precedence;
     private final Method javaMethod;
     private final AnnotatedParameter<?> handlerParameter;
+    private final Set<InjectionPoint> injectionPoints;
 
     /**
      * Determines if the given method is a handler by looking for the {@link Handles} annotation on a parameter.
@@ -94,8 +97,8 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
      *
      * @param method found handler
      * @param bm     active BeanManager
-     * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with {@link
-     *                                  Handles}
+     * @throws IllegalArgumentException if method is null, has no params or first param is not annotated with
+     *                                  {@link Handles}
      */
     public HandlerMethodImpl(final AnnotatedMethod<?> method, final BeanManager bm) {
         if (!HandlerMethodImpl.isHandler(method)) {
@@ -124,6 +127,12 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
         this.qualifiers = tmpQualifiers;
         this.beanClass = method.getJavaMember().getDeclaringClass();
         this.exceptionType = ((ParameterizedType) this.handlerParameter.getBaseType()).getActualTypeArguments()[0];
+        this.injectionPoints = new HashSet<InjectionPoint>(method.getParameters().size() - 1);
+
+        for (AnnotatedParameter<?> param : method.getParameters()) {
+            if (!param.equals(this.handlerParameter))
+                this.injectionPoints.add(new ImmutableInjectionPoint(param, bm, this.getBean(bm), false, false));
+        }
     }
 
     /**
@@ -140,7 +149,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
         if (this.bean == null) {
             this.bean = bm.resolve(bm.getBeans(this.beanClass));
         }
-        return this.bean;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.bean;
     }
 
     /**
@@ -164,8 +173,8 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
         CreationalContext<?> ctx = null;
         try {
             ctx = bm.createCreationalContext(null);
-            Object handlerInstance = bm.getReference(getBean(bm), this.beanClass, ctx);
-            InjectableMethod<?> im = createInjectableMethod(this.handler, getBean(bm), bm);
+            Object handlerInstance = bm.getReference(this.getBean(bm), this.beanClass, ctx);
+            InjectableMethod<?> im = createInjectableMethod(this.handler, this.getBean(bm), bm);
             im.invoke(handlerInstance, ctx, new OutboundParameterValueRedefiner(event, bm, this));
         } finally {
             if (ctx != null) {
@@ -203,6 +212,10 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
         return this.handlerParameter;
     }
 
+    public Set<InjectionPoint> getInjectionPoints() {
+        return new HashSet<InjectionPoint>(this.injectionPoints);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -214,12 +227,6 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
 
         HandlerMethod<?> that = (HandlerMethod<?>) o;
 
-        if (!beanClass.equals(that.getBeanClass())) {
-            return false;
-        }
-        if (!javaMethod.equals(that.getJavaMethod())) {
-            return false;
-        }
         if (!qualifiers.equals(that.getQualifiers())) {
             return false;
         }
@@ -229,9 +236,7 @@ public class HandlerMethodImpl<T extends Throwable> implements HandlerMethod<T> 
         if (precedence != that.getPrecedence()) {
             return false;
         }
-        if (!handlerParameter.equals(that.getHandlerParameter())) {
-            return false;
-        }
+
         return traversalMode == that.getTraversalMode();
 
     }

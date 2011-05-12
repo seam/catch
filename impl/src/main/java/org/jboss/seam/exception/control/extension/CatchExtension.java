@@ -30,12 +30,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.InjectionException;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Decorator;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.Interceptor;
 import javax.enterprise.inject.spi.ProcessBean;
 
@@ -92,6 +95,26 @@ public class CatchExtension implements Extension, HandlerMethodContainer {
                     }
                     final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
                     registerHandlerMethod(new HandlerMethodImpl(method, bm));
+                }
+            }
+        }
+    }
+
+    /**
+     * Verifies all injection points for every handler are valid.
+     *
+     * @param adv Lifecycle event
+     * @param bm  BeanManager instance
+     */
+    public void verifyInjectionPoints(@Observes final AfterDeploymentValidation adv, final BeanManager bm) {
+        for (Map.Entry<? super Type, Collection<HandlerMethod<? extends Throwable>>> entry : this.allHandlers.entrySet()) {
+            for (HandlerMethod<? extends Throwable> handler : entry.getValue()) {
+                for (InjectionPoint ip : ((HandlerMethodImpl<? extends Throwable>) handler).getInjectionPoints()) {
+                    try {
+                        bm.validate(ip);
+                    } catch (InjectionException e) {
+                        adv.addDeploymentProblem(e);
+                    }
                 }
             }
         }
