@@ -30,6 +30,11 @@
     <artifactId>seam-catch-impl</artifactId>
     <packaging>jar</packaging>
 
+    <!-- Overrides -->
+    <properties>
+        <arquillian.version>1.0.0.Alpha5</arquillian.version>
+    </properties>
+
     <name>Seam Catch Implementation</name>
     <!-- url required for JAR Manifest -->
     <url>${project.parent.url}</url>
@@ -52,7 +57,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.weld.arquillian.container</groupId>
+            <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
         </dependency>
 

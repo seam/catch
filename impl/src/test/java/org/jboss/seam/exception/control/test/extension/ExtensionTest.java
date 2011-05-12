@@ -57,12 +57,12 @@ public class ExtensionTest {
         return ShrinkWrap.create(JavaArchive.class)
                 .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
                         InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
-                .addManifestResource(new StringAsset(
+                .addAsManifestResource(new StringAsset(
                         "<beans>" +
                                 "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
                                 "   <decorators><class>" + DecoratorAsHandler.class.getName() + "</class></decorators>" +
                                 "</beans>"), "beans.xml")
-                .addServiceProvider(Extension.class, CatchExtension.class);
+                .addAsServiceProvider(Extension.class, CatchExtension.class);
     }
 
     @Inject

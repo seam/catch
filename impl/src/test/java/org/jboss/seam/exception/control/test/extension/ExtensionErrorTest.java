@@ -15,47 +15,36 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.exception.control.test.flow;
-
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+package org.jboss.seam.exception.control.test.extension;
 
 import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.api.OperateOnDeployment;
+import org.jboss.arquillian.api.ShouldThrowException;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CaughtException;
-import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.handler.HandlerWhichThrowsExceptions;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.weld.exceptions.DefinitionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
-
 @RunWith(Arquillian.class)
-public class ProceedCauseHandlerTest {
-    @Deployment
+public class ExtensionErrorTest {
+    @Deployment(name = "weldErrorArchive")
+    @ShouldThrowException(DefinitionException.class)
     public static Archive<?> createTestArchive() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CaughtException.class.getPackage())
-                .addClasses(ProceedCauseHandler.class, CatchExtension.class)
+                .addClasses(CatchExtension.class, HandlerWhichThrowsExceptions.class)
                 .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
                 .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
     }
 
-    @Inject
-    private BeanManager bm;
-
     @Test
-    public void assertCorrectNumberOfHandlerCallsForProceedCause() {
-        bm.fireEvent(new ExceptionToCatch(new Exception(new IllegalArgumentException(new NullPointerException()))));
-        assertEquals(0, ProceedCauseHandler.BREADTH_FIRST_NPE_LOWER_PRECEDENCE_CALLED);
-        assertEquals(1, ProceedCauseHandler.BREADTH_FIRST_NPE_CALLED);
-
-        assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_HIGHER_PRECEDENCE_CALLED);
-        assertEquals(0, ProceedCauseHandler.DEPTH_FIRST_NPE_CALLED);
+    @OperateOnDeployment("weldErrorArchive")
+    public void assertHandlersAreFound() {
     }
 }

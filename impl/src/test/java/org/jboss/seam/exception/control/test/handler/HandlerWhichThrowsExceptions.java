@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,23 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jboss.seam.exception.control.test.handler;
 
-package org.jboss.seam.exception.control.test;
+import org.jboss.seam.exception.control.CaughtException;
+import org.jboss.seam.exception.control.Handles;
+import org.jboss.seam.exception.control.HandlesExceptions;
 
-//@RunWith(Arquillian.class)
-//public class ExtensionErrorTest
-//{
-//   @Deployment
-//   public static Archive<?> createTestArchive()
-//   {
-//      return ShrinkWrap.create(JavaArchive.class)
-//         .addClasses(CatchExtension.class, DefinitionErrorHandler.class)
-//         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-//         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-//   }
-//
-//   @Test(expected = IllegalStateException.class)
-//   public void assertHandlersAreFound()
-//   {
-//   }
-//}
+/**
+ * ExceptionHandler which is not valid.
+ *
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
+ */
+@HandlesExceptions
+public class HandlerWhichThrowsExceptions {
+    public void throwsAnException(@Handles CaughtException<Throwable> evt) throws Exception {
+    }
+}

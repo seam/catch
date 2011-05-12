@@ -48,8 +48,8 @@ public class TraversalPathTest {
                 .addPackage(CaughtException.class.getPackage())
                 .addPackage(CatchExtension.class.getPackage())
                 .addPackage(TraversalPathTest.class.getPackage())
-                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+                .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
     }
 
     /**
