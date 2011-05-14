@@ -20,6 +20,15 @@
 <chapter id="catch-client_usage">
    <title>Seam Catch - Usage</title>
 
+   <section id="catch-eventing-in">
+      <title>Eventing into Catch</title>
+
+      <para>
+         <!-- TODO: Eventing in is the only way to start using Catch, explain the three ways to event in: manual event
+         firing, module integration, and the new interceptor -->
+      </para>
+   </section>
+
    <section id="client_usage.handlers">
       <title>Exception handlers</title>
 
@@ -43,11 +52,10 @@
       </para>
 
       <para>
-         In this chapter, you'll learn how to define an exception handler and explore how and when it gets invoked.
-         We'll
-         begin by covering the two annotations that are used to declare an exception handler,
-         <literal>@HandlesExceptions</literal>
-         and <literal>@Handles</literal>.
+         In this and subsequent chapters, you'll learn how to define an exception handler, explore how and when it gets invoked, modify
+         an exception and a stack trace, and even extend Catch further through events that are fired during the handling
+         workflow.  We'll begin by covering the two annotations that are used to declare an exception handler,
+         <literal>@HandlesExceptions</literal> and <literal>@Handles</literal>.
       </para>
    </section>
 
@@ -147,7 +155,7 @@ public class MyHandlers
                   <para>
                      The <literal>CaughtException</literal> instance provides access to information about the exception
                      and can be used to control exception handling flow. In this case, it's used to read the current
-                     exception being handled in the exception stack trace, as returned by
+                     exception being handled in the exception stack chain, as returned by
                      <literal>getException()</literal>.
                   </para>
                </callout>
@@ -273,19 +281,20 @@ public class MyHandlers
 
    </section>
 
+
    <section id="client_usage.exception_stack">
-      <title>Exception stack trace processing</title>
+      <title>Exception stack chain processing</title>
 
       <para>
          When an exception is thrown, chances are it's nested (wrapped) inside other exceptions. (If you've ever
          examined a server log, you'll appreciate this fact). The collection of exceptions in its entirety is termed an
-         exception stack trace.
+         exception stack chain.
       </para>
 
       <para>
-         The outermost exception of an exception stack trace (e.g., EJBException, ServletException, etc) is probably of
-         little use to exception handlers. That's why Catch doesn't simply pass the exception stack trace directly to
-         the exception handlers. Instead, it intelligently unwraps the stack trace and treats the root exception cause
+         The outermost exception of an exception stack chain (e.g., EJBException, ServletException, etc) is probably of
+         little use to exception handlers. That's why Catch doesn't simply pass the exception stack chain directly to
+         the exception handlers. Instead, it intelligently unwraps the stack chain and treats the root exception cause
          as the primary exception.
       </para>
 
@@ -301,7 +310,7 @@ public class MyHandlers
       <!-- TODO: a graphic of layers (like rings) would be good here -->
 
       <para>
-         Catch continues to work through the exception stack trace, notifying handlers of each exception in the stack,
+         Catch continues to work through the exception stack chain, notifying handlers of each exception in the stack,
          until a handler flags the exception as handled. Once an exception is marked as handled, Catch stops processing
          the exception. If a handler instructed Catch to rethrow the exception (by invoking
          <literal>CaughtException#rethrow()</literal>, Catch will rethrow the exception outside the Catch
@@ -309,7 +318,7 @@ public class MyHandlers
       </para>
 
       <para>
-         Consider a stack trace containing the following nested causes (from outer cause to root cause):
+         Consider a stack chain containing the following nested causes (from outer cause to root cause):
       </para>
 
       <itemizedlist>
@@ -341,7 +350,7 @@ public class MyHandlers
       <title>Exception handler ordering</title>
 
       <para>
-         While processing one of the causes in the exception stack trace, Catch has a specific order it uses to invoke
+         While processing one of the causes in the exception stack chain, Catch has a specific order it uses to invoke
          the handlers, operating on two axes:
       </para>
 
@@ -428,7 +437,7 @@ public class MyHandlers
          </orderedlist>
 
          <para>
-            The same type traversal occurs for each exception processed in the stack trace.
+            The same type traversal occurs for each exception processed in the stack chain.
          </para>
 
          <para>
@@ -579,7 +588,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
          </itemizedlist>
 
          <para>
-            Once a handler is invoked it is muted, meaning it will not be run again for that exception stack trace,
+            Once a handler is invoked it is muted, meaning it will not be run again for that exception stack chain,
             unless it's explicitly marked as unmuted via the
             <literal>unmute()</literal>
             method on
@@ -626,6 +635,13 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
       </section>
 
    </section>
+
+   <section id="catch-usage-troubleshooting">
+      <title>Troubleshooting</title>
+
+      <para>
+      </para>
+   </section> 
 
    <!--
    vim:et:ts=3:sw=3:tw=120

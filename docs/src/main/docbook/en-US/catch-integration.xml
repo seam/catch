@@ -124,6 +124,16 @@ public interface DeclarativeRestExceptionHandlers
       </note> 
 
    </section>
+
+   <section id="catch-integration-programatic-registration">
+      <title>Programmatic Handler Registration</title>
+
+      <para>
+         <!-- TODO: Flesh this out, explain how to add a handler via the new ExceptionHandlerContainer interface, also
+         point out the requirement for implementing equals using all getters, and verifying all injection points are
+         valid -->
+      </para>
+   </section>
    <!--
    vim:et:ts=3:sw=3:tw=120
    -->

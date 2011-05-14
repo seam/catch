@@ -25,24 +25,42 @@
       customized exception handling process. By employing a delegation model, Catch allows exceptions to be addressed in
       a centralized, extensible and uniform manner. 
    </para>
-  
-   <para>
-      Catch is first notified of an exception to be handled via a CDI event. This event is fired either by the
-      application or a Catch integration. Catch then hands the exception off to a chain of registered handlers, which
-      deal with the exception appropriately. The use of CDI events to connect exceptions to handlers makes this strategy
-      of exception handling non-invasive and minimally coupled to Catch's infrastructure. 
-   </para>
-      
-   <para>
-      The exception handling process remains mostly transparent to the developer. In some cases, you register an
-      exception handler simply by annotating a handler method. Alternatively, you can handle an exception
-      programmatically, just as you would observe an event in CDI.
-   </para>
    
    <para>
       In this guide, we'll explore the various options you have for handling exceptions using Catch, as well as how
       framework authors can offer Catch integration.
    </para>
+  
+   <section id="catch_introduction.how_it_works">
+      <title>How Seam Catch Works</title>
+      <!-- TODO: Include an image as an overview of how this works -->
+      <para>
+         Seam Catch is based around the CDI eventing model. While the implementation of exception handlers may not be 
+         the same as a CDI event, and the programming model is not exactly the same as specifying a CDI event / 
+         observer, the concepts are very similar. Seam Catch makes use of events for many of it's features. Eventing in
+         is actually the only way to start using Catch.
+      </para>
+
+      <para>
+         This event is fired either by the application or a Catch integration. Catch then hands the exception off to a 
+         chain of registered handlers, which deal with the exception appropriately. The use of CDI events to connect 
+         exceptions to handlers makes this strategy of exception handling non-invasive and minimally coupled to Catch's 
+         infrastructure. 
+      </para>
+         
+      <para>
+         The exception handling process remains mostly transparent to the developer. In most cases, you register an
+         exception handler simply by annotating a handler method. Alternatively, you can handle an exception
+         programmatically, just as you would observe an event in CDI.
+      </para>
+
+      <para>
+         There are other events that are fired during the exception handling process that will allow great customization
+         of the exception, stack trace, and status. This allows the application developer to have the most control
+         possible while still following a defined workflow. These events and other advanced usages will be covered in
+         the next chapter.
+      </para>
+   </section>
 
    <!--
    vim:et:ts=3:sw=3:tw=120
