@@ -124,6 +124,21 @@ public interface DeclarativeRestExceptionHandlers
       </note> 
 
    </section>
+
+   <section id="catch-integration-programatic-registration">
+      <title>Programmatic Handler Registration</title>
+
+      <para>
+         Handlers can be registered programatically at runtime instead of solely at deploy time. This done very simply
+         by injecting <literal>HandlerMethodContainer</literal> and calling <literal>registerHandlerMethod(HandlerMethod)</literal>.
+      </para>
+
+      <para>
+         <literal>HandlerMethod</literal> has been relaxed in this version as well, and is not tied directly to Java. It
+         is therefore feasible handlers written using other JVM based languages could be easily registered and
+         participate in exception handling.
+      </para>
+   </section>
    <!--
    vim:et:ts=3:sw=3:tw=120
    -->
