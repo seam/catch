@@ -20,13 +20,39 @@
 <chapter id="catch-filtering">
    <title>Seam Catch - Advanced Features</title>
 
-   <!-- TODO: Flesh this section out, talk about the event, how the exception can be modified, and an example use case
-   (mapping) -->
    <section id="catch-exception-modification">
       <title>Exception Modification</title>
 
       <section id="catch-exception-modification-intro">
          <title>Introduction</title>
+
+         <para>
+            At times it may be useful to change the exception to something a little more specific or meaningful before
+            it  sent to handlers. Seam Catch provides means to make this happen. A prime use case for this behavior is
+            a persistence related exception coming from the database. Many times what we get from the database is an
+            error number inside of a <literal>SQLException</literal>, which isn't very helpful.
+         </para>
+
+      </section>
+
+      <section id="catch-exception-modification-usage">
+         <title>Usage</title>
+
+         <para>
+            Before any handlers are notified of an exception, Catch will raise an event of type
+            <literal>ExceptionStack</literal>. This type contains all the exceptions in the chain, and will allow you to
+            change the exception elements that will be used to notify handlers using the
+            <literal>setCauseElements(Collection)</literal> method. Do not use any of the other methods as they only
+            return copies of the chain.
+         </para>
+
+         <tip>
+            <para>
+               When changing the exception, it is strongly recommended you keep the same stack trace for the exceptions
+               you are changing. If the stack trace is not set then the new exception will not contain any stack
+               information save from the time it was created, which is likely to be of little use to any handler.
+            </para>
+         </tip>
       </section>
    </section>
 

@@ -24,9 +24,87 @@
       <title>Eventing into Catch</title>
 
       <para>
-         <!-- TODO: Eventing in is the only way to start using Catch, explain the three ways to event in: manual event
-         firing, module integration, and the new interceptor -->
+         The entire Seam Catch process starts with an event. This helps keep your application minimally coupled to
+         Catch, but also allows for further extension! Catch is all about letting you take care of exceptions the way that
+         makes the most sense for your application. Events provide this delicate balance.
       </para>
+
+      <para>
+         There are three means of firing the event to start the Catch process:
+      </para>
+
+      <itemizedlist>
+         <listitem>manual firing of the event</listitem>
+         <listitem>using an interceptor</listitem>
+         <listitem>module integration - no code needs to be changed</listitem>
+      </itemizedlist>
+
+      <section id="catch_client_usage.manual-event-fire">
+         <title>Manual firing of the event</title>
+         
+         <para>
+            Manually firing an event to event into Catch is primarily used in your own try/catch blocks. It's very
+            painless and also easy. Let's examine an sample that might exist inside of a simple business logic lookup
+            into an inventory database:s
+         </para>
+
+         <programlistingco>
+            <areaspec>
+               <area id="event-injection" coords="4"/>
+               <area id="event-fire" coords="12"/>
+            </areaspec>
+            <programlisting role="JAVA"><![CDATA[@Stateless
+public class InventoryActions {
+  @PersistenceContext private EntityManager em;
+  @Inject private Event<ExceptionToCatch> catchEvent;
+  
+  public Integer queryForItem(Item item) {
+    try {
+      Query q = em.createQuery("SELECT i from Item i where i.id = :id");
+      q.setParameter("id", item.getId());
+      return q.getSingleResult();
+   } catch (PersistenceException e) {
+     catchEvent.fire(new ExceptionToCatch(e));
+   }
+  }
+}]]>
+            </programlisting> 
+            <calloutlist>
+               <callout arearefs="event-injection">
+                  <para>
+                     The <literal>Event</literal> of generic type <literal>ExceptionToCatch</literal> is injected into
+                     your class for use later within a try/catch block.
+                  </para>
+               </callout>
+               <callout arearefs="event-fire"> 
+                  <para>
+                     The event is fired with a new instance of <literal>ExceptionToCatch</literal> constructed with the
+                     exception to be handled.
+                  </para>
+               </callout>
+            </calloutlist>
+         </programlistingco>
+      </section>
+    
+      <section id="catch_usage.interceptor">
+         <title>Using the <literal>@ExceptionHandled</literal> Interceptor</title>
+
+         <para>
+            A CDI Interceptor has been added in this version of Catch to help with integration of Catch into your
+            application. It's used just like any interceptor, and must be enabled in the beans.xml file for your bean
+            archive. This interceptor can be used at the class or method level.
+         </para>
+
+         <warning>
+            <para>
+               Using the interceptor may cause unexpected behavior to methods that call intercepted methods in which an
+               exception occurs, please see the 
+            <ulink
+               url="http://docs.jboss.org/seam/3/catch/latest/api/org/jboss/seam/exception/control/ExceptionHandledInterceptor.html">
+               API docs </ulink> for more information about returns if an exception occurs.
+            </para>
+         </warning>
+      </section>
    </section>
 
    <section id="client_usage.handlers">
@@ -155,7 +233,7 @@ public class MyHandlers
                   <para>
                      The <literal>CaughtException</literal> instance provides access to information about the exception
                      and can be used to control exception handling flow. In this case, it's used to read the current
-                     exception being handled in the exception stack chain, as returned by
+                     exception being handled in the exception chain, as returned by
                      <literal>getException()</literal>.
                   </para>
                </callout>
@@ -283,18 +361,18 @@ public class MyHandlers
 
 
    <section id="client_usage.exception_stack">
-      <title>Exception stack chain processing</title>
+      <title>Exception chain processing</title>
 
       <para>
          When an exception is thrown, chances are it's nested (wrapped) inside other exceptions. (If you've ever
          examined a server log, you'll appreciate this fact). The collection of exceptions in its entirety is termed an
-         exception stack chain.
+         exception chain.
       </para>
 
       <para>
-         The outermost exception of an exception stack chain (e.g., EJBException, ServletException, etc) is probably of
-         little use to exception handlers. That's why Catch doesn't simply pass the exception stack chain directly to
-         the exception handlers. Instead, it intelligently unwraps the stack chain and treats the root exception cause
+         The outermost exception of an exception chain (e.g., EJBException, ServletException, etc) is probably of
+         little use to exception handlers. That's why Catch doesn't simply pass the exception chain directly to
+         the exception handlers. Instead, it intelligently unwraps the chain and treats the root exception cause
          as the primary exception.
       </para>
 
@@ -310,7 +388,7 @@ public class MyHandlers
       <!-- TODO: a graphic of layers (like rings) would be good here -->
 
       <para>
-         Catch continues to work through the exception stack chain, notifying handlers of each exception in the stack,
+         Catch continues to work through the exception chain, notifying handlers of each exception in the stack,
          until a handler flags the exception as handled. Once an exception is marked as handled, Catch stops processing
          the exception. If a handler instructed Catch to rethrow the exception (by invoking
          <literal>CaughtException#rethrow()</literal>, Catch will rethrow the exception outside the Catch
@@ -318,7 +396,7 @@ public class MyHandlers
       </para>
 
       <para>
-         Consider a stack chain containing the following nested causes (from outer cause to root cause):
+         Consider a exception chain containing the following nested causes (from outer cause to root cause):
       </para>
 
       <itemizedlist>
@@ -350,7 +428,7 @@ public class MyHandlers
       <title>Exception handler ordering</title>
 
       <para>
-         While processing one of the causes in the exception stack chain, Catch has a specific order it uses to invoke
+         While processing one of the causes in the exception chain, Catch has a specific order it uses to invoke
          the handlers, operating on two axes:
       </para>
 
@@ -437,7 +515,7 @@ public class MyHandlers
          </orderedlist>
 
          <para>
-            The same type traversal occurs for each exception processed in the stack chain.
+            The same type traversal occurs for each exception processed in the chain.
          </para>
 
          <para>
@@ -588,7 +666,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
          </itemizedlist>
 
          <para>
-            Once a handler is invoked it is muted, meaning it will not be run again for that exception stack chain,
+            Once a handler is invoked it is muted, meaning it will not be run again for that exception chain,
             unless it's explicitly marked as unmuted via the
             <literal>unmute()</literal>
             method on
@@ -640,6 +718,15 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
       <title>Troubleshooting</title>
 
       <para>
+         The issues to date with Seam Catch have all be around eventing into Catch. The information at the top of this
+         chapter should give details how to correctly event into Seam Catch and allow your handlers to be notified of
+         exceptions.
+      </para>
+
+      <para>
+         For questions involving integrations such as JSF or REST for navigation cases, or exceptions not being passed
+         correctly to Seam Catch, please see documentation for that module as an exhaustive review of each integration
+         and hazards pretaining to those integrations is beyond the scope of this guide.
       </para>
    </section> 
 
