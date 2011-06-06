@@ -43,9 +43,9 @@
          <title>Manual firing of the event</title>
          
          <para>
-            Manually firing an event to event into Catch is primarily used in your own try/catch blocks. It's very
+            Manually firing an event to use Catch is primarily used in your own try/catch blocks. It's very
             painless and also easy. Let's examine an sample that might exist inside of a simple business logic lookup
-            into an inventory database:s
+            into an inventory database:
          </para>
 
          <programlistingco>
@@ -90,9 +90,17 @@ public class InventoryActions {
          <title>Using the <literal>@ExceptionHandled</literal> Interceptor</title>
 
          <para>
-            A CDI Interceptor has been added in this version of Catch to help with integration of Catch into your
+            A CDI Interceptor has been added to help with integration of Catch into your
             application. It's used just like any interceptor, and must be enabled in the beans.xml file for your bean
             archive. This interceptor can be used at the class or method level.
+         </para>
+
+         <para>
+            This interceptor is a typical AroundInvoke interceptor and is invoked before the method (which in this case
+            mearly wraps the call to the intercepted method in a try / catch block). The intercepted method is called
+            then, if an exception (actually a <literal>Throwable</literal>) occurs during execution of the intercepted 
+            method the exception is passed to Catch (without any qualifiers). Normal flow continues from there, however,
+            take not of the following warning:
          </para>
 
          <warning>
@@ -719,7 +727,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
 
       <para>
          The issues to date with Seam Catch have all be around eventing into Catch. The information at the top of this
-         chapter should give details how to correctly event into Seam Catch and allow your handlers to be notified of
+         chapter should give details how to correctly use into Seam Catch and allow your handlers to be notified of
          exceptions.
       </para>
 
