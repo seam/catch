@@ -51,7 +51,7 @@
 	   </tip>
       <para>
          Alternatively, you can use the API at compile time and only include the implementation at runtime. This protects
-         you from inadvertantly depending on an implementation class.
+         you from inadvertently depending on an implementation class.
       </para>
 	   <programlisting role="XML"><![CDATA[<dependency>
    <groupId>org.jboss.seam.catch</groupId>

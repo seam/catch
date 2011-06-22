@@ -63,7 +63,7 @@
          <title>Introduction</title>
 
          <para>
-            Stack traces are an everyday occurance for the Java developer, unfortunately the base stack trace isn't very
+            Stack traces are an everyday occurence for the Java developer, unfortunately the base stack trace isn't very
             helpful and can be difficult to understand and see the root problem. Catch helps make this easier by
          </para>
 

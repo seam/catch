@@ -112,7 +112,7 @@ public interface DeclarativeRestExceptionHandlers
          <literal>@SendHttpResponse</literal> annotation. The only thing left is some boiler plate code to setup
          the <literal>Response</literal>. In a jax-rs application (or even in any web application) this approach helps
          developers cut down on the amount of boiler plate code they have to write in their own handlers and should
-         be implemented in any Catch integration, however, there may be situtations where ServiceHandlers simply do not
+         be implemented in any Catch integration, however, there may be situations where ServiceHandlers simply do not
          make sense.
       </para>
 

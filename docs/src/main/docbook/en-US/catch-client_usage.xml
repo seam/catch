@@ -97,7 +97,7 @@ public class InventoryActions {
 
          <para>
             This interceptor is a typical AroundInvoke interceptor and is invoked before the method (which in this case
-            mearly wraps the call to the intercepted method in a try / catch block). The intercepted method is called
+            merely wraps the call to the intercepted method in a try / catch block). The intercepted method is called
             then, if an exception (actually a <literal>Throwable</literal>) occurs during execution of the intercepted 
             method the exception is passed to Catch (without any qualifiers). Normal flow continues from there, however,
             take not of the following warning:
@@ -325,7 +325,7 @@ public class MyHandlers
                      This handler has a default precedence of 0 (the default value of the precedence attribute on
                      <literal>@Handles</literal>). It's invoked during the breadth first traversal mode. For more
                      information on traversal, see the section <xref
-                        linkend="client_usage.handler_ordering.hierarchy_traversal"/>.
+                        linkend="client_usage.handler_ordering.hierarchy"/>.
                   </para>
                </callout>
                <callout arearefs="qualifier">
@@ -350,7 +350,7 @@ public class MyHandlers
          </programlistingco>
 
          <para>
-            A handler is guaranteed to only be invoked once per exception (automatically muted), unless it reenables
+            A handler is guaranteed to only be invoked once per exception (automatically muted), unless it re-enables
             itself by invoking the
             <literal>unmute()</literal>
             method on the
@@ -360,7 +360,7 @@ public class MyHandlers
 
          <para>
             Handlers must not throw checked exceptions, and should avoid throwing unchecked exceptions. Should a handler
-            throw an unchecked exception it will propegate up the stack and all handling done via Catch will cease. Any
+            throw an unchecked exception it will propagate up the stack and all handling done via Catch will cease. Any
             exception that was being handled will be lost.
          </para>
       </section>
@@ -455,7 +455,7 @@ public class MyHandlers
          <para>
             Catch doesn't simply invoke handlers that match the exact type of the exception. Instead, it walks up and
             down the type hierarchy of the exception. It first notifies least specific handler in breadth first
-            traversal mode, then gradually works down the type hiearchy towards handlers for the actual exception type,
+            traversal mode, then gradually works down the type hierarchy towards handlers for the actual exception type,
             still in breadth first traversal. Once all breadth first traversal handlers have been invoked, the process
             is reversed for depth first traversal, meaning the most specific handlers are notified first and Catch
             continues walking up the hierarchy tree.
@@ -734,7 +734,7 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
       <para>
          For questions involving integrations such as JSF or REST for navigation cases, or exceptions not being passed
          correctly to Seam Catch, please see documentation for that module as an exhaustive review of each integration
-         and hazards pretaining to those integrations is beyond the scope of this guide.
+         and hazards pertaining to those integrations is beyond the scope of this guide.
       </para>
    </section> 
 
