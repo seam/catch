@@ -31,7 +31,7 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner 
     final private CaughtException<?> event;
     final private BeanManager bm;
     final private Bean<?> declaringBean;
-    final private HandlerMethod<?> handlerMethod;
+    final private HandlerMethodImpl<?> handlerMethod;
 
     /**
      * Sole constructor.
@@ -41,10 +41,10 @@ public class OutboundParameterValueRedefiner implements ParameterValueRedefiner 
      * @param handler Handler method this redefiner is for
      */
     public OutboundParameterValueRedefiner(final CaughtException<?> event, final BeanManager manager,
-                                           final HandlerMethod<?> handler) {
+                                           final HandlerMethodImpl<?> handler) {
         this.event = event;
         this.bm = manager;
-        this.declaringBean = handler.getBean(bm);
+        this.declaringBean = handler.getBean(manager);
         this.handlerMethod = handler;
     }
 

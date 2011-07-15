@@ -42,8 +42,8 @@ public class UnMuteHandlerTest {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage(CaughtException.class.getPackage())
                 .addClasses(UnMuteHandler.class, CatchExtension.class)
-                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+                .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
     }
 
     @Inject

@@ -28,8 +28,10 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.HandlerMethod;
+import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.extension.Account;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -47,9 +49,9 @@ public class HandlerComparatorTest {
     @Deployment
     public static Archive<?> createTestArchive() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(CatchExtension.class, ExtensionExceptionHandler.class)
-                .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+                .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, Account.class)
+                .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
+                .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
     }
 
     @Inject
@@ -62,10 +64,10 @@ public class HandlerComparatorTest {
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
                 IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
 
-        assertEquals("catchThrowable", handlers.get(0).getJavaMethod().getName());
-        assertEquals("catchThrowableP20", handlers.get(1).getJavaMethod().getName());
-        assertEquals("catchRuntime", handlers.get(2).getJavaMethod().getName());
-        assertEquals("catchIAE", handlers.get(3).getJavaMethod().getName());
+        assertEquals("catchThrowable", ((HandlerMethodImpl<?>) handlers.get(0)).getJavaMethod().getName());
+        assertEquals("catchThrowableP20", ((HandlerMethodImpl<?>) handlers.get(1)).getJavaMethod().getName());
+        assertEquals("catchRuntime", ((HandlerMethodImpl<?>) handlers.get(2)).getJavaMethod().getName());
+        assertEquals("catchIAE", ((HandlerMethodImpl<?>) handlers.get(3)).getJavaMethod().getName());
     }
 
     @Test

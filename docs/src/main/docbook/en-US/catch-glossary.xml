@@ -22,8 +22,8 @@
    <glossdiv>
       <title>E</title>
 
-      <glossentry id="exceptionstack">
-         <glossterm>Exception Stack</glossterm>
+      <glossentry id="exceptionchain">
+         <glossterm>Exception Chain</glossterm>
          <glossdef>
             <para>
                An exception chain is made up of many different exceptions or causes until the root exception is found

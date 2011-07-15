@@ -27,7 +27,7 @@
    <xi:include href="catch-introduction.xml"/>
    <xi:include href="catch-installation.xml"/>
    <xi:include href="catch-client_usage.xml"/>
-   <xi:include href="catch-filter.xml"/>
+   <xi:include href="catch-advanced_usage.xml"/>
    <xi:include href="catch-integration.xml"/>
    <xi:include href="catch-glossary.xml"/>
 

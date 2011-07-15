@@ -30,17 +30,21 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.InjectionException;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Decorator;
 import javax.enterprise.inject.spi.Extension;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.Interceptor;
 import javax.enterprise.inject.spi.ProcessBean;
 
 import org.jboss.seam.exception.control.ExceptionHandlerComparator;
 import org.jboss.seam.exception.control.HandlerMethod;
+import org.jboss.seam.exception.control.HandlerMethodContainer;
 import org.jboss.seam.exception.control.HandlerMethodImpl;
 import org.jboss.seam.exception.control.HandlesExceptions;
 import org.jboss.seam.exception.control.TraversalMode;
@@ -52,7 +56,7 @@ import org.jboss.seam.solder.reflection.HierarchyDiscovery;
  * CDI extension to find handlers at startup.
  */
 @SuppressWarnings("unchecked")
-public class CatchExtension implements Extension {
+public class CatchExtension implements Extension, HandlerMethodContainer {
     private final Map<? super Type, Collection<HandlerMethod<? extends Throwable>>> allHandlers;
 
     public CatchExtension() {
@@ -77,7 +81,7 @@ public class CatchExtension implements Extension {
             return;
         }
 
-		final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
+        final AnnotatedType<T> type = (AnnotatedType<T>) pmb.getAnnotated();
 
         if (AnnotationInspector.isAnnotationPresent(type, HandlesExceptions.class, bm)) {
             final Set<AnnotatedMethod<? super T>> methods = type.getMethods();
@@ -90,18 +94,29 @@ public class CatchExtension implements Extension {
                                 String.format("Handler method %s must not throw exceptions", method.getJavaMember())));
                     }
                     final Class<? extends Throwable> exceptionType = (Class<? extends Throwable>) ((ParameterizedType) param.getBaseType()).getActualTypeArguments()[0];
-                    addHandlerMethod(exceptionType, method, bm);
+                    registerHandlerMethod(new HandlerMethodImpl(method, bm));
                 }
             }
         }
     }
 
-    private <E extends Throwable, M> void addHandlerMethod(Class<E> exceptionType, AnnotatedMethod<M> method, BeanManager bm) {
-        if (this.allHandlers.containsKey(exceptionType)) {
-            this.allHandlers.get(exceptionType).add(new HandlerMethodImpl<E>(method, bm));
-        } else {
-            this.allHandlers.put(exceptionType, new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(new HandlerMethodImpl<E>(
-                    method, bm))));
+    /**
+     * Verifies all injection points for every handler are valid.
+     *
+     * @param adv Lifecycle event
+     * @param bm  BeanManager instance
+     */
+    public void verifyInjectionPoints(@Observes final AfterDeploymentValidation adv, final BeanManager bm) {
+        for (Map.Entry<? super Type, Collection<HandlerMethod<? extends Throwable>>> entry : this.allHandlers.entrySet()) {
+            for (HandlerMethod<? extends Throwable> handler : entry.getValue()) {
+                for (InjectionPoint ip : ((HandlerMethodImpl<? extends Throwable>) handler).getInjectionPoints()) {
+                    try {
+                        bm.validate(ip);
+                    } catch (InjectionException e) {
+                        adv.addDeploymentProblem(e);
+                    }
+                }
+            }
         }
     }
 
@@ -149,5 +164,14 @@ public class CatchExtension implements Extension {
             }
         }
         return false;
+    }
+
+    @Override
+    public <T extends Throwable> void registerHandlerMethod(HandlerMethod<T> handlerMethod) {
+        if (this.allHandlers.containsKey(handlerMethod.getExceptionType())) {
+            this.allHandlers.get(handlerMethod.getExceptionType()).add(handlerMethod);
+        } else {
+            this.allHandlers.put(handlerMethod.getExceptionType(), new HashSet<HandlerMethod<? extends Throwable>>(Arrays.asList(handlerMethod)));
+        }
     }
 }

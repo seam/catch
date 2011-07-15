@@ -30,17 +30,22 @@ import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.api.OperateOnDeployment;
+import org.jboss.arquillian.api.ShouldThrowException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.extension.literal.ArquillianLiteral;
 import org.jboss.seam.exception.control.test.extension.literal.CatchQualifierLiteral;
+import org.jboss.seam.exception.control.test.handler.BadInjectionPointHandler;
 import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,25 +57,36 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
 public class ExtensionTest {
-    @Deployment
+    @Deployment(name = "defaultExtensionTest")
     public static Archive<?> createTestArchive() {
         return ShrinkWrap.create(JavaArchive.class)
                 .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
                         InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
-                .addManifestResource(new StringAsset(
+                .addAsManifestResource(new StringAsset(
                         "<beans>" +
                                 "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
                                 "   <decorators><class>" + DecoratorAsHandler.class.getName() + "</class></decorators>" +
                                 "</beans>"), "beans.xml")
-                .addServiceProvider(Extension.class, CatchExtension.class);
+                .addAsServiceProvider(Extension.class, CatchExtension.class);
+    }
+
+    @Deployment(name = "BadInjectionPointHandler")
+    @ShouldThrowException(DeploymentException.class)
+    public static Archive<?> createBadInjectionPointArchive() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClasses(CatchExtension.class, BadInjectionPointHandler.class)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsServiceProvider(Extension.class, CatchExtension.class);
     }
 
     @Inject
     CatchExtension extension;
+
     @Inject
     BeanManager bm;
 
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertAnyHandlersAreFound() {
         assertFalse(extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
                 Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).isEmpty());
@@ -85,18 +101,21 @@ public class ExtensionTest {
      * @see DecoratorAsHandler
      */
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertNumberOfHandlersFoundMatchesExpectedDepthFirst() {
         assertEquals(5, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
                 Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST).size());
     }
 
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertNumberOfHandlersFoundMatchesExpectedBreathFirst() {
         assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm,
                 Collections.<Annotation>emptySet(), TraversalMode.BREADTH_FIRST).size());
     }
 
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertSQLHandlerFound() {
         final List<HandlerMethod<? extends Throwable>> handlerMethods = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
                 SQLException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
@@ -105,6 +124,7 @@ public class ExtensionTest {
     }
 
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertQualifiedHandlerAndOthersAreFound() {
         HashSet<Annotation> qualifiers = new HashSet<Annotation>();
         qualifiers.add(CatchQualifierLiteral.INSTANCE);
@@ -113,6 +133,7 @@ public class ExtensionTest {
     }
 
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertAllValidHandlersAreFoundDepthFirst() {
         HashSet<Annotation> qualifiers = new HashSet<Annotation>();
         qualifiers.add(CatchQualifierLiteral.INSTANCE);
@@ -122,11 +143,20 @@ public class ExtensionTest {
     }
 
     @Test
+    @OperateOnDeployment("defaultExtensionTest")
     public void assertAllValidHandlersAreFoundBreadthFirst() {
         HashSet<Annotation> qualifiers = new HashSet<Annotation>();
         qualifiers.add(CatchQualifierLiteral.INSTANCE);
         qualifiers.add(ArquillianLiteral.INSTANCE);
         assertEquals(4, extension.getHandlersForExceptionType(IllegalArgumentException.class, bm, qualifiers,
                 TraversalMode.BREADTH_FIRST).size());
+    }
+
+    /**
+     * @see BadInjectionPointHandler
+     */
+    @Test
+    @OperateOnDeployment("BadInjectionPointHandler")
+    public void assertDeploymentExceptionThrown() {
     }
 }

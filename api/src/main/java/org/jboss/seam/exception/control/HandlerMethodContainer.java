@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright [2010], Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,23 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jboss.seam.exception.control;
 
-package org.jboss.seam.exception.control.test;
-
-//@RunWith(Arquillian.class)
-//public class ExtensionErrorTest
-//{
-//   @Deployment
-//   public static Archive<?> createTestArchive()
-//   {
-//      return ShrinkWrap.create(JavaArchive.class)
-//         .addClasses(CatchExtension.class, DefinitionErrorHandler.class)
-//         .addManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-//         .addManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
-//   }
-//
-//   @Test(expected = IllegalStateException.class)
-//   public void assertHandlersAreFound()
-//   {
-//   }
-//}
+/**
+ * Injectable container to support programmatic registration of {@link HandlerMethod} instances.
+ *
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
+ */
+public interface HandlerMethodContainer {
+    /**
+     * Registers the given handlerMethod to the container.
+     *
+     * @param handlerMethod HandlerMethod implementation to register with the container
+     */
+    <T extends Throwable> void registerHandlerMethod(HandlerMethod<T> handlerMethod);
+}
