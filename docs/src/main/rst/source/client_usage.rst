@@ -135,6 +135,7 @@ stout. (``Throwable`` is the base exception type in Java and thus
 represents all exceptions).
 
 .. code-block:: java
+
   @HandlesExceptions
   public class MyHandlers
   {
@@ -145,6 +146,7 @@ represents all exceptions).
         evt.markHandled();
      }
   }
+
 - Line 1: The ``@HandlesExceptions`` annotation signals that
   this bean contains exception handler methods. 
 - Line 4: The <literal>@Handles</literal> annotation on the first parameter 
