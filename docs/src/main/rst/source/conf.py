@@ -41,14 +41,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Seam Catch'
-copyright = u'2011, Jason Porter, Dan Allen'
+copyright = u'2011, Red Hat Inc., Jason Porter, Dan Allen'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '3.1.0'
+version = '3.1.0-Beta'
 # The full version, including alpha/beta/rc tags.
 release = '3.1.0'
 
