@@ -135,6 +135,7 @@ stout. (``Throwable`` is the base exception type in Java and thus
 represents all exceptions).
 
 .. code-block:: java
+  :linenos:
 
   @HandlesExceptions
   public class MyHandlers
