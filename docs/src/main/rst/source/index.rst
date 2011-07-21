@@ -22,10 +22,7 @@ integration.
 
   installation
   how_it_works
-  client_usage
-
-Indices and tables
-==================
-* :ref:`index`
-* :ref:`search`
-.. * :ref:`glossary`  
+  usage
+  advanced_features
+  framework_integration
+  glossary
