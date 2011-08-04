@@ -26,19 +26,15 @@ import java.util.ArrayList;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionStack;
 import org.jboss.seam.exception.control.ExceptionToCatch;
 import org.jboss.seam.exception.control.Handles;
 import org.jboss.seam.exception.control.HandlesExceptions;
-import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.BaseWebArchive;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,11 +49,8 @@ public class ModifyExceptionStackTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CaughtException.class.getPackage())
-                .addClasses(ModifyExceptionStackTest.class, CatchExtension.class)
-                .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+        return BaseWebArchive.createBase("ModifyExceptionStack.war")
+                .addClasses(ModifyExceptionStackTest.class);
     }
 
     @SuppressWarnings("serial")
