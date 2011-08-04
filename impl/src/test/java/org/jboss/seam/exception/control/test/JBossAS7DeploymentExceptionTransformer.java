@@ -14,33 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jboss.seam.exception.control.test;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.ExceptionToCatch;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+/**
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
+ */
+public class JBossAS7DeploymentExceptionTransformer implements DeploymentExceptionTransformer {
+    @Override
+    public Throwable transform(Throwable exception) {
+        Throwable rootCause = exception;
 
-@RunWith(Arquillian.class)
-public class StackInfoTest {
-    @Deployment
-    public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("stackInfo.war")
-                .addClasses(StackInfoHandler.class);
+        while (rootCause.getCause() != null) {
+            rootCause = exception.getCause();
+        }
+
+        System.out.println(rootCause);
+        return rootCause;
     }
-
-    @Inject
-    private BeanManager bm;
-
-    @Test
-    public void assertStackInfoIsCorrect() {
-        bm.fireEvent(new ExceptionToCatch(new Exception(new NullPointerException())));
-    }
-
 }

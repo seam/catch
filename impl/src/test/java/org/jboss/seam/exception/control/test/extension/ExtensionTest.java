@@ -26,25 +26,21 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
-import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.api.OperateOnDeployment;
-import org.jboss.arquillian.api.ShouldThrowException;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.container.test.api.ShouldThrowException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.exception.control.HandlerMethod;
 import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.BaseWebArchive;
 import org.jboss.seam.exception.control.test.extension.literal.ArquillianLiteral;
 import org.jboss.seam.exception.control.test.extension.literal.CatchQualifierLiteral;
 import org.jboss.seam.exception.control.test.handler.BadInjectionPointHandler;
 import org.jboss.seam.exception.control.test.handler.ExtensionExceptionHandler;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.weld.exceptions.DeploymentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,24 +55,16 @@ import static org.junit.Assert.assertThat;
 public class ExtensionTest {
     @Deployment(name = "defaultExtensionTest")
     public static Archive<?> createTestArchive() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(CatchExtension.class, ExtensionExceptionHandler.class, StereotypedHandler.class,
-                        InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class)
-                .addAsManifestResource(new StringAsset(
-                        "<beans>" +
-                                "   <interceptors><class>" + InterceptorAsHandler.class.getName() + "</class></interceptors>" +
-                                "   <decorators><class>" + DecoratorAsHandler.class.getName() + "</class></decorators>" +
-                                "</beans>"), "beans.xml")
-                .addAsServiceProvider(Extension.class, CatchExtension.class);
+        return BaseWebArchive.createBase("defaultExtension.war")
+                .addClasses(ExtensionExceptionHandler.class, StereotypedHandler.class,
+                        InterceptorAsHandler.class, PretendInterceptorBinding.class, DecoratorAsHandler.class, Account.class);
     }
 
     @Deployment(name = "BadInjectionPointHandler")
     @ShouldThrowException(DeploymentException.class)
     public static Archive<?> createBadInjectionPointArchive() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(CatchExtension.class, BadInjectionPointHandler.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsServiceProvider(Extension.class, CatchExtension.class);
+        return BaseWebArchive.createBase("badInjectionExtension.war")
+                .addClasses(BadInjectionPointHandler.class);
     }
 
     @Inject

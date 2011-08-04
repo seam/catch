@@ -20,16 +20,11 @@ package org.jboss.seam.exception.control.test.handler;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.CaughtException;
 import org.jboss.seam.exception.control.ExceptionToCatch;
-import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.BaseWebArchive;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,11 +34,8 @@ import static junit.framework.Assert.assertEquals;
 public class UnMuteHandlerTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addPackage(CaughtException.class.getPackage())
-                .addClasses(UnMuteHandler.class, CatchExtension.class)
-                .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+        return BaseWebArchive.createBase("unMuteHandler.war")
+                .addClasses(UnMuteHandler.class);
     }
 
     @Inject

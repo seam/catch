@@ -17,17 +17,13 @@
 
 package org.jboss.seam.exception.control.test.extension;
 
-import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.api.OperateOnDeployment;
-import org.jboss.arquillian.api.ShouldThrowException;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.container.test.api.ShouldThrowException;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.exception.control.extension.CatchExtension;
+import org.jboss.seam.exception.control.test.BaseWebArchive;
 import org.jboss.seam.exception.control.test.handler.HandlerWhichThrowsExceptions;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.weld.exceptions.DefinitionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,10 +33,8 @@ public class ExtensionErrorTest {
     @Deployment(name = "weldErrorArchive")
     @ShouldThrowException(DefinitionException.class)
     public static Archive<?> createTestArchive() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(CatchExtension.class, HandlerWhichThrowsExceptions.class)
-                .addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension")
-                .addAsManifestResource(new ByteArrayAsset(new byte[0]), ArchivePaths.create("beans.xml"));
+        return BaseWebArchive.createBase("extensionError.war")
+                .addClasses(HandlerWhichThrowsExceptions.class);
     }
 
     @Test
