@@ -40,6 +40,9 @@ public class ExceptionStack implements Serializable {
     private Collection<Throwable> causes;
     private Throwable current;
 
+    /**
+     * Basic constructor, needed to make the class a bean, please don't use
+     */
     public ExceptionStack() {
     } // needed to be a bean
 
@@ -138,6 +141,10 @@ public class ExceptionStack implements Serializable {
         return Collections.unmodifiableCollection(this.causes);
     }
 
+    /**
+     * Test if iteration is finished
+     * @return finished with iteration
+     */
     public boolean isLast() {
         return this.last;
     }
@@ -150,10 +157,18 @@ public class ExceptionStack implements Serializable {
         return Collections.unmodifiableCollection(this.createThrowableCollectionFrom(this.remaining));
     }
 
+    /**
+     * Tests if the current exception is the root exception
+     * @return Returns true if iteration is at the root exception (top of the inverted stack)
+     */
     public boolean isRoot() {
         return this.root;
     }
 
+    /**
+     * Current exception in the iteration
+     * @return current exception
+     */
     public Throwable getCurrent() {
         return this.current;
     }
@@ -163,6 +178,10 @@ public class ExceptionStack implements Serializable {
         this.init();
     }
 
+    /**
+     * The original exception stack if it has been changed.
+     * @return The original exception stack
+     */
     public Deque<ExceptionStackItem> getOrigExceptionStackItems() {
         return new ArrayDeque<ExceptionStackItem>(this.origExceptionStackItems);
     }

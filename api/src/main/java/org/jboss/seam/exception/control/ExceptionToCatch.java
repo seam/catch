@@ -34,6 +34,9 @@ public class ExceptionToCatch implements Serializable {
     private boolean handled;
     private transient Set<Annotation> qualifiers;
 
+    /**
+     * Basic constructor
+     */
     public ExceptionToCatch() {
     } // needed to be a bean
 
@@ -64,18 +67,22 @@ public class ExceptionToCatch implements Serializable {
         return exception;
     }
 
-    /**
-     * NOTE: Will be moved to protected in a later release!!
-     */
-    // TODO: Move to protected
-    public void setHandled(boolean handled) {
+    protected void setHandled(boolean handled) {
         this.handled = handled;
     }
 
+    /**
+     * Test to see if the exception has been handled via Seam Catch.
+     * @return test if the exception has been through Seam Catch handling.
+     */
     public boolean isHandled() {
         return handled;
     }
 
+    /**
+     * Qualifiers with which the instance was created.
+     * @return Qualifiers with which the instance was created.
+     */
     public Set<Annotation> getQualifiers() {
         return Collections.unmodifiableSet(qualifiers);
     }
