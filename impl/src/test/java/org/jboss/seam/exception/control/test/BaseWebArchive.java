@@ -17,6 +17,7 @@
 package org.jboss.seam.exception.control.test;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.enterprise.inject.spi.Extension;
 
@@ -34,13 +35,13 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
 public final class BaseWebArchive {
-    static Collection<JavaArchive> libraries;
+    private static Collection<JavaArchive> libraries = new HashSet<JavaArchive>(5);
 
     public static WebArchive createBase(final String name) {
-        if (libraries == null) {
+        if (libraries.isEmpty()) {
             // The JBoss Repository must be defined in the user's settings.xml for this to work.
-            libraries = DependencyResolvers.use(MavenDependencyResolver.class)
-                    .artifacts("org.jboss.seam.solder:seam-solder:3.0.0.Final").resolveAs(JavaArchive.class);
+            libraries.addAll(DependencyResolvers.use(MavenDependencyResolver.class)
+                    .artifacts("org.jboss.seam.solder:seam-solder:3.0.0.Final").resolveAs(JavaArchive.class));
         }
 
         return ShrinkWrap.create(WebArchive.class, name)
