@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jboss.seam.exception.control.literal;
 
-package org.jboss.seam.exception.control;
+import javax.enterprise.util.AnnotationLiteral;
+
+import org.jboss.seam.exception.control.CatchResource;
 
 /**
- * Direction of a exception cause chain traversal.
+ * Annotation literal.
+ *
+ * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
-public enum TraversalMode {
-    /**
-     * Traversal that matches the exception type as closely as possible first.
-     */
-    DEPTH_FIRST,
+public class CatchResourceLiteral extends AnnotationLiteral<CatchResource> implements CatchResource {
+    public static final CatchResource INSTANCE = new CatchResourceLiteral();
 
-    /**
-     * Traversal that matches the highest super type of the exception as possible first.
-     */
-    BREADTH_FIRST
+    private CatchResourceLiteral() {
+    }
 }
