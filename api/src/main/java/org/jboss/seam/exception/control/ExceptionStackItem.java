@@ -28,6 +28,8 @@ import java.util.Arrays;
  * Container for the exception and it's stack trace.
  */
 public final class ExceptionStackItem implements Serializable {
+    private static final long serialVersionUID = 3082750572813491654L;
+
     final private Throwable throwable;
     final private StackTraceElement[] stackTraceElements;
 

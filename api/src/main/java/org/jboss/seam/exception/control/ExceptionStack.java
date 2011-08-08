@@ -88,7 +88,7 @@ public class ExceptionStack implements Serializable {
      * @deprecated There shouldn't be a use for this, please use the other constructor
      */
     @Deprecated
-    public ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex) {
+    protected ExceptionStack(final Collection<Throwable> causeChainElements, final int currentElementIndex) {
         if (causeChainElements == null || causeChainElements.size() == 0) {
             throw new IllegalArgumentException("Null or empty collection of causeChainElements is not valid");
         }
@@ -143,6 +143,7 @@ public class ExceptionStack implements Serializable {
 
     /**
      * Test if iteration is finished
+     *
      * @return finished with iteration
      */
     public boolean isLast() {
@@ -159,6 +160,7 @@ public class ExceptionStack implements Serializable {
 
     /**
      * Tests if the current exception is the root exception
+     *
      * @return Returns true if iteration is at the root exception (top of the inverted stack)
      */
     public boolean isRoot() {
@@ -167,6 +169,7 @@ public class ExceptionStack implements Serializable {
 
     /**
      * Current exception in the iteration
+     *
      * @return current exception
      */
     public Throwable getCurrent() {
@@ -180,6 +183,7 @@ public class ExceptionStack implements Serializable {
 
     /**
      * The original exception stack if it has been changed.
+     *
      * @return The original exception stack
      */
     public Deque<ExceptionStackItem> getOrigExceptionStackItems() {
