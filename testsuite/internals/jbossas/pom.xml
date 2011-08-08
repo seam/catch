@@ -159,7 +159,7 @@
                                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                                     <trimStackTrace>false</trimStackTrace>
                                     <printSummary>true</printSummary>
-                                    <forkMode>always</forkMode>
+                                    <!--<forkMode>always</forkMode>-->
                                 </configuration>
                             </execution>
                         </executions>

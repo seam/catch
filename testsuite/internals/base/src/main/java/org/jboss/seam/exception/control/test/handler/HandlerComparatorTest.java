@@ -33,6 +33,7 @@ import org.jboss.seam.exception.control.TraversalMode;
 import org.jboss.seam.exception.control.extension.CatchExtension;
 import org.jboss.seam.exception.control.test.BaseWebArchive;
 import org.jboss.seam.exception.control.test.extension.Account;
+import org.jboss.seam.exception.control.test.extension.CatchQualifier;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +47,8 @@ public class HandlerComparatorTest {
     @Deployment
     public static Archive<?> createTestArchive() {
         return BaseWebArchive.createBase("handlerComparator.war")
-                .addClasses(ExtensionExceptionHandler.class, Account.class);
+                .addClasses(ExtensionExceptionHandler.class, Account.class,
+                        org.jboss.seam.exception.control.test.extension.Arquillian.class, CatchQualifier.class);
     }
 
     @Inject
@@ -58,6 +60,8 @@ public class HandlerComparatorTest {
     public void assertOrderIsCorrectDepthFirst() {
         List<HandlerMethod<? extends Throwable>> handlers = new ArrayList<HandlerMethod<? extends Throwable>>(extension.getHandlersForExceptionType(
                 IllegalArgumentException.class, bm, Collections.<Annotation>emptySet(), TraversalMode.DEPTH_FIRST));
+
+        System.out.println(handlers);
 
         assertEquals("catchThrowable", ((HandlerMethodImpl<?>) handlers.get(0)).getJavaMethod().getName());
         assertEquals("catchThrowableP20", ((HandlerMethodImpl<?>) handlers.get(1)).getJavaMethod().getName());
