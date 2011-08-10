@@ -34,9 +34,9 @@
       </para>
 
       <itemizedlist>
-         <listitem>manual firing of the event</listitem>
-         <listitem>using an interceptor</listitem>
-         <listitem>module integration - no code needs to be changed</listitem>
+         <listitem><para>manual firing of the event</para></listitem>
+         <listitem><para>using an interceptor</para></listitem>
+         <listitem><para>module integration - no code needs to be changed</para></listitem>
       </itemizedlist>
 
       <section id="catch_client_usage.manual-event-fire">
@@ -179,10 +179,12 @@ public class MyHandlers {}]]>
          </para>
 
          <para>
-            <note>The
-               <literal>@HandlesExceptions</literal>
-               annotation may be deprecated in favor of annotation indexing
-               done by <ulink href="http://seamframework.org/Seam3/Solder">Seam Solder</ulink>.
+            <note>
+               <para>
+                  The <literal>@HandlesExceptions</literal>
+                  annotation may be deprecated in favor of annotation indexing
+                  done by <ulink url="http://seamframework.org/Seam3/Solder">Seam Solder</ulink>.
+               </para>
             </note>
          </para>
       </section>
@@ -246,9 +248,11 @@ public class MyHandlers
                   </para>
                </callout>
                <callout arearefs="markHandled">
-                  This handler does not modify the invocation of subsequent handlers, as designated by invoking
-                  <literal>markHandled()</literal> on <literal>CaughtException</literal>. As this is the default behavior,
-                  this line could be omitted.
+                  <para>
+                     This handler does not modify the invocation of subsequent handlers, as designated by invoking
+                     <literal>markHandled()</literal> on <literal>CaughtException</literal>. As this is the default behavior,
+                     this line could be omitted.
+                  </para>
                </callout>
             </calloutlist>
          </programlistingco>
@@ -261,13 +265,9 @@ public class MyHandlers
          </para>
 
          <itemizedlist>
-            <listitem>a parameter of a handler method must be a
-               <literal>CaughtException</literal>
-            </listitem>
-            <listitem>handlers are ordered before they are invoked (invocation order of observers is
-               non-deterministic)
-            </listitem>
-            <listitem>any handler can prevent subsequent handlers from being invoked</listitem>
+            <listitem><para>a parameter of a handler method must be a <literal>CaughtException</literal></para></listitem>
+            <listitem><para>handlers are ordered before they are invoked (invocation order of observers is non-deterministic)</para></listitem>
+            <listitem><para>any handler can prevent subsequent handlers from being invoked</para></listitem>
          </itemizedlist>
 
          <para>
@@ -278,13 +278,17 @@ public class MyHandlers
 
          <itemizedlist>
             <listitem>
-               a precedence relative to other handlers for the same exception type. Handlers with higher precedence are
-               invoked before handlers with lower precedence that handle the same exception type. The default
-               precedence (if not specified) is 0.
+               <para>
+                  a precedence relative to other handlers for the same exception type. Handlers with higher precedence are
+                  invoked before handlers with lower precedence that handle the same exception type. The default
+                  precedence (if not specified) is 0.
+               </para>
             </listitem>
             <listitem>
-               the type of the traversal mode (i.e., phase) during which the handler is invoked. The default
-               traversal mode (if not specified) is <literal>TraversalMode.DEPTH_FIRST</literal>.
+               <para>
+                  the type of the traversal mode (i.e., phase) during which the handler is invoked. The default
+                  traversal mode (if not specified) is <literal>TraversalMode.DEPTH_FIRST</literal>.
+               </para>
             </listitem>
          </itemizedlist>
 
@@ -295,7 +299,7 @@ public class MyHandlers
 
          <programlistingco>
             <areaspec>
-               <area id="handles-exceptions" coords="1"/>
+               <area id="handles-exceptions-second-example" coords="1"/>
                <area id="traversal" coords="4"/>
                <area id="qualifier" coords="5"/>
                <area id="injection" coords="6"/>
@@ -312,7 +316,7 @@ public class MyHandlers
 }]]>
             </programlisting>
             <calloutlist>
-               <callout arearefs="handles-exceptions">
+               <callout arearefs="handles-exceptions-second-example">
                   <para>
                      The
                      <literal>@HandlesExceptions</literal>
@@ -325,7 +329,7 @@ public class MyHandlers
                      This handler has a default precedence of 0 (the default value of the precedence attribute on
                      <literal>@Handles</literal>). It's invoked during the breadth first traversal mode. For more
                      information on traversal, see the section <xref
-                        linkend="client_usage.handler_ordering.hierarchy"/>.
+                        linkend="client_usage.handler_ordering.hierarchy_traversal"/>.
                   </para>
                </callout>
                <callout arearefs="qualifier">
@@ -408,9 +412,9 @@ public class MyHandlers
       </para>
 
       <itemizedlist>
-         <listitem>EJBException</listitem>
-         <listitem>PersistenceException</listitem>
-         <listitem>SQLGrammarException</listitem>
+         <listitem><para>EJBException</para></listitem>
+         <listitem><para>PersistenceException</para></listitem>
+         <listitem><para>SQLGrammarException</para></listitem>
       </itemizedlist>
 
       <para>
@@ -418,9 +422,9 @@ public class MyHandlers
       </para>
 
       <orderedlist>
-         <listitem>SQLGrammarException</listitem>
-         <listitem>PersistenceException</listitem>
-         <listitem>EJBException</listitem>
+         <listitem><para>SQLGrammarException</para></listitem>
+         <listitem><para>PersistenceException</para></listitem>
+         <listitem><para>EJBException</para></listitem>
       </orderedlist>
 
       <para>
@@ -441,8 +445,8 @@ public class MyHandlers
       </para>
 
       <itemizedlist>
-         <listitem>traversal of exception type hierarchy</listitem>
-         <listitem>relative handler precedence</listitem>
+         <listitem><para>traversal of exception type hierarchy</para></listitem>
+         <listitem><para>relative handler precedence</para></listitem>
       </itemizedlist>
 
       <para>
@@ -466,8 +470,8 @@ public class MyHandlers
          </para>
 
          <itemizedlist>
-            <listitem>BREADTH_FIRST</listitem>
-            <listitem>DEPTH_FIRST</listitem>
+            <listitem><para>BREADTH_FIRST</para></listitem>
+            <listitem><para>DEPTH_FIRST</para></listitem>
          </itemizedlist>
 
          <para>
@@ -488,38 +492,14 @@ public class MyHandlers
          </para>
 
          <orderedlist>
-            <listitem>
-               <literal>Throwable</literal>
-               (BREADTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>Exception</literal>
-               (BREADTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>IOException</literal>
-               (BREADTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>SocketException</literal>
-               (BREADTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>SocketException</literal>
-               (DEPTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>IOException</literal>
-               (DEPTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>Exception</literal>
-               (DEPTH_FIRST)
-            </listitem>
-            <listitem>
-               <literal>Throwable</literal>
-               (DEPTH_FIRST)
-            </listitem>
+            <listitem><para><literal>Throwable</literal> (BREADTH_FIRST)</para></listitem>
+            <listitem><para><literal>Exception</literal> (BREADTH_FIRST)</para></listitem>
+            <listitem><para><literal>IOException</literal> (BREADTH_FIRST)</para></listitem>
+            <listitem><para><literal>SocketException</literal> (BREADTH_FIRST)</para></listitem>
+            <listitem><para><literal>SocketException</literal> (DEPTH_FIRST)</para></listitem>
+            <listitem><para><literal>IOException</literal> (DEPTH_FIRST)</para></listitem>
+            <listitem><para><literal>Exception</literal> (DEPTH_FIRST)</para></listitem>
+            <listitem><para><literal>Throwable</literal> (DEPTH_FIRST)</para></listitem>
          </orderedlist>
 
          <para>
@@ -587,29 +567,29 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
          </para>
 
          <itemizedlist>
-            <listitem>BUILT_IN = -100</listitem>
-            <listitem>FRAMEWORK = -50</listitem>
-            <listitem>DEFAULT = 0</listitem>
-            <listitem>LOW = 50</listitem>
-            <listitem>HIGH = 100</listitem>
+            <listitem><para>BUILT_IN = -100</para></listitem>
+            <listitem><para>FRAMEWORK = -50</para></listitem>
+            <listitem><para>DEFAULT = 0</para></listitem>
+            <listitem><para>LOW = 50</para></listitem>
+            <listitem><para>HIGH = 100</para></listitem>
          </itemizedlist>
 
-      </section>
+         <para>
+            To summarize, here's how Catch determines the order of handlers to invoke (until a handler marks exception as
+            handled):
+         </para>
 
-      <para>
-         To summarize, here's how Catch determines the order of handlers to invoke (until a handler marks exception as
-         handled):
-      </para>
+         <orderedlist>
+            <listitem><para>Unwrap exception stack</para></listitem>
+            <listitem><para>Begin processing root cause</para></listitem>
+            <listitem><para>Find handler for least specific handler marked for BREADTH_FIRST traversal</para></listitem>
+            <listitem><para>If multiple handlers for same type, invoke handlers with higher precedence first</para></listitem>
+            <listitem><para>Find handler for most specific handler marked for DEPTH_FIRST traversal</para></listitem>
+            <listitem><para>If multiple handlers for same type, invoke handlers with higher precedence first</para></listitem>
+            <listitem><para>Continue above steps for each exception in stack</para></listitem>
+         </orderedlist>
 
-      <orderedlist>
-         <listitem>Unwrap exception stack</listitem>
-         <listitem>Begin processing root cause</listitem>
-         <listitem>Find handler for least specific handler marked for BREADTH_FIRST traversal</listitem>
-         <listitem>If multiple handlers for same type, invoke handlers with higher precedence first</listitem>
-         <listitem>Find handler for most specific handler marked for DEPTH_FIRST traversal</listitem>
-         <listitem>If multiple handlers for same type, invoke handlers with higher precedence first</listitem>
-         <listitem>Continue above steps for each exception in stack</listitem>
-      </orderedlist>
+      </section> 
 
    </section>
 
@@ -621,12 +601,8 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
       </para>
 
       <itemizedlist>
-         <listitem>
-            <literal>CaughtException</literal>
-         </listitem>
-         <listitem>
-            <literal>ExceptionStack</literal>
-         </listitem>
+         <listitem><para><literal>CaughtException</literal></para></listitem>
+         <listitem><para><literal>ExceptionStack</literal></para></listitem>
       </itemizedlist>
 
       <section id="client_usage.api.caughtexception">
@@ -647,29 +623,39 @@ void handleIOExceptionSecond(@Handles CaughtException<IOException> evt)
 
          <itemizedlist>
             <listitem>
-               <literal>abort()</literal>
-               - terminate all handling immediately after this handler, does not mark the
-               exception as handled, does not re-throw the exception.
+               <para>
+                  <literal>abort()</literal>
+                  - terminate all handling immediately after this handler, does not mark the
+                  exception as handled, does not re-throw the exception.
+               </para>
             </listitem>
             <listitem>
-               <literal>rethrow()</literal>
-               - continues through all handlers, but once all handlers have been called
-               (assuming another handler does not call abort() or handled()) the initial exception passed to Catch is
-               rethrown. Does not mark the exception as handled.
+               <para>
+                  <literal>rethrow()</literal>
+                  - continues through all handlers, but once all handlers have been called
+                  (assuming another handler does not call abort() or handled()) the initial exception passed to Catch is
+                  rethrown. Does not mark the exception as handled.
+               </para>
             </listitem>
             <listitem>
-               <literal>handled()</literal>
-               - marks the exception as handled and terminates further handling.
+               <para>
+                  <literal>handled()</literal>
+                  - marks the exception as handled and terminates further handling.
+               </para>
             </listitem>
             <listitem>
-               <literal>markHandled()</literal>
-               - default. Marks the exception as handled and proceeds with the rest of the
-               handlers.
+               <para>
+                  <literal>markHandled()</literal>
+                  - default. Marks the exception as handled and proceeds with the rest of the
+                  handlers.
+               </para>
             </listitem>
             <listitem>
-               <literal>dropCause()</literal>
-               - marks the exception as handled, but proceeds to the next cause in
-               the cause container, without calling other handlers for the current cause.
+               <para>
+                  <literal>dropCause()</literal>
+                  - marks the exception as handled, but proceeds to the next cause in
+                  the cause container, without calling other handlers for the current cause.
+               </para>
             </listitem>
          </itemizedlist>
 
