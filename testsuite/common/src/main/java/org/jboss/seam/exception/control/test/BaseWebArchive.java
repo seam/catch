@@ -42,10 +42,17 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
  * @author <a href="http://community.jboss.org/people/LightGuard">Jason Porter</a>
  */
 public final class BaseWebArchive {
+    private static String SOLDER_PATH;
+    static {
+        try {
+            SOLDER_PATH = File.createTempFile("solder", ".jar").getParent();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
     private static volatile JavaArchive solderJar = null;
     private static final String SOLDER_VERSION = "3.0.0.Final";
     private static final String SOLDER_NAME = "seam-solder-" + SOLDER_VERSION + ".jar";
-    private static final String SOLDER_PATH = "target" + File.separator;
     private static final String JBOSS_REPO = "http://repository.jboss.org/nexus/content/groups/public/org/jboss/seam/solder/seam-solder/";
     private static final String SOLDER_URL_STRING = JBOSS_REPO + SOLDER_VERSION + "/" + SOLDER_NAME;
 
