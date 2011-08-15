@@ -44,7 +44,7 @@
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-impl</artifactId>
+         <artifactId>seam-catch</artifactId>
          <optional>true</optional>
       </dependency>
 
