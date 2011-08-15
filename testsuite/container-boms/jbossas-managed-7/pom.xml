@@ -22,11 +22,11 @@
         <groupId>org.jboss.seam.catch</groupId>
         <artifactId>container-boms</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>3.1.0.Beta-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>container-bom-jbossas-managed-7</artifactId>
-    <version>3.1.0.Beta-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>JBoss AS7 Managed Container</name>
 

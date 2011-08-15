@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.jboss.seam.catch</groupId>
         <artifactId>seam-catch-parent</artifactId>
-        <version>3.1.0.Beta-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,7 +32,7 @@
 
     <!-- Overrides -->
     <properties>
-        <arquillian.version>1.0.0.CR1</arquillian.version>
+        <arquillian.version>1.0.0.CR2</arquillian.version>
         <arquillian.jbossas7.version>7.0.0.Final</arquillian.jbossas7.version>
         <arquillian.openwebbeans.version>1.0.0.Final-SNAPSHOT</arquillian.openwebbeans.version>
         <jboss.home>${env.JBOSS_HOME}</jboss.home>
@@ -63,13 +63,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.spec</groupId>
-            <artifactId>jboss-javaee-6.0</artifactId>
-            <scope>provided</scope>
-            <type>pom</type>
         </dependency>
     </dependencies>
 
