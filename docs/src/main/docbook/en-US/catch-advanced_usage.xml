@@ -68,8 +68,8 @@
          </para>
 
          <itemizedlist>
-            <listitem>turning the stack upside down and showing the root cause first, and</listitem>
-            <listitem>allowing the stack trace to be filtered</listitem>
+            <listitem><para>turning the stack upside down and showing the root cause first, and</para></listitem>
+            <listitem><para>allowing the stack trace to be filtered</para></listitem>
          </itemizedlist>
 
          <para>
@@ -78,10 +78,10 @@
          </para>
 
          <itemizedlist>
-            <listitem>ExceptionStackOutput</listitem>
-            <listitem>StackFrameFilter</listitem>
-            <listitem>StackFrameFilterResult</listitem>
-            <listitem>StackFrame</listitem>
+            <listitem><para>ExceptionStackOutput</para></listitem>
+            <listitem><para>StackFrameFilter</para></listitem>
+            <listitem><para>StackFrameFilterResult</para></listitem>
+            <listitem><para>StackFrame</para></listitem>
          </itemizedlist>
 
       </section>
@@ -122,7 +122,7 @@
             <literal>process</literal>
             method. Please see the
             <ulink
-                  href="http://docs.jboss.org/seam/3/catch/latest/api/org/jboss/seam/exception/filter/StackFrameFilterResult.html">
+                  url="http://docs.jboss.org/seam/3/catch/latest/api/org/jboss/seam/exception/filter/StackFrameFilterResult.html">
                API docs
             </ulink>
             for definitions of each value.
@@ -144,72 +144,72 @@
             <literal>StackTraceElement</literal>
             from the exception.
          </para>
-      </section>
 
-      <example>
-         <title>Terminate</title>
-         <programlisting role="JAVA"><![CDATA[ @Override
-   public StackFrameFilterResult process(StackFrame frame) {
-      return StackFrameFilterResult.TERMINATE;
-   }]]></programlisting>
-         <para>
-            This example will simply show the exception, no stack trace.
-         </para>
-      </example>
+         <example>
+            <title>Terminate</title>
+            <programlisting role="JAVA"><![CDATA[ @Override
+      public StackFrameFilterResult process(StackFrame frame) {
+         return StackFrameFilterResult.TERMINATE;
+      }]]></programlisting>
+            <para>
+               This example will simply show the exception, no stack trace.
+            </para>
+         </example>
 
-      <example>
-         <title>Terminate After</title>
-         <programlisting role="JAVA"><![CDATA[@Override
-   public StackFrameFilterResult process(StackFrame frame) {
-      return StackFrameFilterResult.TERMINATE_AFTER;
-   } ]]></programlisting>
-         <para>
-            This is similar to the previous example, save the first line of the stack is shown.
-         </para>
-      </example>
+         <example>
+            <title>Terminate After</title>
+            <programlisting role="JAVA"><![CDATA[@Override
+      public StackFrameFilterResult process(StackFrame frame) {
+         return StackFrameFilterResult.TERMINATE_AFTER;
+      } ]]></programlisting>
+            <para>
+               This is similar to the previous example, save the first line of the stack is shown.
+            </para>
+         </example>
 
-      <example>
-         <title>Drop Remaining</title>
-         <programlisting role="JAVA"><![CDATA[@Override
-   public StackFrameFilterResult process(StackFrame frame) {
-      if (frame.getIndex() >= 5) {
-         return StackFrameFilterResult.DROP_REMAINING;
-      }
-      return StackFrameFilterResult.INCLUDE;
-   }]]></programlisting>
-         <para>
-            This filter drops all stack elements after the fifth element.
-         </para>
-      </example>
-
-      <example>
-         <title>Folding</title>
-         <programlisting role="JAVA"><![CDATA[@Override
-   public StackFrameFilterResult process(StackFrame frame) {
-      if (frame.isMarkSet("reflections.invoke")) {
-         if (frame.getStackTraceElement().getClassName().contains("java.lang.reflect")) {
-            frame.clearMark("reflections.invoke");
-            return StackFrameFilterResult.INCLUDE;
+         <example>
+            <title>Drop Remaining</title>
+            <programlisting role="JAVA"><![CDATA[@Override
+      public StackFrameFilterResult process(StackFrame frame) {
+         if (frame.getIndex() >= 5) {
+            return StackFrameFilterResult.DROP_REMAINING;
          }
-         else if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
+         return StackFrameFilterResult.INCLUDE;
+      }]]></programlisting>
+            <para>
+               This filter drops all stack elements after the fifth element.
+            </para>
+         </example>
+
+         <example>
+            <title>Folding</title>
+            <programlisting role="JAVA"><![CDATA[@Override
+      public StackFrameFilterResult process(StackFrame frame) {
+         if (frame.isMarkSet("reflections.invoke")) {
+            if (frame.getStackTraceElement().getClassName().contains("java.lang.reflect")) {
+               frame.clearMark("reflections.invoke");
+               return StackFrameFilterResult.INCLUDE;
+            }
+            else if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
+               return StackFrameFilterResult.DROP;
+            }
+         }
+
+         if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
+            frame.mark("reflections.invoke");
             return StackFrameFilterResult.DROP;
          }
-      }
 
-      if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
-         frame.mark("reflections.invoke");
-         return StackFrameFilterResult.DROP;
-      }
-
-      return StackFrameFilterResult.INCLUDE;
-   }]]></programlisting>
-         <para>
-            Certainly the most complicated example, however, this shows a possible way of "folding" a stack trace. In the
-            example any internal reflection invocation methods are folded into a single
-            <literal>java.lang.reflect.Method.invoke()</literal>
-            call, no more internal com.sun calls in the trace.
-         </para>
-      </example>
+         return StackFrameFilterResult.INCLUDE;
+      }]]></programlisting>
+            <para>
+               Certainly the most complicated example, however, this shows a possible way of "folding" a stack trace. In the
+               example any internal reflection invocation methods are folded into a single
+               <literal>java.lang.reflect.Method.invoke()</literal>
+               call, no more internal com.sun calls in the trace.
+            </para>
+         </example>
+      </section>
    </section>
 
    <!--

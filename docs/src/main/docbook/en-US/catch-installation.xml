@@ -45,7 +45,7 @@
 	   	<para>
             Substitute the expression ${seam.catch.version} with the most recent or appropriate version of Seam Catch.
             Alternatively, you can create a <ulink
-            href="http://www.sonatype.com/books/mvnref-book/reference/resource-filtering-sect-properties.html#resource-filtering-sect-user-defined">Maven
+            url="http://www.sonatype.com/books/mvnref-book/reference/resource-filtering-sect-properties.html#resource-filtering-sect-user-defined">Maven
             user-defined property</ulink> to satisfy this substitution so you can centrally manage the version.
          </para>
 	   </tip>
@@ -66,10 +66,10 @@
    <version>${seam.catch.version}</version>
    <scope>runtime</scope>
 </dependency>]]></programlisting>
+      <para>
+         Now you're ready to start catching exceptions!
+      </para>
    </section>
-   <para>
-      Now you're ready to start catching exceptions!
-   </para>
 <!--
 vim:et:ts=3:sw=3:tw=120
 -->

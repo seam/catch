@@ -26,9 +26,9 @@
    </para>
 
    <itemizedlist>
-      <listitem>creating and firing an <literal>ExceptionToCatch</literal> </listitem>
-      <listitem>adding any default handlers and qualifiers with annotation literals (optional)</listitem>
-      <listitem>supporting ServiceHandlers for creating exception handlers</listitem>
+      <listitem><para>creating and firing an <literal>ExceptionToCatch</literal></para></listitem>
+      <listitem><para>adding any default handlers and qualifiers with annotation literals (optional)</para></listitem>
+      <listitem><para>supporting ServiceHandlers for creating exception handlers</para></listitem>
    </itemizedlist>
 
    <section id="integration.exceptiontocatchevent">
@@ -65,9 +65,11 @@
          </para>
 
          <note>
-            Hopefully at some point there will be a way to conditionally enable handlers so the application developer
-            will be able to selectively enable any default handlers. Currently this does not exist, but is something
-            that will be explored.
+            <para>
+               Hopefully at some point there will be a way to conditionally enable handlers so the application developer
+               will be able to selectively enable any default handlers. Currently this does not exist, but is something
+               that will be explored.
+            </para>
          </note>
       </section>
 
@@ -117,10 +119,12 @@ public interface DeclarativeRestExceptionHandlers
       </para>
 
       <note>
-         If ServiceHandlers are implemented make sure to document if any of the methods are called from 
-         <literal>CaughtException</literal>, specifically <literal>abort()</literal>, <literal>handled()</literal>
-         or <literal>rethrow()</literal>. These methods affect invocation of other handlers (or rethrowing the
-         exception in the case of <literal>rethrow()</literal>).
+         <para>
+            If ServiceHandlers are implemented make sure to document if any of the methods are called from 
+            <literal>CaughtException</literal>, specifically <literal>abort()</literal>, <literal>handled()</literal>
+            or <literal>rethrow()</literal>. These methods affect invocation of other handlers (or rethrowing the
+            exception in the case of <literal>rethrow()</literal>).
+         </para>
       </note> 
 
    </section>

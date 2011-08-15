@@ -16,13 +16,24 @@
  */
 package org.jboss.seam.exception.control;
 
+/**
+ * Base class for setting up messages and responses for exceptions. This class is mutable.
+ */
 public class ExceptionResponse {
     private Class<? extends Throwable> forType;
     private String message;
 
+    /**
+     * Basic constructor, needed to make the class a bean, please don't use.
+     */
     public ExceptionResponse() {
     }
 
+    /**
+     * Basic constructor setting all the internal state
+     * @param forType Exception type for this instance.
+     * @param message Message for the exception.
+     */
     public ExceptionResponse(Class<? extends Throwable> forType, String message) {
         this.forType = forType;
         this.message = message;

@@ -21,6 +21,13 @@ package org.jboss.seam.exception.control;
  * Direction of a exception cause chain traversal.
  */
 public enum TraversalMode {
+    /**
+     * Traversal that matches the exception type as closely as possible first.
+     */
     DEPTH_FIRST,
+
+    /**
+     * Traversal that matches the highest super type of the exception as possible first.
+     */
     BREADTH_FIRST
 }
