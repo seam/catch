@@ -64,7 +64,7 @@
 
       <dependency>
          <groupId>org.jboss.seam.catch</groupId>
-         <artifactId>seam-catch-impl</artifactId>
+         <artifactId>seam-catch</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
