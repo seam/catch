@@ -15,14 +15,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.jboss.seam.catch</groupId>
         <artifactId>seam-catch-parent</artifactId>
-        <version>3.1.0.Beta-SNAPSHOT</version>
+        <version>3.1.0.Beta1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,7 +31,7 @@
 
     <!-- Overrides -->
     <properties>
-        <arquillian.version>1.0.0.CR1</arquillian.version>
+        <arquillian.version>1.0.0.CR2</arquillian.version>
         <arquillian.jbossas7.version>7.0.0.Final</arquillian.jbossas7.version>
         <arquillian.openwebbeans.version>1.0.0.Final-SNAPSHOT</arquillian.openwebbeans.version>
         <jboss.home>${env.JBOSS_HOME}</jboss.home>
@@ -63,13 +62,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.spec</groupId>
-            <artifactId>jboss-javaee-6.0</artifactId>
-            <scope>provided</scope>
-            <type>pom</type>
         </dependency>
     </dependencies>
 
