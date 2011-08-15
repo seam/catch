@@ -21,7 +21,7 @@
     <parent>
         <artifactId>seam-catch-parent</artifactId>
         <groupId>org.jboss.seam.catch</groupId>
-        <version>3.1.0.Beta1</version>
+        <version>3.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

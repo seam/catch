@@ -21,10 +21,10 @@
         <groupId>org.jboss.seam.catch</groupId>
         <artifactId>container-boms</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>3.1.0.Beta1</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
-    <version>3.1.0.Beta1</version>
+    <version>3.1.0-SNAPSHOT</version>
     <artifactId>container-bom-weld-ee-embedded-1.1</artifactId>
     <packaging>pom</packaging>
     <name>Weld EE Embedded 1.1 Container</name>
