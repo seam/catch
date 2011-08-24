@@ -19,6 +19,8 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
 
+    <id>distribution</id>
+
    <formats>
       <format>zip</format>
    </formats>
@@ -53,7 +55,7 @@
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
-      
+
       <!-- Add necessary dependencies -->
       <dependencySet>
          <outputDirectory>lib</outputDirectory>
@@ -65,7 +67,7 @@
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
-      
+
       <!-- Pull in the example projects -->
       <dependencySet>
          <outputDirectory>examples</outputDirectory>
@@ -75,7 +77,7 @@
             <include>org.jboss.seam.catch:seam-catch-example-basic-servlet</include>
          </includes>
       </dependencySet>
-      
+
       <!-- Pull in JavaDoc -->
       <dependencySet>
          <outputDirectory>doc/api</outputDirectory>
@@ -104,7 +106,7 @@
             </excludes>
          </unpackOptions>
       </dependencySet>
-      
+
       <!-- Add the source -->
       <dependencySet>
          <outputDirectory>source</outputDirectory>
@@ -119,6 +121,6 @@
                <exclude>META-INF/</exclude>
             </excludes>
          </unpackOptions>
-      </dependencySet>       
+      </dependencySet>
    </dependencySets>
 </assembly>
