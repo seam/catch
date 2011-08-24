@@ -22,10 +22,10 @@
         <groupId>org.jboss.seam.catch</groupId>
         <artifactId>seam-catch-testsuite-integration-internals</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>3.1.0.Beta1</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
-    <version>3.1.0.Beta1</version>
+    <version>3.1.0-SNAPSHOT</version>
     <artifactId>seam-catch-testsuite-integration-internals-weld-ee-embedded</artifactId>
     <name>Seam Catch Test Suite: Internals Integration Tests for Weld EE Embedded</name>
 
@@ -63,6 +63,23 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core</artifactId>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder-logging</artifactId>
+            <version>${seam.solder.version}</version>
         </dependency>
     </dependencies>
 
