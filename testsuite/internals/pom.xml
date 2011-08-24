@@ -30,6 +30,10 @@
     <name>Seam Catch Test Suite: Internals Integration Tests</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <seam.solder.version>3.1.0.Beta2</seam.solder.version>
+    </properties>
+
     <modules>
         <module>base</module>
         <module>weld-ee-embedded</module>

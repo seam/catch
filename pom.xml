@@ -21,7 +21,7 @@
     <parent>
         <artifactId>seam-parent</artifactId>
         <groupId>org.jboss.seam</groupId>
-        <version>12</version>
+        <version>14</version>
     </parent>
 
     <groupId>org.jboss.seam.catch</groupId>
@@ -32,8 +32,8 @@
     <url>http://www.seamframework.org/Seam3/CatchModuleHome</url>
 
     <properties>
-        <seam.version>3.1.0-SNAPSHOT</seam.version>
-        <seam.solder.version>3.1.0-SNAPSHOT</seam.solder.version>
+        <seam.version>3.1.0.Beta2</seam.version>
+        <seam.solder.version>3.1.0.Beta2</seam.solder.version>
         <jboss.spec.version>2.0.0.Final</jboss.spec.version>
     </properties>
 
@@ -79,6 +79,12 @@
                 <artifactId>seam-solder</artifactId>
                 <version>${seam.solder.version}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-library</artifactId>
+                <version>${hamcrest.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
