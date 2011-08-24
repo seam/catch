@@ -101,16 +101,15 @@ public class StackFilteringTest {
         final StackFrameFilter<NoClassDefFoundError> filter = new StackFrameFilter<NoClassDefFoundError>() {
             @Override
             public StackFrameFilterResult process(StackFrame frame) {
+                // We want to drop calls referring to reflection
                 if (frame.isMarkSet("reflections.invoke")) {
-                    if (frame.getStackTraceElement().getClassName().contains("java.lang.reflect")) {
+                    if (!frame.getStackTraceElement().toString().contains("reflect")) {
                         frame.clearMark("reflections.invoke");
                         return StackFrameFilterResult.INCLUDE;
-                    } else if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
-                        return StackFrameFilterResult.DROP;
                     }
                 }
 
-                if (frame.getStackTraceElement().getMethodName().startsWith("invoke")) {
+                if (frame.getStackTraceElement().toString().contains("reflect")) {
                     frame.mark("reflections.invoke");
                     return StackFrameFilterResult.DROP;
                 }
@@ -127,18 +126,19 @@ public class StackFilteringTest {
         final ExceptionStackOutput<NoClassDefFoundError> exceptionStackOutput = new ExceptionStackOutput<NoClassDefFoundError>(noClassDefFoundError, filter);
         final String result = exceptionStackOutput.printTrace();
         final LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(result));
-        int invokeLines = 0;
+        int reflectLines = 0;
         String line;
 
         while ((line = lineNumberReader.readLine()) != null) {
             if (line.contains("reflect")) {
-                invokeLines++;
+                reflectLines++;
             }
-        } // just get the line numbers
+            System.out.println(line);
+        }
 
 
         assertThat("Actual: " + result, lineNumberReader.getLineNumber() < 22, is(true));
-        assertThat(invokeLines, is(1));
+        assertThat(reflectLines, is(0));
     }
 
     @Test

@@ -61,15 +61,15 @@ public final class BaseWebArchive {
     private static volatile JavaArchive solderLoggingJar = null;
     private static volatile JavaArchive solderApiJar = null;
 
-    private static final String SOLDER_VERSION = "3.1.0.Beta1";
+    private static final String SOLDER_VERSION = "3.1.0.Beta2";
 
     private static final String SOLDER_NAME = "seam-solder-" + SOLDER_VERSION + ".jar";
     private static final String SOLDER_LOGGING_NAME = "seam-solder-logging-" + SOLDER_VERSION + ".jar";
     private static final String SOLDER_API_NAME = "seam-solder-api-" + SOLDER_VERSION + ".jar";
 
-    private static final String SOLDER_JBOSS_REPO = "https://repository.jboss.org/nexus/content/groups/staging/org/jboss/seam/solder/seam-solder/";
-    private static final String SOLDER_LOGGING_JBOSS_REPO = "https://repository.jboss.org/nexus/content/groups/staging/org/jboss/seam/solder/seam-solder-logging/";
-    private static final String SOLDER_API_JBOSS_REPO = "https://repository.jboss.org/nexus/content/groups/staging/org/jboss/seam/solder/seam-solder-api/";
+    private static final String SOLDER_JBOSS_REPO = "https://repository.jboss.org/nexus/content/groups/public/org/jboss/seam/solder/seam-solder/";
+    private static final String SOLDER_LOGGING_JBOSS_REPO = "https://repository.jboss.org/nexus/content/groups/public/org/jboss/seam/solder/seam-solder-logging/";
+    private static final String SOLDER_API_JBOSS_REPO = "https://repository.jboss.org/nexus/content/groups/public/org/jboss/seam/solder/seam-solder-api/";
 
     private static final String SOLDER_URL_STRING = SOLDER_JBOSS_REPO + SOLDER_VERSION + "/" + SOLDER_NAME;
     private static final String SOLDER_LOGGING_URL_STRING = SOLDER_LOGGING_JBOSS_REPO + SOLDER_VERSION + "/" + SOLDER_LOGGING_NAME;
