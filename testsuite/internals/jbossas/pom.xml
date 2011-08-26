@@ -55,6 +55,10 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.seam.catch</groupId>
+            <artifactId>seam-catch-testsuite-integration-internals-base</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -72,20 +76,15 @@
                 <executions>
                     <execution>
                         <id>unpack-base-tests</id>
-                        <phase>process-test-classes</phase>
+                        <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.jboss.seam.catch</groupId>
-                                    <artifactId>seam-catch-testsuite-integration-internals-base</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>jar</type>
-                                    <outputDirectory>${project.build.directory}/test-classes/</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
+                            <includeArtifactIds>
+                                seam-catch-testsuite-integration-internals-base
+                            </includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/test-classes/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -120,7 +119,7 @@
                         <executions>
                             <execution>
                                 <id>unpack-as7</id>
-                                <phase>process-test-classes</phase>
+                                <phase>generate-test-sources</phase>
                                 <!-- So run before testing -->
                                 <goals>
                                     <goal>unpack</goal>
