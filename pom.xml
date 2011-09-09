@@ -21,7 +21,7 @@
     <parent>
         <artifactId>seam-parent</artifactId>
         <groupId>org.jboss.seam</groupId>
-        <version>14</version>
+        <version>15</version>
     </parent>
 
     <groupId>org.jboss.seam.catch</groupId>
@@ -80,6 +80,7 @@
                 <version>${seam.solder.version}</version>
                 <scope>compile</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-library</artifactId>

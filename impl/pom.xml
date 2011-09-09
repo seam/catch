@@ -31,11 +31,7 @@
 
     <!-- Overrides -->
     <properties>
-        <arquillian.version>1.0.0.CR2</arquillian.version>
-        <arquillian.jbossas7.version>7.0.0.Final</arquillian.jbossas7.version>
-        <arquillian.openwebbeans.version>1.0.0.Final-SNAPSHOT</arquillian.openwebbeans.version>
         <jboss.home>${env.JBOSS_HOME}</jboss.home>
-        <openwebbeans.version>1.1.1-SNAPSHOT</openwebbeans.version>
     </properties>
 
     <name>Seam Catch Implementation</name>
