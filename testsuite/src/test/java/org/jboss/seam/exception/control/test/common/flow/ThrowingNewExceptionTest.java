@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 public class ThrowingNewExceptionTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("throwingNewException.war")
+        return BaseWebArchive.createBase("throwingNewException.jar")
                 .addClasses(ThrowingNewHandler.class);
     }
 

@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class DepthAbortControlTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("depthAbortControl.war")
+        return BaseWebArchive.createBase("depthAbortControl.jar")
                 .addClasses(AbortingDepthHandler.class);
     }
 

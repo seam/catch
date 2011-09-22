@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 public class CallingHandlersTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("callingHandlers.war")
+        return BaseWebArchive.createBase("callingHandlers.jar")
                 .addClasses(CalledExceptionHandler.class, ExceptionHandledInterceptor.class);
     }
 

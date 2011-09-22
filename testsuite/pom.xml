@@ -32,18 +32,15 @@
     <name>Seam Catch Test Suite</name>
 
     <properties>
-        <jbossas.7.version>7.0.0.Final</jbossas.7.version>
+        <arquillian.version>1.0.0.CR4</arquillian.version> <!-- Overriding -->
+        <arquillian.weld-ee.version>1.0.0.CR2</arquillian.weld-ee.version>
+        <jbossas.7.version>7.0.1.Final</jbossas.7.version>
         <version.jboss_javaee6_spec>2.0.0.Final</version.jboss_javaee6_spec>
-        <version.arquillian_core>1.0.0.CR2</version.arquillian_core>
         <!-- Container Versions -->
-        <version.arquillian_container>1.0.0.CR1</version.arquillian_container>
-        <version.jbossas_7>7.0.0.Final</version.jbossas_7>
-        <version.log4j>1.2.14</version.log4j>
-        <version.slf4j>1.5.10</version.slf4j>
+        <version.arquillian_container>1.0.0.CR4</version.arquillian_container>
         <version.weld_core>1.1.1.Final</version.weld_core>
         <version.weld_api>1.1.Final</version.weld_api>
         <version.hamcrest>1.3.RC2</version.hamcrest>
-        <version.shrinkwrap>1.0.0-beta-3</version.shrinkwrap>
         <version.junit>4.8.2</version.junit>
     </properties>
 
@@ -114,15 +111,6 @@
             <version>${version.hamcrest}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--
-        <dependency>
-            <groupId>org.jboss.shrinkwrap</groupId>
-            <artifactId>shrinkwrap-api</artifactId>
-            <version>${version.shrinkwrap}</version>
-            <scope>test</scope>
-        </dependency>
-        -->
     </dependencies>
 
     <build>
@@ -132,10 +120,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <skipTests>true</skipTests>
-                    <!-- All tests will be picked up by the profiles -->
-                    <excludes>
-                        <exclude>**/**</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -146,6 +130,10 @@
             <id>weld-ee-embedded</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>arquillian</name>
+                    <value>weld-ee-embedded-1.1</value>
+                </property>
             </activation>
             <dependencyManagement>
                 <dependencies>
@@ -162,18 +150,23 @@
                 <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>${arquillian.weld-ee.version}</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-core</artifactId>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.weld</groupId>
                     <artifactId>weld-api</artifactId>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-simple</artifactId>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
             <build>
@@ -183,14 +176,82 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <skipTests>false</skipTests>
-                            <systemPropertyVariables>
-                                <arquillian.launch>weld-ee-embedded</arquillian.launch>
-                            </systemPropertyVariables>
                             <includes>
                                 <include>**/common/**</include>
                                 <include>**/weld/**</include>
                             </includes>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jboss-as7-managed</id>
+            <activation>
+                <property>
+                    <name>arquillian</name>
+                    <value>jbossas-managed-7</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-container-spi</artifactId>
+                    <version>${arquillian.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>false</skipTests>
+                            <includes>
+                                <include>**/common/**</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/weld/**</exclude>
+                            </excludes>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <trimStackTrace>false</trimStackTrace>
+                            <systemProperties>
+                                <arquillian.launch>jbossas-managed-7</arquillian.launch>
+                                <arquillian>jbossas-managed-7</arquillian>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-as7</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jboss.as</groupId>
+                                            <artifactId>jboss-as-dist</artifactId>
+                                            <version>${jbossas.7.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

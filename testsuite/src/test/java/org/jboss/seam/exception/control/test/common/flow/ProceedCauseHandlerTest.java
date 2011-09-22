@@ -34,7 +34,7 @@ import static junit.framework.Assert.assertEquals;
 public class ProceedCauseHandlerTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("proceedCauseHandler.war")
+        return BaseWebArchive.createBase("proceedCauseHandler.jar")
                 .addClasses(ProceedCauseHandler.class);
     }
 

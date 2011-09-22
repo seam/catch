@@ -24,7 +24,6 @@ import org.jboss.seam.solder.bean.Beans;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import org.jboss.seam.solder.literal.AnyLiteral;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
-import org.jboss.seam.solder.reflection.HierarchyDiscovery;
 import org.jboss.seam.solder.reflection.annotated.InjectableMethod;
 import org.jboss.seam.solder.reflection.annotated.ParameterValueRedefiner;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -45,9 +44,9 @@ public final class BaseWebArchive {
                 .addClass(CatchExtension.class)
                 .addAsServiceProvider(Extension.class, CatchExtension.class)
                 // Solder classes used in Catch
-                .addClasses(Beans.class, ImmutableInjectionPoint.class, AnyLiteral.class, AnnotationInspector.class,
-                        HierarchyDiscovery.class, InjectableMethod.class, ParameterValueRedefiner.class)
-
+                .addClasses(Beans.class, ImmutableInjectionPoint.class, AnyLiteral.class,
+                        InjectableMethod.class, ParameterValueRedefiner.class)
+                .addPackage(AnnotationInspector.class.getPackage())
                 // Logging in AS7
                 .addAsManifestResource(new StringAsset("<jboss-deployment-structure>\n" +
                         "  <deployment>\n" +

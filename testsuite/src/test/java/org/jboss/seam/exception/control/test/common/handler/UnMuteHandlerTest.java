@@ -34,7 +34,7 @@ import static junit.framework.Assert.assertEquals;
 public class UnMuteHandlerTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("unMuteHandler.war")
+        return BaseWebArchive.createBase("unMuteHandler.jar")
                 .addClasses(UnMuteHandler.class);
     }
 

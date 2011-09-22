@@ -43,7 +43,7 @@ import static org.junit.Assert.assertTrue;
 public class EventTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("eventTest.war")
+        return BaseWebArchive.createBase("eventTest.jar")
                 .addClasses(EventTest.class, EventQualifier.class, EventQualifierLiteral.class);
     }
 

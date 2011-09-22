@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class BreadthFirstAbortControlTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("breadthFirstAbortControl.war")
+        return BaseWebArchive.createBase("breadthFirstAbortControl.jar")
                 .addClasses(AbortingBreadthFirstHandler.class);
     }
 

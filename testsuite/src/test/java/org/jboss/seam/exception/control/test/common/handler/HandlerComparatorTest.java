@@ -46,7 +46,7 @@ import static org.junit.Assert.assertThat;
 public class HandlerComparatorTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("handlerComparator.war")
+        return BaseWebArchive.createBase("handlerComparator.jar")
                 .addClasses(ExtensionExceptionHandler.class, Account.class,
                         org.jboss.seam.exception.control.test.common.extension.Arquillian.class, CatchQualifier.class);
     }

@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
 public class RethrowTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("rethrow.war")
+        return BaseWebArchive.createBase("rethrow.jar")
                 .addClasses(RethrowHandler.class);
     }
 

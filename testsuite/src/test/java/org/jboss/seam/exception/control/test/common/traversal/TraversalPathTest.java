@@ -39,7 +39,7 @@ public class TraversalPathTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-        return BaseWebArchive.createBase("traversalPath.war")
+        return BaseWebArchive.createBase("traversalPath.jar")
                 .addPackage(TraversalPathTest.class.getPackage());
 
     }
